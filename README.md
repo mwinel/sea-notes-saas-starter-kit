@@ -18,7 +18,7 @@ Welcome! 👋 This starter kit helps you quickly build and deploy a professional
 
 Want to try it out right away? Deploy directly to DigitalOcean App Platform with one click:
 
-[![Deploy to DigitalOcean](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/do-yard/do-starter-kit/tree/main)
+[![Deploy to DigitalOcean](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/digitalocean/do-starter-kit-internal/tree/main)
 
 ## What's Included
 
@@ -77,7 +77,7 @@ The DigitalOcean SaaS Starter Kit can be run [locally](#quick-start-local-develo
 Clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/do-yard/do-starter-kit.git
+git clone https://github.com/digitalocean/do-starter-kit-internal.git
 cd do-starter-kit/application
 npm install
 ```
@@ -381,7 +381,7 @@ This starter kit is designed to deploy seamlessly to DigitalOcean App Platform. 
 
 1. Click on the one-click deployment button below. If you are not currently logged in with your DigitalOcean account, this button prompts you to log in.
 
-[![Deploy to DigitalOcean](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/do-yard/do-starter-kit/tree/main)
+[![Deploy to DigitalOcean](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/digitalocean/do-starter-kit-internal/tree/main)
 
 2. After deployment is complete, configure the environment variables under Settings -> saas-application.
    - DATABASE_URL: is automatically populated, but if you want to use a DigitalOcean Managed DB, replace the connection string value.

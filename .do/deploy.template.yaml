@@ -15,7 +15,7 @@ spec:
       environment_slug: node-js # Runtime environment
       git:
         branch: main # Git branch to deploy
-        repo_clone_url: https://github.com/do-yard/do-starter-kit # Repository URL
+        repo_clone_url: https://github.com/digitalocean/do-starter-kit-internal # Repository URL
       source_dir: ./application # Directory containing the service source code
       build_command: "npm install && npm run build" # Command to build the service
       run_command: "npx prisma migrate deploy; npm run start" # Command to run the service
