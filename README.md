@@ -10,9 +10,20 @@
 [![DigitalOcean](https://img.shields.io/badge/DigitalOcean-Ready-0080FF)](https://www.digitalocean.com/)
 [![DO Spaces](https://img.shields.io/badge/DO%20Spaces-Storage-0080FF)](https://www.digitalocean.com/products/spaces/)
 
-This repository contains a complete SaaS Starter Kit for building professional SaaS applications on DigitalOcean App Platform.
+![alt text](docs/images/starter_kit_integrations.png)
 
-Welcome! 👋 This starter kit helps you quickly build and deploy a professional SaaS application. It's designed to get you up and running fast, whether you're developing locally or connecting to a cloud database. The kit includes a fully functional notes app as a practical example that demonstrates how to implement business logic on top of the SaaS foundation.
+This repository contains a complete SaaS Starter Kit for building professional SaaS applications on DigitalOcean App Platform. It's designed to get you up and running fast, whether you're developing locally or connecting to a cloud database. The kit includes a fully functional notes app as a practical example that demonstrates how to implement business logic on top of the SaaS foundation.
+
+This starter kit comes pre-integrated with:
+- **Stripe** for subscription billing and payments
+- **Resend** for transactional emails
+- **DigitalOcean Spaces** for file storage
+- **PostgreSQL** for database
+- **One-click deployment** to DigitalOcean App Platform
+
+You can use it in two ways:
+1. As a **starter kit** to build your own SaaS application by replacing the notes functionality with your business logic
+2. As a **reference app** by pointing your LLMs (like ChatGPT or Claude) to this codebase to understand how to implement similar features in your own projects
 
 ![alt text](docs/images/launch_your_saas_on_digitalocean.png)
 
