@@ -12,7 +12,7 @@
 
 This repository contains a complete SaaS Starter Kit for building professional SaaS applications on DigitalOcean App Platform.
 
-Welcome! 👋 This starter kit helps you quickly build and deploy a professional SaaS application. It's designed to get you up and running fast, whether you're developing locally or connecting to a cloud database.
+Welcome! 👋 This starter kit helps you quickly build and deploy a professional SaaS application. It's designed to get you up and running fast, whether you're developing locally or connecting to a cloud database. The kit includes a fully functional notes app as a practical example that demonstrates how to implement business logic on top of the SaaS foundation.
 
 ## Quick Deploy
 
@@ -31,11 +31,12 @@ This is a production-ready SaaS Starter Kit for developers who want to build and
 - 🗄️ Database integration (DigitalOcean PostgreSQL)
 - 🚀 One-click deploy to DigitalOcean App Platform
 - 📊 User dashboard
+- 📝 Example notes app functionality (create, edit, delete notes)
 - ✨ Modern, responsive UI (Next.js, React, Material UI)
 
 Developers can use this kit as a clean, flexible starting point for your own SaaS app — or as a reference app to see how all the core pieces fit together on DigitalOcean.
 
-It shows how real-world features are implemented using DO services. It also works really well with tools like ChatGPT or Claude. You can literally point your LLM at this repo and say:
+It shows how real-world features are implemented using DO services. The included notes app functionality serves as a practical example of how to build business logic on top of this foundation. It also works really well with tools like ChatGPT or Claude. You can literally point your LLM at this repo and say:
 
 "Build me something like this, but for [my idea]," and it'll scaffold your app using similar patterns — auth, billing, storage, GenAI, etc., all running on DigitalOcean.
 
@@ -82,7 +83,17 @@ cd do-starter-kit/application
 npm install
 ```
 
-### Step 2: Set Up Your Database
+### Step 2: Create Your Environment File
+
+Copy the example environment file to create your own configuration:
+
+```bash
+cp env-example .env
+```
+
+The `.env` file contains all the configuration settings for your application. The default values will work for basic local development, but you'll need to update them for additional features like email, file storage, and payments.
+
+### Step 3: Set Up Your Database
 
 #### Option A: Use Docker for PostgreSQL (Recommended for Development)
 
@@ -93,23 +104,7 @@ If you prefer using Docker for your database, follow these steps:
    - If you don't already have Docker installed, download and install [Docker Desktop](https://www.docker.com/products/docker-desktop/)
    - Make sure Docker is running on your system before proceeding
 
-2. **Define Environment Variables**
-
-   Create or update your `.env` file inside the `application/` directory:
-
-   ```
-   # Local application database configuration
-   DATABASE_URL=postgresql://postgres:postgres@localhost:5432/saas_kit_db
-
-   # Docker container initialization (PostgreSQL)
-   POSTGRES_USER=postgres
-   POSTGRES_PASSWORD=postgres
-   POSTGRES_DB=saas_kit_db
-   ```
-
-   > **Note:** The `DATABASE_URL` is used by your application, while the `POSTGRES_*` variables configure the Docker PostgreSQL instance. Keep them aligned to avoid mismatches.
-
-3. **Start the PostgreSQL Container**
+2. **Start the PostgreSQL Container**
 
    From the project root, run:
 
@@ -118,50 +113,46 @@ If you prefer using Docker for your database, follow these steps:
    docker-compose up -d
    ```
 
-   This will start a PostgreSQL container with the following defaults:
+   This will start a PostgreSQL container with the default configuration:
+   - Database name: `saas_kit_db`
+   - Username: `postgres` 
+   - Password: `postgres`
+   - Port: `5432`
 
-   - Port: 5432
-   - User: postgres
-   - Password: postgres
-   - Database: saas_kit_db
+   The Docker Compose configuration already includes these sensible defaults, so no changes are needed to the database configuration in your `.env` file for basic setup.
 
-4. **Initialize Your Database**
-
-   With the Docker container running, set up your database tables:
-
-   ```bash
-   npx prisma generate
-   npx prisma migrate deploy
-   ```
+   ![alt text](docs/images/docker_desktop_containers_view.png)
 
 #### Option B: Use an Existing Cloud Database (e.g., DigitalOcean)
 
 If you already have a PostgreSQL database hosted in the cloud, you can use that instead:
 
-- [How to create a DigitalOcean database](./docs/creating-database-digitalocean.md)
-- [How to get your DigitalOcean database connection string](https://docs.digitalocean.com/products/databases/postgresql/how-to/connect/)
+1. **Update Your Database Connection**
 
-### Step 3: Environment Setup
+   Edit your `.env` file and update the `DATABASE_URL` to your cloud database connection string:
 
-- Copy the example environment file:
+   ```
+   DATABASE_URL=postgresql://username:password@host:port/database
+   ```
 
-  ```bash
-  cp env-example .env
-  ```
+   For a DigitalOcean managed PostgreSQL database, you can find this connection string in your database's Connection Details tab:
 
-- Edit `.env` and set your `DATABASE_URL`:
+   ![DigitalOcean PostgreSQL Connection Details](docs/images/digitalocean_postgresql_connection_details.png)
 
-  - If running locally, use the value from the Docker setup above.
-  - If using a cloud database, paste your connection string here.
+2. For guidance on setting up a cloud database:
+   - [How to create a DigitalOcean database](./docs/creating-database-digitalocean.md)
+   - [How to get your DigitalOcean database connection string](https://docs.digitalocean.com/products/databases/postgresql/how-to/connect/)
 
 ### Step 4: Initialize Your Database
 
-Run the following to set up your database tables:
+With your database set up (either Docker or cloud), initialize the database tables:
 
 ```bash
 npx prisma generate
 npx prisma migrate deploy
 ```
+
+This will create all the necessary tables and relationships in your database.
 
 ### Step 5: Start the Development Server
 
@@ -169,7 +160,11 @@ npx prisma migrate deploy
 npm run dev
 ```
 
+This command will start the development server and launch your application on port 3000.
+
 Visit [http://localhost:3000](http://localhost:3000) in your browser.
+
+![alt text](docs/images/launch_your_saas_on_digitalocean.png)
 
 ## First Things to Try
 
@@ -189,10 +184,22 @@ The basic starter kit is now set up locally on your computer! You can start expl
    - Go to your **profile** and try updating your profile details
    - **Log out** and log back in
 
-3. **Check the System Status Page**
+3. **Create your first note**
+
+   - Navigate to the **My Notes** section in the dashboard
+   - Click the **Add Note** button
+   - Enter a title and content for your note
+   - Click **Save** to create your note
+   - Try editing or deleting the note you created
+
+![alt text](docs/images/saas_app_create_note_interface.png)
+
+4. **Check the System Status Page**
    - Navigate to [http://localhost:3000/system-status](http://localhost:3000/system-status) to see if all required services are correctly configured
    - We've built this helpful service status page to show you at a glance if any service (like email or file storage) is misconfigured or missing credentials
    - This makes it easy to spot and fix issues before going live
+
+![alt text](docs/images/system_status_page_screenshot.png)
 
 > **Note:** Email and file storage are not set up by default. Configure these features using the documentation below.
 
@@ -200,7 +207,7 @@ The basic starter kit is now set up locally on your computer! You can start expl
 
 By default, email functionality is disabled for local development, allowing you to sign up and log in without setting up an email provider. However, features like password reset and magic links won't work until email is configured.
 
-This starter kit comes with Resend integration built-in. All you need to do is get your API key and a verified sender email address from Resend, and add them to your `.env` file.
+This starter kit comes with [Resend](https://resend.com) integration built-in. All you need to do is get your API key and a verified sender email address from Resend, and add them to your `.env` file.
 
 ### Steps:
 
@@ -214,6 +221,8 @@ This starter kit comes with Resend integration built-in. All you need to do is g
    - Click "Create API Key" and copy the generated key
    - Set permissions to "Full Access" and select your domain (or all domains)
    - Store this key securely - you'll need it for your `.env` file
+
+![alt text](docs/images/resend_api_keys_dashboard.png)
 
 3. **Configure Sender Address (Two Options)**
 
@@ -230,6 +239,7 @@ This starter kit comes with Resend integration built-in. All you need to do is g
    - Follow the DNS verification steps provided to verify ownership of your domain
    - Once verified, you can use any email address at that domain as your sender (e.g., `noreply@yourdomain.com`)
    - Note: Free accounts can configure up to one domain
+   - For detailed instructions on domain setup, see [Resend's official domain documentation](https://resend.com/docs/dashboard/domains/introduction)
 
 4. **Update Your `.env` File**
    Add these lines (replace with your actual values):
@@ -253,6 +263,9 @@ This starter kit comes with Resend integration built-in. All you need to do is g
    - Try signing up for a new account or using the password reset feature
    - Check your inbox for the verification or reset email
    - You can also check the system status page to confirm Resend is connected
+![alt text](docs/images/gmail_verify_email_screenshot.png)
+
+![alt text](docs/images/email_verification_screen.png)
 
 ## Part 3: Set Up File Storage (DigitalOcean Spaces)
 
