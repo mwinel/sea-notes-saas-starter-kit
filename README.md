@@ -14,6 +14,8 @@ This repository contains a complete SaaS Starter Kit for building professional S
 
 Welcome! 👋 This starter kit helps you quickly build and deploy a professional SaaS application. It's designed to get you up and running fast, whether you're developing locally or connecting to a cloud database. The kit includes a fully functional notes app as a practical example that demonstrates how to implement business logic on top of the SaaS foundation.
 
+![alt text](docs/images/launch_your_saas_on_digitalocean.png)
+
 ## Quick Deploy
 
 Want to try it out right away? Deploy directly to DigitalOcean App Platform with one click:
@@ -263,9 +265,7 @@ This starter kit comes with [Resend](https://resend.com) integration built-in. A
    - Try signing up for a new account or using the password reset feature
    - Check your inbox for the verification or reset email
    - You can also check the system status page to confirm Resend is connected
-![alt text](docs/images/gmail_verify_email_screenshot.png)
-
-![alt text](docs/images/email_verification_screen.png)
+   ![alt text](docs/images/gmail_verify_email_screenshot.png)
 
 ## Part 3: Set Up File Storage (DigitalOcean Spaces)
 
@@ -276,20 +276,23 @@ To enable file uploads, you'll need to set up a DigitalOcean Spaces bucket and a
 ### Steps:
 
 1. **Create a Spaces Bucket**
-   - Log in to your [DigitalOcean dashboard](https://cloud.digitalocean.com/spaces)
-   - Click "Create a Space"
-   - Choose a datacenter region and give your Space a unique name
-2. **Create an Access Key**
+   - Log in to your [DigitalOcean dashboard](https://cloud.digitalocean.com/)
+   - Click on **Spaces Object Storage**
+   - Click **Create a Spaces Bucket**
+   ![alt text](docs/images/digitalocean_spaces_object_storage.png)
+   - Choose a region close to your users (e.g., nyc3 for New York)
+   - Name your Space (e.g., `saas-starter-kit-demo`)
+   - This will create your bucket available at a URL like `https://saas-starter-kit-demo.nyc3.digitaloceanspaces.com`
 
-   - In your DigitalOcean dashboard, go to the **Settings** for the Spaces bucket you just created
-   - Find the section for **Access Keys** and click **Create Access Key**
-   - Choose **Limited Access** and select your bucket (e.g., `do-starter-kit-demo`)
-   - Set the permissions to **Read/Write/Delete**
-   - Give your access key a name (e.g., `do-starter-kit-demo-access-key`)
-   - Click **Create Access Key**
-   - Save the **Access Key** and **Secret Key** somewhere safe—you'll need them for your `.env` file
 
-![Creating Access Key in DigitalOcean](./docs/images/create_access_key_digitalocean.png)
+2. **Generate Access Keys**
+   - Open your Space, click **Settings**, and scroll down to **Access Keys**
+   - Click **Create Access Key** 
+   ![alt text](docs/images/digitalocean_spaces_storage_settings.png)
+   - Set permissions to **Full Access**, so your app can read, write, and delete files
+   - Name the key (e.g., `do-starter-kit-demo-access-key`) and click **Create Access Key**
+   - **Important:** Save the Access Key and Secret Key—this is the only time you'll see the Secret Key!
+   ![alt text](docs/images/digitalocean_create_access_key.png)
 
 3. **Get Your Spaces Values for Environment Variables**
 
@@ -313,8 +316,8 @@ To enable file uploads, you'll need to set up a DigitalOcean Spaces bucket and a
    ```
    SPACES_REGION=your-space-region (nyc3, sfo2, etc.)
    SPACES_BUCKET_NAME=your-space-name
-   SPACES_SECRET_KEY=your-access-key
-   SPACES_SECRET=your-secret-key
+   SPACES_KEY_ID=your-access-key
+   SPACES_SECRET_KEY=your-secret-key
    ```
 
    - The endpoint will match your region (e.g., `nyc3`, `sfo2`, etc.)
