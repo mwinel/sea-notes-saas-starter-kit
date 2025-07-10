@@ -3,6 +3,7 @@ export interface ServerConfig {
   storageProvider: string;
   emailProvider: string;
   billingProvider: string;
+  invoiceProvider: string;
   enableEmailIntegration: boolean;
   baseURL?: string;
   Database: {
@@ -10,7 +11,7 @@ export interface ServerConfig {
   };
   Spaces: {
     SPACES_KEY_ID?: string;
-    SPACES_SECRET_KEY?: string;
+    SPACES_KEY_SECRET?: string;
     SPACES_BUCKET_NAME?: string;
     SPACES_REGION?: string;
   };
@@ -26,6 +27,10 @@ export interface ServerConfig {
     webhookSecret?: string;
     portalConfigId?: string;
   };
+  Invoice: {
+    doAgentBaseUrl?: string;
+    doApiToken?: string;
+  };
 }
 
 export const serverConfig: ServerConfig = {
@@ -33,6 +38,7 @@ export const serverConfig: ServerConfig = {
   storageProvider: process.env.STORAGE_PROVIDER || 'Spaces',
   emailProvider: process.env.EMAIL_PROVIDER || 'Resend',
   billingProvider: process.env.BILLING_PROVIDER || 'Stripe',
+  invoiceProvider: process.env.INVOICE_PROVIDER || 'DigitalOcean GenAI',
   enableEmailIntegration: process.env.ENABLE_EMAIL_INTEGRATION
     ? process.env.ENABLE_EMAIL_INTEGRATION === 'true'
     : false,
@@ -42,7 +48,7 @@ export const serverConfig: ServerConfig = {
   },
   Spaces: {
     SPACES_KEY_ID: process.env.SPACES_KEY_ID,
-    SPACES_SECRET_KEY: process.env.SPACES_SECRET_KEY,
+    SPACES_KEY_SECRET: process.env.SPACES_KEY_SECRET,
     SPACES_BUCKET_NAME: process.env.SPACES_BUCKET_NAME,
     SPACES_REGION: process.env.SPACES_REGION,
   },
@@ -57,5 +63,9 @@ export const serverConfig: ServerConfig = {
     proGiftPriceId: process.env.STRIPE_PRO_GIFT_PRICE_ID,
     webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
     portalConfigId: process.env.STRIPE_PORTAL_CONFIG_ID,
+  },
+  Invoice: {
+    doAgentBaseUrl: process.env.DO_AGENT_BASE_URL,
+    doApiToken: process.env.DO_API_TOKEN,
   },
 };

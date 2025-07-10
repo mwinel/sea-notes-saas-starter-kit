@@ -1,4 +1,4 @@
-import { serverConfig } from 'settings';
+import { serverConfig } from '../../settings';
 import { ServiceConfigStatus } from 'services/status/serviceConfigStatus';
 import { BillingService } from './billing';
 import Stripe from 'stripe';
@@ -203,12 +203,18 @@ export class StripeBillingService extends BillingService {
       limit: 1,
     });
 
-    const subscription = result.data.map((subscription) => ({
-      id: subscription.id,
-      items: subscription.items.data.map((item) => ({ id: item.id, priceId: item.price.id })),
-    }));
+    if (result.data.length === 0) {
+      throw new Error('No subscription found for customer');
+    }
 
-    const priceId = this.getPriceId(plan);
+    const subscription = result.data[0];
+    const currentPriceId = subscription.items.data[0]?.price.id;
+    const requestedPriceId = this.getPriceId(plan);
+
+    // Check if user is already on the requested plan
+    if (currentPriceId === requestedPriceId) {
+      throw new Error(`User is already on the ${plan} plan`);
+    }
 
     const session = await this.stripe.billingPortal.sessions.create({
       customer: customerId,
@@ -216,11 +222,11 @@ export class StripeBillingService extends BillingService {
       flow_data: {
         type: 'subscription_update_confirm',
         subscription_update_confirm: {
-          subscription: subscription[0].id,
+          subscription: subscription.id,
           items: [
             {
-              id: subscription[0].items[0].id,
-              price: priceId,
+              id: subscription.items.data[0].id,
+              price: requestedPriceId,
               quantity: 1,
             },
           ],
@@ -342,3 +348,4 @@ export class StripeBillingService extends BillingService {
     };
   }
 }
+

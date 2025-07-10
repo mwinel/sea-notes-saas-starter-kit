@@ -99,6 +99,12 @@ STRIPE_PORTAL_CONFIG_ID=          # ID for customer portal configuration
 # ====================
 # General application settings that affect multiple components
 
+#Invoice Generation (DigitalOcean GenAI)
+INVOICE_PROVIDER=DigitalOcean GenAI
+DO_AGENT_BASE_URL= # DigitalOcean GenAI agent base URL
+DO_API_TOKEN= # DigitalOcean API token for GenAI agent
+
+
 # Base URL of your application (used for callbacks, email links, etc.)
 # Format: https://yourdomain.com or http://localhost:3000 for development
 # In the app: Used for generating absolute URLs for email links and Stripe callbacks

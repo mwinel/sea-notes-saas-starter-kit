@@ -1,6 +1,6 @@
 import { Resend } from 'resend';
-import { serverConfig } from 'settings';
-import { EmailService } from './email';
+import { serverConfig } from '../../settings';
+import { EmailService, EmailAttachment } from './email';
 import { ServiceConfigStatus } from '../status/serviceConfigStatus';
 
 /**
@@ -58,20 +58,46 @@ export class ResendEmailService extends EmailService {
     return serverConfig.enableEmailIntegration;
   }
 
-  async sendReactEmail(to: string, subject: string, body: React.ReactNode): Promise<void> {
+  async sendReactEmail(
+    to: string, 
+    subject: string, 
+    body: React.ReactNode, 
+    attachments?: EmailAttachment[]
+  ): Promise<void> {
     if (!this.resend) {
       throw new Error('Email client not initialized. Check configuration.');
     }
 
     try {
-      const result = await this.resend.emails.send({
+      // Prepare email data
+      const emailData: any = {
         from: this.fromEmail,
         to: [to],
         subject,
         react: body,
+      };
+
+      // Add attachments if provided
+      if (attachments && attachments.length > 0) {
+        emailData.attachments = attachments.map(attachment => ({
+          filename: attachment.filename,
+          content: attachment.content.toString('base64'), // Convert Buffer to base64
+          contentType: attachment.contentType,
+        }));
+      }
+
+      console.log('Sending email with attachments:', {
+        to,
+        subject,
+        hasAttachments: attachments && attachments.length > 0,
+        attachmentCount: attachments?.length || 0
       });
 
+      const result = await this.resend.emails.send(emailData);
+
       if (result.error) throw new Error(result.error.message);
+      
+      console.log('Email sent successfully:', result);
     } catch (error) {
       console.error('Error sending email:', error);
       throw new Error(

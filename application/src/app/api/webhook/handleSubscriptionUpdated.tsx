@@ -1,11 +1,14 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 import * as React from 'react';
 import { SubscriptionPlanEnum, SubscriptionStatusEnum } from 'types';
-import { serverConfig } from 'settings';
+import { serverConfig } from '../../../settings';
 import { createDatabaseService } from 'services/database/databaseFactory';
 import { createEmailService } from 'services/email/emailFactory';
 import { SubscriptionUpdatedEmail } from 'services/email/templates/SubscriptionUpdatedEmail';
 import { createBillingService } from 'services/billing/billingFactory';
+import { createInvoiceService } from 'services/invoice/invoiceFactory';
+import { prepareInvoiceData } from 'services/invoice/invoiceUtlis';
+import { InvoiceEmail } from 'services/email/templates/InvoiceEmail';
 
 const PLAN_MAP: Record<string, SubscriptionPlanEnum> = {
   [serverConfig.Stripe.proPriceId!]: SubscriptionPlanEnum.PRO,
@@ -61,7 +64,7 @@ export const handleSubscriptionUpdated = async (json: any) => {
     const emailClient = await createEmailService();
 
     if (emailClient.isEmailEnabled()) {
-      // Use the new React email component for Resend
+      // Send subscription update email
       await emailClient.sendReactEmail(
         user.email,
         'Your subscription was updated',
@@ -76,6 +79,39 @@ export const handleSubscriptionUpdated = async (json: any) => {
           }}
         />
       );
+
+      // Generate and send invoice for paid plans
+      if (currentPlan.amount > 0) {
+        try {
+          const invoiceService = await createInvoiceService();
+          const invoiceConfig = await invoiceService.checkConfiguration();
+          
+          if (invoiceConfig.configured && invoiceConfig.connected) {
+            const invoiceData = prepareInvoiceData(user, currentPlan, subscription.id);
+            const generatedInvoice = await invoiceService.generateInvoice(invoiceData);
+            
+            // Send invoice email
+            await emailClient.sendReactEmail(
+              user.email,
+              generatedInvoice.subject,
+              <InvoiceEmail
+                invoiceHtml={generatedInvoice.html}
+                customerName={user.name}
+                planName={currentPlan.name}
+                amount={currentPlan.amount}
+                invoiceNumber={invoiceData.invoiceNumber}
+              />
+            );
+            
+            console.log(`✅ Invoice sent for subscription ${subscription.id}`);
+          } else {
+            console.warn(`⚠️ Invoice service not configured or connected. Invoice not sent.`);
+          }
+        } catch (invoiceError) {
+          console.error('Error generating or sending invoice:', invoiceError);
+          // Don't fail the entire webhook if invoice generation fails
+        }
+      }
     }
 
     console.log('✅ Subscription updated');

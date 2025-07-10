@@ -46,6 +46,16 @@ export const checkout = async (
       'Error creating Billing Portal session',
       (error as { message?: string }).message ?? undefined
     );
+    
+    // Provide more specific error messages
+    const errorMessage = (error as { message?: string }).message;
+    if (errorMessage?.includes('already on the')) {
+      return NextResponse.json(
+        { error: errorMessage },
+        { status: HTTP_STATUS.BAD_REQUEST }
+      );
+    }
+    
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: HTTP_STATUS.INTERNAL_SERVER_ERROR }
