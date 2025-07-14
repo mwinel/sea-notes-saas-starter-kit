@@ -2,7 +2,7 @@
  * AI Content Generation API Endpoint
  * 
  * This API endpoint provides on-demand AI content generation for note creation.
- * When users click "Generate Content with AI" in the note creation modal, this
+ * When users click "Generate Note with AI" in the note creation modal, this
  * endpoint generates helpful, actionable content using DigitalOcean's Inference API.
  * 
  * Features:

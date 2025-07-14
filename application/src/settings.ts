@@ -68,7 +68,7 @@ export const serverConfig: ServerConfig = {
 
 
 // Client-side flag for DigitalOcean Gradient AI content generation (available in browser)
-// Controls visibility of "Generate Content with AI" button in note creation
+// Controls visibility of "Generate Note with AI" button in note creation
 export const hasDigitalOceanGradientAIEnabled = process.env.NEXT_PUBLIC_DIGITALOCEAN_GRADIENTAI_ENABLED === 'true';
 
 // Server-side check for AI configuration

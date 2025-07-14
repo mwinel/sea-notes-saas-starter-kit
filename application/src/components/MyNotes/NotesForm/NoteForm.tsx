@@ -4,7 +4,7 @@
  * Unified component for creating, editing, and viewing notes with optional AI features.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Box,
   Typography,
@@ -49,6 +49,9 @@ const NoteForm: React.FC<NoteFormProps> = ({ mode, noteId, onSave, onCancel }) =
   const [toastMessage, setToastMessage] = useState('');
   const [toastSeverity, setToastSeverity] = useState<'success' | 'error'>('success');
 
+  // Ref for content field to enable auto-focus
+  const contentFieldRef = useRef<HTMLInputElement>(null);
+
   // Fetch note data for edit/view modes
   useEffect(() => {
     if ((mode === 'edit' || mode === 'view') && noteId) {
@@ -71,6 +74,13 @@ const NoteForm: React.FC<NoteFormProps> = ({ mode, noteId, onSave, onCancel }) =
       fetchNote();
     }
   }, [mode, noteId]);
+
+  // Auto-focus content field when in create mode
+  useEffect(() => {
+    if (mode === 'create' && contentFieldRef.current) {
+      contentFieldRef.current.focus();
+    }
+  }, [mode]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -187,31 +197,15 @@ const NoteForm: React.FC<NoteFormProps> = ({ mode, noteId, onSave, onCancel }) =
             {' '}
             <TextField
               id="title"
-              label="Title"
+              label="Title (optional)"
               fullWidth
               margin="normal"
-              placeholder="Enter note title"
+              placeholder="Enter note title (optional)"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               InputProps={{ readOnly: isReadOnly }}
               data-testid="note-title-input"
             />
-            
-            {/* AI Content Generation Button - only show in create mode when AI configured */}
-            {mode === 'create' && hasDigitalOceanGradientAIEnabled && (
-              <Box mb={1}>
-                <Button
-                  variant="outlined"
-                  startIcon={isGenerating ? <CircularProgress size={16} /> : '🤖'}
-                  onClick={handleGenerateContent}
-                  disabled={isGenerating}
-                  size="small"
-                  data-testid="generate-content-button"
-                >
-                  {isGenerating ? 'Generating...' : 'Generate Content with AI'}
-                </Button>
-              </Box>
-            )}
             
             <TextField
               id="content"
@@ -225,22 +219,41 @@ const NoteForm: React.FC<NoteFormProps> = ({ mode, noteId, onSave, onCancel }) =
               onChange={(e) => setContent(e.target.value)}
               required
               InputProps={{ readOnly: isReadOnly }}
+              inputRef={contentFieldRef}
               data-testid="note-content-input"
             />{' '}
-            <Box display="flex" justifyContent="flex-end" gap={1} mt={2}>
-              <Button onClick={onCancel} data-testid="note-cancel-button">
-                {mode === 'view' ? 'Close' : 'Cancel'}
-              </Button>
-              {mode !== 'view' && (
+            <Box display="flex" justifyContent="space-between" alignItems="center" mt={2}>
+              {/* AI Content Generation Button - only show in create mode when AI configured */}
+              {mode === 'create' && hasDigitalOceanGradientAIEnabled ? (
                 <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  data-testid="note-save-button"
+                  variant="outlined"
+                  startIcon={isGenerating ? <CircularProgress size={16} /> : '✨'}
+                  onClick={handleGenerateContent}
+                  disabled={isGenerating}
+                  size="small"
+                  data-testid="generate-content-button"
                 >
-                  {mode === 'edit' ? 'Save Changes' : 'Save Note'}
+                  {isGenerating ? 'Generating...' : 'Generate Note with GradientAI'}
                 </Button>
+              ) : (
+                <Box /> // Empty box to maintain spacing
               )}
+              
+              <Box display="flex" gap={1}>
+                <Button onClick={onCancel} data-testid="note-cancel-button">
+                  {mode === 'view' ? 'Close' : 'Cancel'}
+                </Button>
+                {mode !== 'view' && (
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    data-testid="note-save-button"
+                  >
+                    {mode === 'edit' ? 'Save Changes' : 'Save Note'}
+                  </Button>
+                )}
+              </Box>
             </Box>
           </form>
         </CardContent>
