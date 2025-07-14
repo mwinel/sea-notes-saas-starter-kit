@@ -79,14 +79,20 @@ const MyNotes: React.FC = () => {
     
     // Add to recently updated tracking for visual indicator
     setRecentlyUpdatedTitles(prev => new Set(prev).add(noteId));
-    
+
+    // Clear any existing timeout for this noteId
+    if (timeoutRef.current[noteId]) {
+      clearTimeout(timeoutRef.current[noteId]);
+    }
+
     // Remove from tracking after animation completes
-    setTimeout(() => {
+    timeoutRef.current[noteId] = setTimeout(() => {
       setRecentlyUpdatedTitles(prev => {
         const newSet = new Set(prev);
         newSet.delete(noteId);
         return newSet;
       });
+      delete timeoutRef.current[noteId];
     }, 3000); // 3 second animation duration
   }, []);
 
