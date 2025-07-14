@@ -76,7 +76,7 @@ const features: FeatureCardProps[] = [
 ];
 
 /**
- * Home page component for the DigitalOcean SaaS starter kit.
+ * Home page component for SeaNotes.
  */
 const Home = () => (
   <Box>
@@ -85,7 +85,7 @@ const Home = () => (
       <Container maxWidth="md">
         <Stack spacing={3} textAlign="center">
           <Typography variant="h1" component="h1" fontWeight="bold">
-            Launch Your SaaS on DigitalOcean
+            Launch Your SaaS with SeaNotes
           </Typography>
           <Typography variant="h5" component="p">
             A complete starter kit for building and deploying your SaaS application with ease.
@@ -162,7 +162,7 @@ const Home = () => (
                   Ready to Launch Your SaaS?
                 </Typography>
                 <Typography variant="h6" color="text.secondary">
-                  Get started with our DigitalOcean Starter Kit and bring your ideas to life.
+                  Get started with SeaNotes and bring your ideas to life.
                 </Typography>
                 <Box>
                   <Button

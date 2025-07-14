@@ -69,7 +69,7 @@ export default function Footer() {
           ))}
         </Box>
         <Box mt={2} textAlign="center" fontSize={14}>
-          <Typography variant="body2">© 2025 DO Starter Kit. All rights reserved.</Typography>
+          <Typography variant="body2">© 2025 SeaNotes. All rights reserved.</Typography>
         </Box>
       </Container>
     </Box>
