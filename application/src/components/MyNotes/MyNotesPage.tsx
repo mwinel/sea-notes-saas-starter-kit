@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, ChangeEvent } from 'react';
+import React, { useState, useEffect, useCallback, ChangeEvent, useRef } from 'react';
 import { Dialog, DialogContent } from '@mui/material';
 import { Note, NotesApiClient } from 'lib/api/notes';
 import NoteForm from './NotesForm/NoteForm';
@@ -43,6 +43,10 @@ const MyNotes: React.FC = () => {
   const [notes, setNotes] = useState<Note[]>([]);
   const [totalNotes, setTotalNotes] = useState(0);
   const [recentlyUpdatedTitles, setRecentlyUpdatedTitles] = useState<Set<string>>(new Set());
+  
+  // Ref to track timeout IDs for cleanup
+  const timeoutRef = useRef<Record<string, NodeJS.Timeout>>({});
+  
   // Fetch notes from API
   const fetchNotes = useCallback(async () => {
     try {
@@ -102,7 +106,9 @@ const MyNotes: React.FC = () => {
   // Cleanup animation tracking on unmount
   useEffect(() => {
     return () => {
-      // Clear any pending timeouts when component unmounts
+      // Clear all pending timeouts when component unmounts
+      Object.values(timeoutRef.current).forEach(clearTimeout);
+      timeoutRef.current = {};
       setRecentlyUpdatedTitles(new Set());
     };
   }, []);
