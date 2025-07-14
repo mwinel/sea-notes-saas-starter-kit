@@ -53,12 +53,22 @@ export async function GET(request: NextRequest) {
 
     const userId = session.user.id;
 
+    // Determine allowed origin for CORS (security: don't use wildcard)
+    const allowedOrigins = [
+      process.env.BASE_URL,
+      'http://localhost:3000', // Development fallback
+      'https://localhost:3000'  // HTTPS development
+    ].filter(Boolean);
+
+    const origin = request.headers.get('origin');
+    const corsOrigin = allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
+
     // Create SSE response headers
     const headers = new Headers({
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache',
       'Connection': 'keep-alive',
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': corsOrigin,
       'Access-Control-Allow-Headers': 'Cache-Control'
     });
 
