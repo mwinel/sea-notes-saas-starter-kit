@@ -88,7 +88,7 @@ const SidebarContent = ({ onNavigate }: { onNavigate?: () => void }) => {
     <>
       <SidebarHeader justifyContent="space-between">
         <Typography variant="h5" fontWeight={600}>
-          SaaS App
+          🐳 SeaNotes
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>{getProfileIcon()}</Box>
       </SidebarHeader>
