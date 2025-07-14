@@ -21,7 +21,7 @@ export class DigitalOceanInferenceService {
 
     this.client = new OpenAI({
       apiKey: serverConfig.AI.doInferenceApiKey,
-      baseURL: 'https://inference.do-ai.run/v1/',
+      baseURL: 'https://inference.do-ai.run/v1',
     });
   }
 
