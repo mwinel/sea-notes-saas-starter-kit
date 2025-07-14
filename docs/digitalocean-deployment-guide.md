@@ -30,7 +30,6 @@ Before you begin, make sure you have:
       ![Getting DO API keys](./images/do-api.png)
    - Give it a name (e.g., "SaaS Deployment")
    - Ensure both read and write scopes are selected or you can also select `Full Access` and then click **Generate Token**
-      ![Generating token with needed access](./images/generate-token.png)
    - Copy and store the token securely (you won't be able to see it again)
 
 3. **Authenticate with doctl**:
@@ -96,7 +95,8 @@ The App Spec is a YAML file that defines how your application should be deployed
 > - `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_FREE_PRICE_ID`, `STRIPE_PRO_PRICE_ID`, `STRIPE_PRO_GIFT_PRICE_ID`, `STRIPE_PORTAL_CONFIG_ID`: Your Stripe configuration
 > - `BASE_URL`: Will be set after deployment (used for callbacks)
 
-_Alternatively, you can also use the console to deploy the application. To do that, you can follow the [steps mentioned in the documentation](https://docs.digitalocean.com/products/app-platform/how-to/create-apps/) and also make sure to add the above [environment variables in the application](https://docs.digitalocean.com/products/app-platform/how-to/use-environment-variables/) from the `Settings` tab._
+**Prefer using the DigitalOcean dashboard instead?**
+You can also deploy your app directly through the console by following [How to Create Apps in App Platform](https://docs.digitalocean.com/products/app-platform/how-to/create-apps/). Just make sure to also add your environment variables manually as explained in [How to Use Environment Variables in App Platform](https://docs.digitalocean.com/products/app-platform/how-to/use-environment-variables/).
 
 ### Step 4: For Subsequent Deployments
 
