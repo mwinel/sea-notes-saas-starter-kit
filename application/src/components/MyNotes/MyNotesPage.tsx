@@ -11,6 +11,7 @@ import PageContainer from '../Common/PageContainer/PageContainer';
 import ConfirmationDialog from './ConfirmationDialog/ConfirmationDialog';
 import Toast from '../Common/Toast/Toast';
 import Pagination from '../Common/Pagination/Pagination';
+import { useNotesSSE } from '../../hooks/useNotesSSE';
 
 // Create an instance of the ApiClient
 const apiClient = new NotesApiClient();
@@ -65,6 +66,20 @@ const MyNotes: React.FC = () => {
     fetchNotes();
   }, [fetchNotes]);
 
+  // Handle real-time title updates via SSE
+  const handleTitleUpdate = useCallback((noteId: string, newTitle: string) => {
+    setNotes(prevNotes => 
+      prevNotes.map(note => 
+        note.id === noteId 
+          ? { ...note, title: newTitle }
+          : note
+      )
+    );
+  }, []);
+
+  // Initialize SSE connection for real-time updates
+  useNotesSSE(handleTitleUpdate);
+
   const handleSortChange = (
     event: ChangeEvent<HTMLInputElement> | (Event & { target: { value: unknown; name: string } }),
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -77,7 +92,7 @@ const MyNotes: React.FC = () => {
     setSearchQuery(event.target.value);
   };
 
-  const handleCreateNote = async (noteData: { title: string; content: string }) => {
+  const handleCreateNote = async (noteData: { title?: string; content: string }) => {
     try {
       await apiClient.createNote(noteData);
       setIsCreateModalOpen(false);
@@ -104,7 +119,7 @@ const MyNotes: React.FC = () => {
       setToastOpen(true);
     }
   };
-  const handleUpdateNote = async (noteData: { title: string; content: string }) => {
+  const handleUpdateNote = async (noteData: { title?: string; content: string }) => {
     if (!selectedNoteId) return;
 
     try {

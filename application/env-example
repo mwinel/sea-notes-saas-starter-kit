@@ -104,6 +104,19 @@ STRIPE_PORTAL_CONFIG_ID=          # ID for customer portal configuration
 # In the app: Used for generating absolute URLs for email links and Stripe callbacks
 BASE_URL=
 
+# ====================
+# AI CONFIGURATION (DigitalOcean Inference API)
+# ====================
+# AI title generation for notes using DigitalOcean's inference API
+# When configured: Users only enter note content, titles are auto-generated
+# When not configured: Users enter both title and content (traditional flow)
+# In the app: Used by src/services/ai/titleGenerationService.ts for server-side generation
+DO_INFERENCE_API_KEY=             # Your DigitalOcean Inference API key
+
+# Client-side flag to enable AI title generation UI features
+# Set to 'true' when you want to enable AI-powered title generation
+NEXT_PUBLIC_AI_TITLE_GENERATION=true
+
 # Optional: Set logging level (default: info)
 # Controls the verbosity of application logs
 # Valid values: error, warn, info, debug

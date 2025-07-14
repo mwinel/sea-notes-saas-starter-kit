@@ -5,6 +5,9 @@ export interface ServerConfig {
   billingProvider: string;
   enableEmailIntegration: boolean;
   baseURL?: string;
+  AI: {
+    doInferenceApiKey?: string;
+  };
   Database: {
     url?: string;
   };
@@ -58,4 +61,16 @@ export const serverConfig: ServerConfig = {
     webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
     portalConfigId: process.env.STRIPE_PORTAL_CONFIG_ID,
   },
+  AI: {
+    doInferenceApiKey: process.env.DO_INFERENCE_API_KEY,
+  },
 };
+
+
+// Client-side flag for AI content generation (available in browser)
+// Controls visibility of "Generate Content with AI" button in note creation
+export const hasAIConfigured = process.env.NEXT_PUBLIC_AI_CONFIGURED === 'true';
+
+// Server-side check for AI configuration
+// Used by API routes and background services that require AI functionality
+export const hasAIConfiguredServer = !!serverConfig.AI.doInferenceApiKey;
