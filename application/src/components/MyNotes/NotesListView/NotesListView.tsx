@@ -23,6 +23,7 @@ interface NotesListViewProps {
   onViewNote: (noteId: string) => void;
   onEditNote: (noteId: string) => void;
   onDeleteNote: (noteId: string) => void;
+  recentlyUpdatedTitles: Set<string>;
 }
 
 /**
@@ -36,6 +37,7 @@ const NotesListView: React.FC<NotesListViewProps> = ({
   onViewNote,
   onEditNote,
   onDeleteNote,
+  recentlyUpdatedTitles,
 }) => {
   if (isLoading) {
     return (
@@ -74,7 +76,27 @@ const NotesListView: React.FC<NotesListViewProps> = ({
         <TableBody>
           {notes.map((note) => (
             <TableRow key={note.id} hover data-testid={`note-row-${note.id}`}>
-              <TableCell data-testid={`note-title-cell-${note.id}`}>
+              <TableCell 
+                data-testid={`note-title-cell-${note.id}`}
+                sx={{
+                  animation: recentlyUpdatedTitles.has(note.id) 
+                    ? 'titleUpdateFlash 3s ease-out' 
+                    : 'none',
+                  '@keyframes titleUpdateFlash': {
+                    '0%': { 
+                      backgroundColor: 'rgba(76, 175, 80, 0.3)', // Light green
+                      borderRadius: '4px'
+                    },
+                    '100%': { 
+                      backgroundColor: 'transparent',
+                      borderRadius: '4px'
+                    }
+                  },
+                  '@media (prefers-reduced-motion: reduce)': {
+                    animation: 'none', // Disable animation for users who prefer reduced motion
+                  }
+                }}
+              >
                 <Typography variant="body1" data-testid={`note-title-${note.id}`}>
                   {note.title}
                 </Typography>

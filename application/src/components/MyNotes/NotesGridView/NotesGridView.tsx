@@ -19,6 +19,7 @@ interface NotesGridViewProps {
   onViewNote: (noteId: string) => void;
   onEditNote: (noteId: string) => void;
   onDeleteNote: (noteId: string) => void;
+  recentlyUpdatedTitles: Set<string>;
 }
 
 /**
@@ -32,6 +33,7 @@ const NotesGridView: React.FC<NotesGridViewProps> = ({
   onViewNote,
   onEditNote,
   onDeleteNote,
+  recentlyUpdatedTitles,
 }) => {
   if (isLoading) {
     return (
@@ -79,7 +81,31 @@ const NotesGridView: React.FC<NotesGridViewProps> = ({
         >
           <CardContent sx={{ flexGrow: 1 }}>
             <Stack spacing={2}>
-              <Typography variant="h6" component="h3" data-testid={`note-title-${note.id}`}>
+              <Typography 
+                variant="h6" 
+                component="h3" 
+                data-testid={`note-title-${note.id}`}
+                sx={{
+                  animation: recentlyUpdatedTitles.has(note.id) 
+                    ? 'titleUpdateFlash 3s ease-out' 
+                    : 'none',
+                  '@keyframes titleUpdateFlash': {
+                    '0%': { 
+                      backgroundColor: 'rgba(76, 175, 80, 0.3)', // Light green
+                      borderRadius: '4px',
+                      padding: '2px 4px'
+                    },
+                    '100%': { 
+                      backgroundColor: 'transparent',
+                      borderRadius: '4px',
+                      padding: '2px 4px'
+                    }
+                  },
+                  '@media (prefers-reduced-motion: reduce)': {
+                    animation: 'none', // Disable animation for users who prefer reduced motion
+                  }
+                }}
+              >
                 {note.title}
               </Typography>{' '}
               <Typography

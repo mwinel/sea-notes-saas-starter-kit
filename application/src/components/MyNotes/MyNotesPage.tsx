@@ -42,6 +42,7 @@ const MyNotes: React.FC = () => {
   const [pageSize, setPageSize] = useState(10);
   const [notes, setNotes] = useState<Note[]>([]);
   const [totalNotes, setTotalNotes] = useState(0);
+  const [recentlyUpdatedTitles, setRecentlyUpdatedTitles] = useState<Set<string>>(new Set());
   // Fetch notes from API
   const fetchNotes = useCallback(async () => {
     try {
@@ -75,10 +76,30 @@ const MyNotes: React.FC = () => {
           : note
       )
     );
+    
+    // Add to recently updated tracking for visual indicator
+    setRecentlyUpdatedTitles(prev => new Set(prev).add(noteId));
+    
+    // Remove from tracking after animation completes
+    setTimeout(() => {
+      setRecentlyUpdatedTitles(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(noteId);
+        return newSet;
+      });
+    }, 3000); // 3 second animation duration
   }, []);
 
   // Initialize SSE connection for real-time updates
   useNotesSSE(handleTitleUpdate);
+
+  // Cleanup animation tracking on unmount
+  useEffect(() => {
+    return () => {
+      // Clear any pending timeouts when component unmounts
+      setRecentlyUpdatedTitles(new Set());
+    };
+  }, []);
 
   const handleSortChange = (
     event: ChangeEvent<HTMLInputElement> | (Event & { target: { value: unknown; name: string } }),
@@ -242,6 +263,7 @@ const MyNotes: React.FC = () => {
           onViewNote={handleViewNote}
           onEditNote={handleEditNote}
           onDeleteNote={handleDeleteNote}
+          recentlyUpdatedTitles={recentlyUpdatedTitles}
         />
       ) : (
         <NotesGridView
@@ -251,6 +273,7 @@ const MyNotes: React.FC = () => {
           onViewNote={handleViewNote}
           onEditNote={handleEditNote}
           onDeleteNote={handleDeleteNote}
+          recentlyUpdatedTitles={recentlyUpdatedTitles}
         />
       )}
 
