@@ -42,10 +42,12 @@ This is a production-ready SaaS Starter Kit for developers who want to build and
 - 📧 Email system (Resend.com integration)
 - 🖼️ File uploads and storage (DigitalOcean Spaces)
 - 🗄️ Database integration (DigitalOcean PostgreSQL)
+- 🤖 AI-powered content generation (DigitalOcean Inference API)
+- ✨ Automatic title generation for notes
 - 🚀 One-click deploy to DigitalOcean App Platform
 - 📊 User dashboard
 - 📝 Example notes app functionality (create, edit, delete notes)
-- ✨ Modern, responsive UI (Next.js, React, Material UI)
+- 🎨 Modern, responsive UI (Next.js, React, Material UI)
 
 Developers can use this kit as a clean, flexible starting point for your own SaaS app — or as a reference app to see how all the core pieces fit together on DigitalOcean.
 
@@ -64,6 +66,7 @@ It shows how real-world features are implemented using DO services. The included
 - **Email**: Resend.com
 - **File Storage**: DigitalOcean Spaces
 - **Payments**: Stripe
+- **AI**: DigitalOcean GradientAI Serverless Inference API
 - **Deployment**: DigitalOcean App Platform
 
 ## Who It's For
@@ -400,7 +403,69 @@ This starter kit includes a complete subscription billing system powered by Stri
 
 > **Note:** For detailed instructions, including webhook setup, adding custom products, and troubleshooting, see the [Stripe Integration Guide](./docs/stripe-integration-guide.md).
 
-## Part 5: Deploy to DigitalOcean App Platform
+## Part 5: Set Up AI Features (DigitalOcean Inference API)
+
+This starter kit includes AI-powered features that enhance the note-taking experience using DigitalOcean's Inference API. These features are completely optional - your app works perfectly without them, but they add intelligent automation when enabled.
+
+### AI Features Included:
+
+- **AI Integration Demo** - Users can click "Generate Note with AI" to see how DigitalOcean's Inference API works (demonstrates AI integration patterns)
+- **Automatic Title Generation** - When users create notes without titles, the system generates relevant titles in the background
+- **Graceful Fallbacks** - If AI services are unavailable, the app continues working normally with timestamp-based titles
+
+### Setup Steps:
+
+1. **Get Your DigitalOcean Inference API Key**
+
+   - Log in to your [DigitalOcean dashboard](https://cloud.digitalocean.com/)
+   - Navigate to **Agent Platform** in the left sidebar → click **Serverless Inference**
+   ![digitalocean_agent_platform_interface](docs/images/digitalocean_agent_platform_interface.png)
+   - Click the **"Create model access key"** button
+   - Give your key a descriptive name (e.g., "my-saas-app-ai-key")
+   ![add_model_access_key_screenshot](docs/images/add_model_access_key_screenshot.png)
+   - Click **Save** and copy the generated key immediately
+   ![alt text](docs/images/model_access_keys_digitalocean.png)
+   - Store this key securely - you'll need it for your environment configuration
+   
+
+   > **Note:** This single key provides access to all models in DigitalOcean's Serverless Inference service.
+
+2. **Update Your `.env` File**
+   
+   Update the following values in your `.env` file with your actual API key:
+
+   ```
+   DO_INFERENCE_API_KEY=your-digitalocean-inference-api-key
+   NEXT_PUBLIC_DIGITALOCEAN_GRADIENTAI_ENABLED=true
+   ```
+
+   - `DO_INFERENCE_API_KEY`: Your DigitalOcean Inference API key (server-side)
+   - `NEXT_PUBLIC_DIGITALOCEAN_GRADIENTAI_ENABLED`: Enables DigitalOcean Gradient AI features in the frontend (client-side)
+
+3. **Restart Your Development Server**
+
+   After updating your `.env`, restart the server:
+
+   ```bash
+   npm run dev
+   ```
+
+4. **Test the AI Features**
+
+   - **Content Generation**: When creating a new note, look for the "Generate Note with AI" button
+   - **Auto-Title Generation**: Create a note without a title and watch as an AI-generated title appears automatically
+   - **System Status**: Check [http://localhost:3000/system-status](http://localhost:3000/system-status) to confirm AI services are connected
+
+### How It Works:
+
+- **User-Triggered**: Content generation only happens when users click the AI button
+- **Background Processing**: Title generation happens automatically but doesn't block note creation
+- **Smart Fallbacks**: If AI generation fails, the app uses timestamp-based titles instead
+- **No Dependencies**: Your app continues to work normally even if AI features are disabled
+
+> **Note:** AI features use DigitalOcean's managed inference service, which provides reliable AI capabilities without the need to manage your own AI infrastructure.
+
+## Part 6: Deploy to DigitalOcean App Platform
 
 This starter kit is designed to deploy seamlessly to DigitalOcean App Platform. You have two options for deployment:
 
