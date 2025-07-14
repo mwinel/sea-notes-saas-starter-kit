@@ -21,7 +21,7 @@ import {
   Snackbar,
 } from '@mui/material';
 import { NotesApiClient } from 'lib/api/notes';
-import { hasAIConfigured } from '../../../settings';
+import { hasDigitalOceanGradientAIEnabled } from '../../../settings';
 
 const apiClient = new NotesApiClient();
 
@@ -198,7 +198,7 @@ const NoteForm: React.FC<NoteFormProps> = ({ mode, noteId, onSave, onCancel }) =
             />
             
             {/* AI Content Generation Button - only show in create mode when AI configured */}
-            {mode === 'create' && hasAIConfigured && (
+            {mode === 'create' && hasDigitalOceanGradientAIEnabled && (
               <Box mb={1}>
                 <Button
                   variant="outlined"

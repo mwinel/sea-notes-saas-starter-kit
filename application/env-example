@@ -113,9 +113,9 @@ BASE_URL=
 # In the app: Used by src/services/ai/titleGenerationService.ts for server-side generation
 DO_INFERENCE_API_KEY=             # Your DigitalOcean Inference API key
 
-# Client-side flag to enable AI title generation UI features
-# Set to 'true' when you want to enable AI-powered title generation
-NEXT_PUBLIC_AI_TITLE_GENERATION=true
+# Client-side flag to enable DigitalOcean Gradient AI features in the UI
+# Set to 'true' when you want to enable AI-powered content generation
+NEXT_PUBLIC_DIGITALOCEAN_GRADIENTAI_ENABLED=true
 
 # Optional: Set logging level (default: info)
 # Controls the verbosity of application logs
