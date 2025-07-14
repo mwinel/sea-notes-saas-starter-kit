@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import { Edit, Visibility, Delete } from '@mui/icons-material';
 import { Note } from 'lib/api/notes';
+import { getTitleUpdateFlashAnimation } from '../../Common/animations/titleUpdateFlash';
 
 interface NotesListViewProps {
   notes: Note[];
@@ -78,24 +79,7 @@ const NotesListView: React.FC<NotesListViewProps> = ({
             <TableRow key={note.id} hover data-testid={`note-row-${note.id}`}>
               <TableCell 
                 data-testid={`note-title-cell-${note.id}`}
-                sx={{
-                  animation: recentlyUpdatedTitles.has(note.id) 
-                    ? 'titleUpdateFlash 3s ease-out' 
-                    : 'none',
-                  '@keyframes titleUpdateFlash': {
-                    '0%': { 
-                      backgroundColor: 'rgba(76, 175, 80, 0.3)', // Light green
-                      borderRadius: '4px'
-                    },
-                    '100%': { 
-                      backgroundColor: 'transparent',
-                      borderRadius: '4px'
-                    }
-                  },
-                  '@media (prefers-reduced-motion: reduce)': {
-                    animation: 'none', // Disable animation for users who prefer reduced motion
-                  }
-                }}
+                sx={getTitleUpdateFlashAnimation(recentlyUpdatedTitles.has(note.id))}
               >
                 <Typography variant="body1" data-testid={`note-title-${note.id}`}>
                   {note.title}

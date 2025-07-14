@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { Edit, Visibility, Delete } from '@mui/icons-material';
 import { Note } from 'lib/api/notes';
+import { getTitleUpdateFlashAnimation } from '../../Common/animations/titleUpdateFlash';
 
 interface NotesGridViewProps {
   notes: Note[];
@@ -85,26 +86,7 @@ const NotesGridView: React.FC<NotesGridViewProps> = ({
                 variant="h6" 
                 component="h3" 
                 data-testid={`note-title-${note.id}`}
-                sx={{
-                  animation: recentlyUpdatedTitles.has(note.id) 
-                    ? 'titleUpdateFlash 3s ease-out' 
-                    : 'none',
-                  '@keyframes titleUpdateFlash': {
-                    '0%': { 
-                      backgroundColor: 'rgba(76, 175, 80, 0.3)', // Light green
-                      borderRadius: '4px',
-                      padding: '2px 4px'
-                    },
-                    '100%': { 
-                      backgroundColor: 'transparent',
-                      borderRadius: '4px',
-                      padding: '2px 4px'
-                    }
-                  },
-                  '@media (prefers-reduced-motion: reduce)': {
-                    animation: 'none', // Disable animation for users who prefer reduced motion
-                  }
-                }}
+                sx={getTitleUpdateFlashAnimation(recentlyUpdatedTitles.has(note.id), true)}
               >
                 {note.title}
               </Typography>{' '}
