@@ -30,6 +30,7 @@ Before you begin, make sure you have:
       ![Getting DO API keys](./images/do-api.png)
    - Give it a name (e.g., "SaaS Deployment")
    - Ensure both read and write scopes are selected or you can also select `Full Access` and then click **Generate Token**
+   ![Generating token with needed access](./images/generate-token.png)
    - Copy and store the token securely (you won't be able to see it again)
 
 3. **Authenticate with doctl**:
