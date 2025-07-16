@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, ChangeEvent } from 'react';
+import React, { useState, useEffect, useCallback, ChangeEvent, useRef } from 'react';
 import { Dialog, DialogContent } from '@mui/material';
 import { Note, NotesApiClient } from 'lib/api/notes';
 import NoteForm from './NotesForm/NoteForm';
@@ -11,6 +11,7 @@ import PageContainer from '../Common/PageContainer/PageContainer';
 import ConfirmationDialog from './ConfirmationDialog/ConfirmationDialog';
 import Toast from '../Common/Toast/Toast';
 import Pagination from '../Common/Pagination/Pagination';
+import { useNotesSSE } from '../../hooks/useNotesSSE';
 
 // Create an instance of the ApiClient
 const apiClient = new NotesApiClient();
@@ -41,6 +42,11 @@ const MyNotes: React.FC = () => {
   const [pageSize, setPageSize] = useState(10);
   const [notes, setNotes] = useState<Note[]>([]);
   const [totalNotes, setTotalNotes] = useState(0);
+  const [recentlyUpdatedTitles, setRecentlyUpdatedTitles] = useState<Set<string>>(new Set());
+  
+  // Ref to track timeout IDs for cleanup
+  const timeoutRef = useRef<Record<string, NodeJS.Timeout>>({});
+  
   // Fetch notes from API
   const fetchNotes = useCallback(async () => {
     try {
@@ -65,6 +71,48 @@ const MyNotes: React.FC = () => {
     fetchNotes();
   }, [fetchNotes]);
 
+  // Handle real-time title updates via SSE
+  const handleTitleUpdate = useCallback((noteId: string, newTitle: string) => {
+    setNotes(prevNotes => 
+      prevNotes.map(note => 
+        note.id === noteId 
+          ? { ...note, title: newTitle }
+          : note
+      )
+    );
+    
+    // Add to recently updated tracking for visual indicator
+    setRecentlyUpdatedTitles(prev => new Set(prev).add(noteId));
+
+    // Clear any existing timeout for this noteId
+    if (timeoutRef.current[noteId]) {
+      clearTimeout(timeoutRef.current[noteId]);
+    }
+
+    // Remove from tracking after animation completes
+    timeoutRef.current[noteId] = setTimeout(() => {
+      setRecentlyUpdatedTitles(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(noteId);
+        return newSet;
+      });
+      delete timeoutRef.current[noteId];
+    }, 3000); // 3 second animation duration
+  }, []);
+
+  // Initialize SSE connection for real-time updates
+  useNotesSSE(handleTitleUpdate);
+
+  // Cleanup animation tracking on unmount
+  useEffect(() => {
+    return () => {
+      // Clear all pending timeouts when component unmounts
+      Object.values(timeoutRef.current).forEach(clearTimeout);
+      timeoutRef.current = {};
+      setRecentlyUpdatedTitles(new Set());
+    };
+  }, []);
+
   const handleSortChange = (
     event: ChangeEvent<HTMLInputElement> | (Event & { target: { value: unknown; name: string } }),
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -77,7 +125,7 @@ const MyNotes: React.FC = () => {
     setSearchQuery(event.target.value);
   };
 
-  const handleCreateNote = async (noteData: { title: string; content: string }) => {
+  const handleCreateNote = async (noteData: { title?: string; content: string }) => {
     try {
       await apiClient.createNote(noteData);
       setIsCreateModalOpen(false);
@@ -104,7 +152,7 @@ const MyNotes: React.FC = () => {
       setToastOpen(true);
     }
   };
-  const handleUpdateNote = async (noteData: { title: string; content: string }) => {
+  const handleUpdateNote = async (noteData: { title?: string; content: string }) => {
     if (!selectedNoteId) return;
 
     try {
@@ -227,6 +275,7 @@ const MyNotes: React.FC = () => {
           onViewNote={handleViewNote}
           onEditNote={handleEditNote}
           onDeleteNote={handleDeleteNote}
+          recentlyUpdatedTitles={recentlyUpdatedTitles}
         />
       ) : (
         <NotesGridView
@@ -236,6 +285,7 @@ const MyNotes: React.FC = () => {
           onViewNote={handleViewNote}
           onEditNote={handleEditNote}
           onDeleteNote={handleDeleteNote}
+          recentlyUpdatedTitles={recentlyUpdatedTitles}
         />
       )}
 

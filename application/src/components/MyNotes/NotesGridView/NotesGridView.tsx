@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { Edit, Visibility, Delete } from '@mui/icons-material';
 import { Note } from 'lib/api/notes';
+import { getTitleUpdateFlashAnimation } from '../../Common/animations/titleUpdateFlash';
 
 interface NotesGridViewProps {
   notes: Note[];
@@ -19,6 +20,7 @@ interface NotesGridViewProps {
   onViewNote: (noteId: string) => void;
   onEditNote: (noteId: string) => void;
   onDeleteNote: (noteId: string) => void;
+  recentlyUpdatedTitles: Set<string>;
 }
 
 /**
@@ -32,6 +34,7 @@ const NotesGridView: React.FC<NotesGridViewProps> = ({
   onViewNote,
   onEditNote,
   onDeleteNote,
+  recentlyUpdatedTitles,
 }) => {
   if (isLoading) {
     return (
@@ -79,7 +82,12 @@ const NotesGridView: React.FC<NotesGridViewProps> = ({
         >
           <CardContent sx={{ flexGrow: 1 }}>
             <Stack spacing={2}>
-              <Typography variant="h6" component="h3" data-testid={`note-title-${note.id}`}>
+              <Typography 
+                variant="h6" 
+                component="h3" 
+                data-testid={`note-title-${note.id}`}
+                sx={getTitleUpdateFlashAnimation(recentlyUpdatedTitles.has(note.id), true)}
+              >
                 {note.title}
               </Typography>{' '}
               <Typography

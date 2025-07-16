@@ -1,4 +1,10 @@
-import React, { useState, useEffect } from 'react';
+/**
+ * NoteForm Component with AI Content Generation
+ * 
+ * Unified component for creating, editing, and viewing notes with optional AI features.
+ */
+
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Box,
   Typography,
@@ -7,21 +13,27 @@ import {
   Card,
   CardContent,
   CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Alert,
+  Snackbar,
 } from '@mui/material';
 import { NotesApiClient } from 'lib/api/notes';
+import { hasDigitalOceanGradientAIEnabled } from '../../../settings';
 
 const apiClient = new NotesApiClient();
 
 interface NoteFormProps {
   mode: 'create' | 'edit' | 'view';
   noteId?: string;
-  onSave?: (note: { id?: string; title: string; content: string }) => void;
+  onSave?: (note: { id?: string; title?: string; content: string }) => void;
   onCancel?: () => void;
 }
 
 /**
- * Unified NoteForm component
- * This component handles creating, editing, and viewing notes with different UI states
+ * NoteForm component for creating, editing, and viewing notes
  */
 const NoteForm: React.FC<NoteFormProps> = ({ mode, noteId, onSave, onCancel }) => {
   const [title, setTitle] = useState('');
@@ -29,6 +41,16 @@ const NoteForm: React.FC<NoteFormProps> = ({ mode, noteId, onSave, onCancel }) =
   const [createdAt, setCreatedAt] = useState<string>('');
   const [loading, setLoading] = useState(mode !== 'create');
   const [error, setError] = useState<string | null>(null);
+  
+  // AI content generation states
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastSeverity, setToastSeverity] = useState<'success' | 'error'>('success');
+
+  // Ref for content field to enable auto-focus
+  const contentFieldRef = useRef<HTMLInputElement>(null);
 
   // Fetch note data for edit/view modes
   useEffect(() => {
@@ -53,13 +75,76 @@ const NoteForm: React.FC<NoteFormProps> = ({ mode, noteId, onSave, onCancel }) =
     }
   }, [mode, noteId]);
 
+  // Auto-focus content field when in create mode
+  useEffect(() => {
+    if (mode === 'create' && contentFieldRef.current) {
+      contentFieldRef.current.focus();
+    }
+  }, [mode]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (onSave) {
-      const noteData =
-        mode === 'edit' && noteId ? { id: noteId, title, content } : { title, content };
+      let noteData;
+      
+      if (mode === 'edit' && noteId) {
+        // Edit mode: always include title and content
+        noteData = { id: noteId, title, content };
+      } else {
+        // Create mode: include title (if provided) and content
+        noteData = title ? { title, content } : { content };
+      }
+      
       onSave(noteData);
+    }
+  };
+
+  // AI content generation functions
+  const showToastMessage = (message: string, severity: 'success' | 'error' = 'success') => {
+    setToastMessage(message);
+    setToastSeverity(severity);
+    setShowToast(true);
+  };
+
+  const handleGenerateContent = async () => {
+    // If content already exists, show confirmation dialog
+    if (content && content.trim().length > 0) {
+      setShowConfirmDialog(true);
+      return;
+    }
+
+    // Generate content immediately if textarea is empty
+    await generateAIContent();
+  };
+
+  const confirmReplaceContent = async () => {
+    setShowConfirmDialog(false);
+    await generateAIContent();
+  };
+
+  const generateAIContent = async () => {
+    setIsGenerating(true);
+    try {
+      const response = await fetch('/api/ai/generate-content', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}),
+      });
+
+      if (!response.ok) {
+        throw new Error('Content generation failed. Please try again.');
+      }
+
+      const { content: generatedContent } = await response.json();
+      setContent(generatedContent);
+      showToastMessage('Content generated successfully!');
+    } catch (error) {
+      console.error('Content generation failed:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Content generation temporarily unavailable.';
+      showToastMessage(errorMessage, 'error');
+    } finally {
+      setIsGenerating(false);
     }
   };
   // Show loading state
@@ -92,6 +177,7 @@ const NoteForm: React.FC<NoteFormProps> = ({ mode, noteId, onSave, onCancel }) =
   }
 
   const isReadOnly = mode === 'view';
+
   return (
     <Box>
       {createdAt && (
@@ -111,16 +197,16 @@ const NoteForm: React.FC<NoteFormProps> = ({ mode, noteId, onSave, onCancel }) =
             {' '}
             <TextField
               id="title"
-              label="Title"
+              label="Title (optional)"
               fullWidth
               margin="normal"
-              placeholder="Enter note title"
+              placeholder="Enter note title (optional)"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              required
               InputProps={{ readOnly: isReadOnly }}
               data-testid="note-title-input"
             />
+            
             <TextField
               id="content"
               label="Content"
@@ -133,26 +219,83 @@ const NoteForm: React.FC<NoteFormProps> = ({ mode, noteId, onSave, onCancel }) =
               onChange={(e) => setContent(e.target.value)}
               required
               InputProps={{ readOnly: isReadOnly }}
+              inputRef={contentFieldRef}
               data-testid="note-content-input"
             />{' '}
-            <Box display="flex" justifyContent="flex-end" gap={1} mt={2}>
-              <Button onClick={onCancel} data-testid="note-cancel-button">
-                {mode === 'view' ? 'Close' : 'Cancel'}
-              </Button>
-              {mode !== 'view' && (
+            <Box display="flex" justifyContent="space-between" alignItems="center" mt={2}>
+              {/* AI Content Generation Button - only show in create mode when AI configured */}
+              {mode === 'create' && hasDigitalOceanGradientAIEnabled ? (
                 <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  data-testid="note-save-button"
+                  variant="outlined"
+                  startIcon={isGenerating ? <CircularProgress size={16} /> : '✨'}
+                  onClick={handleGenerateContent}
+                  disabled={isGenerating}
+                  size="small"
+                  data-testid="generate-content-button"
                 >
-                  {mode === 'edit' ? 'Save Changes' : 'Save Note'}
+                  {isGenerating ? 'Generating...' : 'Generate Note with GradientAI'}
                 </Button>
+              ) : (
+                <Box /> // Empty box to maintain spacing
               )}
+              
+              <Box display="flex" gap={1}>
+                <Button onClick={onCancel} data-testid="note-cancel-button">
+                  {mode === 'view' ? 'Close' : 'Cancel'}
+                </Button>
+                {mode !== 'view' && (
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    data-testid="note-save-button"
+                  >
+                    {mode === 'edit' ? 'Save Changes' : 'Save Note'}
+                  </Button>
+                )}
+              </Box>
             </Box>
           </form>
         </CardContent>
       </Card>
+
+      {/* Confirmation Dialog for Content Replacement */}
+      <Dialog
+        open={showConfirmDialog}
+        onClose={() => setShowConfirmDialog(false)}
+        data-testid="content-replace-dialog"
+      >
+        <DialogTitle>Replace Existing Content?</DialogTitle>
+        <DialogContent>
+          <Typography>
+            This will replace your current content with AI-generated content. Are you sure you want to continue?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowConfirmDialog(false)} data-testid="dialog-cancel-button">
+            Cancel
+          </Button>
+          <Button onClick={confirmReplaceContent} variant="contained" data-testid="dialog-replace-button">
+            Replace
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Toast Notification */}
+      <Snackbar
+        open={showToast}
+        autoHideDuration={4000}
+        onClose={() => setShowToast(false)}
+        data-testid="generation-toast"
+      >
+        <Alert
+          onClose={() => setShowToast(false)}
+          severity={toastSeverity}
+          variant="filled"
+        >
+          {toastMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

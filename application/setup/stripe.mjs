@@ -154,7 +154,7 @@ async function createProductsAndPrices(stripe, productsConfig, featuresMap, stri
 async function configureBillingPortal(stripe) {
   // Create config with needed features
   const portalConfig = await stripe.billingPortal.configurations.create({
-    business_profile: { headline: 'Saas Starter Kit' },
+    business_profile: { headline: 'SeaNotes' },
     features: {
       subscription_cancel: { enabled: false },
       payment_method_update: { enabled: true },

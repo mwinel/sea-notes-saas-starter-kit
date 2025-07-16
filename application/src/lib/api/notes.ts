@@ -7,7 +7,7 @@ export interface Note {
 }
 
 export interface CreateNoteData {
-  title: string;
+  title?: string;
   content: string;
 }
 

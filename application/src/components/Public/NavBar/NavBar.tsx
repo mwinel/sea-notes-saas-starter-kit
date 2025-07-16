@@ -104,7 +104,7 @@ const NavBar = () => {
               fontWeight={700}
               sx={{ cursor: 'pointer' }}
             >
-              DO Starter Kit
+              🐳 SeaNotes
             </Typography>
           </Link>
 

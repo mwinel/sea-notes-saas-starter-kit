@@ -1,6 +1,9 @@
 import { HTTP_STATUS } from 'lib/api/http';
 import { NextRequest, NextResponse } from 'next/server';
 import { createDatabaseService } from 'services/database/databaseFactory';
+import { generateTimestampTitle } from '../../../services/ai/digitalOceanInferenceService';
+import { triggerBackgroundTitleGeneration } from '../../../services/ai/backgroundTitleService';
+import { hasAIConfiguredServer } from '../../../settings';
 
 /**
  * Create a new note
@@ -16,20 +19,29 @@ export const createNote = async (
     const userId = user.id;
     const { title, content } = await request.json();
 
-    if (!title || !content) {
+    if (!content) {
       return NextResponse.json(
-        { error: 'Title and content are required' },
+        { error: 'Content is required' },
         { status: HTTP_STATUS.BAD_REQUEST }
       );
     }
 
+    // Use provided title or generate timestamp title for fast save
+    const finalTitle = title || generateTimestampTitle();
+
     const dbClient = await createDatabaseService();
 
+    // Save note immediately with timestamp title
     const note = await dbClient.note.create({
       userId,
-      title,
+      title: finalTitle,
       content,
     });
+
+    // Trigger background title generation if no title provided and AI configured
+    if (!title && hasAIConfiguredServer) {
+      triggerBackgroundTitleGeneration(note.id, content, userId);
+    }
 
     return NextResponse.json(note, { status: HTTP_STATUS.CREATED });
   } catch (error) {

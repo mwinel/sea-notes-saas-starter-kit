@@ -35,8 +35,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'SaaS App',
-  description: 'SaaS App template',
+  title: 'SeaNotes',
+  description: 'SeaNotes - A SaaS Starter Kit note-taking app from DigitalOcean',
 };
 
 /**

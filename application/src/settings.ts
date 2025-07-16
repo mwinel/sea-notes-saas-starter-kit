@@ -6,6 +6,9 @@ export interface ServerConfig {
   invoiceProvider: string;
   enableEmailIntegration: boolean;
   baseURL?: string;
+  AI: {
+    doInferenceApiKey?: string;
+  };
   Database: {
     url?: string;
   };
@@ -68,4 +71,16 @@ export const serverConfig: ServerConfig = {
     doAgentBaseUrl: process.env.DO_AGENT_BASE_URL,
     doApiToken: process.env.DO_API_TOKEN,
   },
+  AI: {
+    doInferenceApiKey: process.env.DO_INFERENCE_API_KEY,
+  },
 };
+
+
+// Client-side flag for DigitalOcean Gradient AI content generation (available in browser)
+// Controls visibility of "Generate Note with AI" button in note creation
+export const hasDigitalOceanGradientAIEnabled = process.env.NEXT_PUBLIC_DIGITALOCEAN_GRADIENTAI_ENABLED === 'true';
+
+// Server-side check for AI configuration
+// Used by API routes and background services that require AI functionality
+export const hasAIConfiguredServer = !!serverConfig.AI.doInferenceApiKey;
