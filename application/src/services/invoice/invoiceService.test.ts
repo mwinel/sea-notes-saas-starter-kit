@@ -19,7 +19,7 @@ const mockServerConfig: MockServerConfig = {
   },
 };
 
-jest.mock('settings', () => ({
+jest.mock('../../settings', () => ({
   serverConfig: mockServerConfig,
 }));
 

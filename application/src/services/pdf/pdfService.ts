@@ -384,62 +384,21 @@ ${html}
         }
       </style>`;
       
-      console.log('Injecting CSS into existing HTML document...');
-      console.log('HTML contains </head>:', completeHTML.includes('</head>'));
-      console.log('HTML contains </head> (single quotes):', completeHTML.includes("</head>"));
-      
-      // Try different patterns to inject CSS
+      // Inject CSS into existing HTML document
       if (completeHTML.includes('</head>')) {
         completeHTML = completeHTML.replace('</head>', cssInjection + '</head>');
-        console.log('CSS injected before </head>');
       } else if (completeHTML.includes("</head>")) {
         completeHTML = completeHTML.replace("</head>", cssInjection + "</head>");
-        console.log('CSS injected before </head> (single quotes)');
       } else {
         // If we can't find </head>, inject before </html>
         if (completeHTML.includes('</html>')) {
           completeHTML = completeHTML.replace('</html>', cssInjection + '</html>');
-          console.log('CSS injected before </html>');
         } else if (completeHTML.includes("</html>")) {
           completeHTML = completeHTML.replace("</html>", cssInjection + "</html>");
-          console.log('CSS injected before </html> (single quotes)');
         } else {
           // Last resort: inject at the end
           completeHTML = completeHTML + cssInjection;
-          console.log('CSS injected at the end');
         }
-      }
-      
-      console.log('Final HTML length:', completeHTML.length);
-      console.log('Final HTML contains contact-button CSS:', completeHTML.includes('contact-button'));
-      
-      // Debug: Check what the AI generated for the contact button
-      const contactButtonMatch = completeHTML.match(/<a[^>]*contact[^>]*>.*?<\/a>/gi);
-      if (contactButtonMatch) {
-        console.log('Found contact button HTML:', contactButtonMatch[0]);
-      } else {
-        console.log('No contact button found in HTML');
-      }
-      
-      // Debug: Check for any mailto links
-      const mailtoMatch = completeHTML.match(/<a[^>]*mailto[^>]*>.*?<\/a>/gi);
-      if (mailtoMatch) {
-        console.log('Found mailto links:', mailtoMatch);
-      }
-      
-      // Debug: Check if our CSS injection was successful
-      const cssInjectionMatch = completeHTML.match(/<style>[\s\S]*?contact-button[\s\S]*?<\/style>/gi);
-      if (cssInjectionMatch) {
-        console.log('CSS injection found with contact-button styles');
-        console.log('CSS injection length:', cssInjectionMatch[0].length);
-      } else {
-        console.log('CSS injection not found or doesn\'t contain contact-button styles');
-      }
-      
-      // Debug: Show a snippet of the final HTML around the contact button
-      const buttonContextMatch = completeHTML.match(/(.{0,200}<a[^>]*contact[^>]*>.*?<\/a>.{0,200})/gi);
-      if (buttonContextMatch) {
-        console.log('Contact button context:', buttonContextMatch[0]);
       }
     }
 
@@ -505,7 +464,7 @@ ${html}
       await page.close();
       return true;
     } catch (error) {
-      console.error('PDF service not available:', error);
+      console.error('PDF service not available');
       return false;
     }
   }

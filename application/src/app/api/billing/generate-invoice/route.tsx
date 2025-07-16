@@ -177,13 +177,15 @@ async function generateInvoiceHandler(
         });
         // Log first 100 bytes as base64
         console.log('PDF base64 preview:', pdfBuffer.toString('base64').substring(0, 100));
-        // Save to disk for debugging
-        try {
-          const fs = require('fs');
-          fs.writeFileSync(`/tmp/${pdfFilename}`, pdfBuffer);
-          console.log('PDF saved to /tmp/' + pdfFilename);
-        } catch (err) {
-          console.warn('Could not save PDF to disk:', err);
+        // Save to disk for debugging (only in debug mode)
+        if (process.env.DEBUG_MODE === 'true') {
+          try {
+            const fs = require('fs');
+            fs.writeFileSync(`/tmp/${pdfFilename}`, pdfBuffer);
+            console.log('PDF saved to /tmp/' + pdfFilename);
+          } catch (err) {
+            console.warn('Could not save PDF to disk:', err);
+          }
         }
       } else {
         console.log('No PDF attachment to include');
