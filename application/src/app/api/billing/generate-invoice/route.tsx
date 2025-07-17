@@ -134,28 +134,14 @@ async function generateInvoiceHandler(
     let pdfFilename: string | null = null;
     
     try {
-      console.log('Checking PDF service availability...');
       const pdfAvailable = await pdfService.isAvailable();
-      console.log('PDF service available:', pdfAvailable);
       
       if (pdfAvailable) {
-        console.log('Generating PDF from HTML invoice...');
-        console.log('HTML content length:', generatedInvoice.html.length);
-        console.log('HTML content preview:', generatedInvoice.html.substring(0, 500) + '...');
-        
         pdfBuffer = await pdfService.generateInvoicePDF(generatedInvoice.html);
         pdfFilename = `invoice-${invoiceData.invoiceNumber}-${userDetails.name.replace(/\s+/g, '-')}.pdf`;
-        console.log('PDF generated successfully:', {
-          filename: pdfFilename,
-          size: pdfBuffer.length,
-          invoiceNumber: invoiceData.invoiceNumber
-        });
-      } else {
-        console.warn('PDF service not available, sending email without PDF attachment');
       }
     } catch (pdfError) {
-      console.error('PDF generation failed:', pdfError);
-      console.warn('Sending email without PDF attachment due to PDF generation error');
+      // PDF generation failed, continue without attachment
     }
     
     // Send invoice via email with PDF attachment
@@ -171,27 +157,8 @@ async function generateInvoiceHandler(
           content: pdfBuffer,
           contentType: 'application/pdf'
         });
-        console.log('PDF attachment prepared:', {
-          filename: pdfFilename,
-          size: pdfBuffer.length
-        });
-        // Log first 100 bytes as base64
-        console.log('PDF base64 preview:', pdfBuffer.toString('base64').substring(0, 100));
-        // Save to disk for debugging (only in debug mode)
-        if (process.env.DEBUG_MODE === 'true') {
-          try {
-            const fs = require('fs');
-            fs.writeFileSync(`/tmp/${pdfFilename}`, pdfBuffer);
-            console.log('PDF saved to /tmp/' + pdfFilename);
-          } catch (err) {
-            console.warn('Could not save PDF to disk:', err);
-          }
-        }
-      } else {
-        console.log('No PDF attachment to include');
       }
       
-      console.log('Sending email with attachments...');
       await emailService.sendReactEmail(
         userDetails.email,
         generatedInvoice.subject,
@@ -204,8 +171,6 @@ async function generateInvoiceHandler(
         />,
         attachments
       );
-      
-      console.log('Email sent successfully with attachments');
       
       return NextResponse.json({
         success: true,
@@ -223,7 +188,6 @@ async function generateInvoiceHandler(
     }
     
   } catch (error) {
-    console.error('Error generating invoice:', error);
     return NextResponse.json(
       { error: 'Failed to generate invoice' },
       { status: HTTP_STATUS.INTERNAL_SERVER_ERROR }

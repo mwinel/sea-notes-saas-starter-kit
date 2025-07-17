@@ -78,7 +78,7 @@ export function InvoiceEmail({
             If you have any questions about this invoice, please don't hesitate to contact our support team.
           </Text>
           <Text style={{ fontSize: 14, color: '#666', textAlign: 'center', margin: '8px 0 0 0' }}>
-            Thank you for choosing DO Starter Kit!
+            Thank you for choosing SeaNotes!
           </Text>
         </Section>
       </Container>

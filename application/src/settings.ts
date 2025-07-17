@@ -31,8 +31,7 @@ export interface ServerConfig {
     portalConfigId?: string;
   };
   Invoice: {
-    doAgentBaseUrl?: string;
-    doApiToken?: string;
+    secureAgentKey?: string;
   };
 }
 
@@ -68,8 +67,7 @@ export const serverConfig: ServerConfig = {
     portalConfigId: process.env.STRIPE_PORTAL_CONFIG_ID,
   },
   Invoice: {
-    doAgentBaseUrl: process.env.DO_AGENT_BASE_URL,
-    doApiToken: process.env.DO_API_TOKEN,
+    secureAgentKey: process.env.SECURE_AGENT_KEY,
   },
   AI: {
     doInferenceApiKey: process.env.DO_INFERENCE_API_KEY,

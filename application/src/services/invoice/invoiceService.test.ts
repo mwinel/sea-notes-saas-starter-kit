@@ -5,17 +5,13 @@ jest.mock('axios');
 const mockAxios = require('axios');
 
 // Mock serverConfig
-type MockServerConfig = {
+const mockServerConfig: {
   Invoice: {
-    doAgentBaseUrl?: string;
-    doApiToken?: string;
+    secureAgentKey?: string;
   };
-};
-
-const mockServerConfig: MockServerConfig = {
+} = {
   Invoice: {
-    doAgentBaseUrl: 'https://test-agent.digitalocean.com',
-    doApiToken: 'test-token',
+    secureAgentKey: 'test-secure-agent-key',
   },
 };
 
@@ -36,21 +32,19 @@ describe('InvoiceService', () => {
       const config = await invoiceService.checkConfiguration();
       
       expect(config.configured).toBe(true);
-      expect(config.name).toBe('Invoice Service (DigitalOcean GenAI)');
+      expect(config.name).toBe('Invoice Service (DigitalOcean Serverless Inference)');
     });
 
     it('should return configured false when config is missing', async () => {
       // Temporarily modify the mock
       const originalConfig = { ...mockServerConfig };
-      mockServerConfig.Invoice.doAgentBaseUrl = undefined;
-      mockServerConfig.Invoice.doApiToken = undefined;
+      mockServerConfig.Invoice.secureAgentKey = undefined;
 
       const newService = new InvoiceService();
       const config = await newService.checkConfiguration();
       
       expect(config.configured).toBe(false);
-      expect(config.configToReview).toContain('DO_AGENT_BASE_URL');
-      expect(config.configToReview).toContain('DO_API_TOKEN');
+      expect(config.configToReview).toContain('SECURE_AGENT_KEY');
 
       // Restore original config
       Object.assign(mockServerConfig, originalConfig);
@@ -96,7 +90,7 @@ describe('InvoiceService', () => {
       expect(result.text).toBe('Test Invoice Text');
       expect(result.subject).toBe('Test Invoice Subject');
       expect(mockAxios.post).toHaveBeenCalledWith(
-        'https://test-agent.digitalocean.com/api/v1/chat/completions',
+        'https://api.digitalocean.com/v2/ai/inference',
         expect.objectContaining({
           model: 'claude-3.5-sonnet',
           messages: expect.arrayContaining([
@@ -113,7 +107,7 @@ describe('InvoiceService', () => {
         expect.objectContaining({
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer test-token',
+            'Authorization': 'Bearer test-secure-agent-key',
           },
         })
       );
@@ -136,7 +130,7 @@ describe('InvoiceService', () => {
 
       const result = await invoiceService.generateInvoice(mockInvoiceData);
 
-      expect(result.html).toContain('DO Starter Kit');
+      expect(result.html).toContain('SeaNotes');
       expect(result.html).toContain('John Doe');
       expect(result.html).toContain('Pro Plan');
       expect(result.text).toContain('INVOICE - INV-20240101-0001');
@@ -148,7 +142,7 @@ describe('InvoiceService', () => {
 
       const result = await invoiceService.generateInvoice(mockInvoiceData);
 
-      expect(result.html).toContain('DO Starter Kit');
+      expect(result.html).toContain('SeaNotes');
       expect(result.html).toContain('John Doe');
       expect(result.html).toContain('Pro Plan');
       expect(result.text).toContain('INVOICE - INV-20240101-0001');
@@ -158,8 +152,7 @@ describe('InvoiceService', () => {
     it('should throw error when service is not configured', async () => {
       // Temporarily modify the mock to simulate unconfigured service
       const originalConfig = { ...mockServerConfig };
-      mockServerConfig.Invoice.doAgentBaseUrl = undefined;
-      mockServerConfig.Invoice.doApiToken = undefined;
+      mockServerConfig.Invoice.secureAgentKey = undefined;
 
       const newService = new InvoiceService();
 

@@ -5,82 +5,119 @@ require('dotenv').config();
 
 const fs = require('fs');
 const path = require('path');
-const axios = require('axios');
+const OpenAI = require('openai');
 
-// DigitalOcean AI Agent endpoint and key
-const AGENT_BASE_URL = process.env.DO_AGENT_BASE_URL;
-const AGENT_ENDPOINT = `${AGENT_BASE_URL}/api/v1/chat/completions`;
-const API_TOKEN = process.env.DO_API_TOKEN;
+// DigitalOcean Serverless Inference configuration
+const apiKey = process.env.SECURE_AGENT_KEY;
 
-if (!API_TOKEN) {
-  console.error('❌ Error: DigitalOcean API token not found. Please set the DO_API_TOKEN environment variable.');
+if (!apiKey) {
+  console.error('❌ Error: API key not found. Please set the SECURE_AGENT_KEY or DO_API_TOKEN environment variable.');
   process.exit(1);
 }
 
-if (!AGENT_BASE_URL) {
-  console.error('❌ Error: DigitalOcean Agent base URL not found. Please set the DO_AGENT_BASE_URL environment variable.');
-  process.exit(1);
+const client = new OpenAI({
+  apiKey: apiKey,
+  baseURL: "https://inference.do-ai.run/v1",
+  timeout: 30000, 
+  maxRetries: 3
+});
+
+
+async function testConnection() {
+  try {
+    console.log('🔍 Testing connection to DigitalOcean Serverless Inference...');
+    const models = await client.models.list();
+    console.log('✅ Connection successful! Available models:');
+    for (const model of models.data) {
+      console.log(`   - ${model.id}`);
+    }
+    return true;
+  } catch (error) {
+    console.error('❌ Connection test failed:', error.message);
+    if (error.response) {
+      console.error('Response status:', error.response.status);
+      console.error('Response data:', JSON.stringify(error.response.data, null, 2));
+    }
+    return false;
+  }
 }
 
 /**
- * Generates a professional invoice using DigitalOcean's GenAI agent
+ * Generates a professional invoice using DigitalOcean's serverless inference
  */
 async function generateInvoice(invoiceData) {
   try {
-    console.log('🤖 Generating invoice with DigitalOcean GenAI...');
-    
+    console.log('🤖 Generating invoice with DigitalOcean Serverless Inference...');
+
+    // First test the connection
+    const connectionTest = await testConnection();
+    if (!connectionTest) {
+      console.log('⚠️ Connection test failed, using fallback invoice generation');
+      return generateFallbackInvoice(invoiceData);
+    }
+
     const prompt = buildInvoicePrompt(invoiceData);
-    
-    const response = await axios.post(AGENT_ENDPOINT, {
-      model: 'claude-3.5-sonnet',
+
+    const response = await client.chat.completions.create({
+      model: "llama3-8b-instruct", 
       messages: [
         {
-          role: 'system',
+          role: "system",
           content: `You are a professional invoice generator. You create beautiful, professional invoices in HTML format that are suitable for email delivery. 
           Always include proper styling, company branding, and all necessary invoice details. 
-          Return your response as a JSON object with three fields: html (the full HTML invoice), text (plain text version), and subject (email subject line).`
+          Return your response as a JSON object with three fields: html (the full HTML invoice), text (plain text version), and subject (email subject line).
+          Make sure the JSON is properly formatted and valid.`
         },
         {
-          role: 'user',
+          role: "user",
           content: prompt
         }
       ],
-      temperature: 0.1,
-      max_tokens: 2048
-    }, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${API_TOKEN}`
-      }
+      max_tokens: 2000, 
+      temperature: 0.1
     });
-    
-    console.log('✅ Received response from AI agent');
-    
-    const aiResponse = response.data.choices[0].message.content;
-    
-    // Parse the AI response to extract JSON
-    try {
-      const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        const parsed = JSON.parse(jsonMatch[0]);
-        return {
-          html: parsed.html,
-          text: parsed.text,
-          subject: parsed.subject
-        };
-      } else {
-        throw new Error('No JSON found in AI response');
+
+    console.log('✅ Received response from serverless inference');
+
+    if (response && response.choices && response.choices.length > 0) {
+      const aiResponse = response.choices[0].message.content;
+      
+      // Parse the AI response to extract JSON
+      try {
+        const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          const parsed = JSON.parse(jsonMatch[0]);
+          return {
+            html: parsed.html || generateFallbackInvoice(invoiceData).html,
+            text: parsed.text || generateFallbackInvoice(invoiceData).text,
+            subject: parsed.subject || generateFallbackInvoice(invoiceData).subject
+          };
+        } else {
+          throw new Error('No JSON found in AI response');
+        }
+      } catch (parseError) {
+        console.error('❌ Error parsing AI response:', parseError);
+        console.log('AI response (first 500 chars):', aiResponse.substring(0, 500));
+        return generateFallbackInvoice(invoiceData);
       }
-    } catch (parseError) {
-      console.error('❌ Error parsing AI response:', parseError);
-      console.log('AI response:', aiResponse);
-      return generateFallbackInvoice(invoiceData);
     }
+
+    // If no valid response, return fallback
+    console.log('⚠️ No valid response received, using fallback');
+    return generateFallbackInvoice(invoiceData);
+
   } catch (error) {
     console.error('❌ Error generating invoice:', error.message);
     if (error.response) {
       console.error('Response status:', error.response.status);
       console.error('Response data:', JSON.stringify(error.response.data, null, 2));
+    }
+    if (error.status === 500) {
+      console.error('💡 500 error troubleshooting:');
+      console.error('   - Check if your API key is valid');
+      console.error('   - Verify the model name is correct');
+      console.error('   - Try reducing the prompt length');
+      console.error('   - Check if there are any rate limits');
     }
     return generateFallbackInvoice(invoiceData);
   }
@@ -106,19 +143,24 @@ Invoice Details:
 - Subscription ID: ${invoiceData.subscriptionId}
 
 Please create a professional invoice with:
-1. Company header with "DO Starter Kit" branding
+1. Company header with "SeaNotes" branding
 2. Customer and invoice details clearly displayed
 3. Itemized breakdown of the subscription
 4. Professional styling with blue color scheme (#0061EB)
 5. Mobile-responsive design
 6. Clear call-to-action for payment or support
 
-Return the response as a JSON object with html, text, and subject fields.`;
+Return the response as a valid JSON object with three fields:
+- html: the complete HTML invoice
+- text: plain text version of the invoice
+- subject: email subject line
+
+Make sure the JSON is properly formatted and escaped.`;
 }
 
 function generateFallbackInvoice(invoiceData) {
   console.log('⚠️ Using fallback invoice generation');
-  
+
   const html = `
     <!DOCTYPE html>
     <html>
@@ -138,12 +180,16 @@ function generateFallbackInvoice(invoiceData) {
         .total { font-size: 18px; font-weight: bold; margin-top: 20px; padding-top: 20px; border-top: 2px solid #0061EB; }
         .features { margin-top: 15px; }
         .features ul { margin: 5px 0; padding-left: 20px; }
+        @media (max-width: 600px) {
+          .invoice-details { flex-direction: column; }
+          .invoice-info { text-align: left; margin-top: 20px; }
+        }
       </style>
     </head>
     <body>
       <div class="container">
         <div class="header">
-          <h1>DO Starter Kit</h1>
+          <h1>SeaNotes</h1>
           <h2>Invoice</h2>
         </div>
         <div class="content">
@@ -188,8 +234,8 @@ function generateFallbackInvoice(invoiceData) {
 
   const text = `
 INVOICE - ${invoiceData.invoiceNumber}
+SeaNotes
 
-DO Starter Kit
 Invoice Date: ${invoiceData.invoiceDate.toLocaleDateString()}
 
 Bill To:
@@ -250,24 +296,24 @@ async function main() {
   console.log('');
 
   const invoice = await generateInvoice(invoiceData);
-  
+
   console.log('✅ Invoice generated successfully!');
   console.log('📧 Subject:', invoice.subject);
   console.log('');
-  
+
   // Save the invoice to files
   const outputDir = path.join(__dirname, 'output');
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });
   }
-  
+
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   const htmlFile = path.join(outputDir, `invoice-${timestamp}.html`);
   const textFile = path.join(outputDir, `invoice-${timestamp}.txt`);
-  
+
   fs.writeFileSync(htmlFile, invoice.html);
   fs.writeFileSync(textFile, invoice.text);
-  
+
   console.log('💾 Invoice saved to:');
   console.log('   HTML:', htmlFile);
   console.log('   Text:', textFile);
@@ -284,4 +330,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { generateInvoice, generateInvoiceNumber }; 
+module.exports = { generateInvoice, generateInvoiceNumber };
