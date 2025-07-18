@@ -58,6 +58,9 @@ services:
         value: "__APP_URL_BIND__"
       - key: "ENABLE_EMAIL_INTEGRATION"
         value: "false"
+      - key: "DO_INFERENCE_API_KEY"
+        value: "${DO_INFERENCE_API_KEY}"
+        type: "SECRET"
 
 databases:
   - name: ${DB_NAME}

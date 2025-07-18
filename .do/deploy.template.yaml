@@ -69,6 +69,9 @@ spec:
           value: "${APP_URL}"
         - key: "ENABLE_EMAIL_INTEGRATION"
           value: "false"
+        - key: "DO_INFERENCE_API_KEY"
+          value: ""
+          type: "SECRET"
 
   # Configuration for databases
   databases:
