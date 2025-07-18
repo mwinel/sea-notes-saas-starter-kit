@@ -4,7 +4,7 @@
 
 spec:
   # Name of the deployment
-  name: do-starter-kit
+  name: sea-notes-saas-starter-kit
   # Optionally you can chose a region where the deployment will be hosted
   # Otherwise, DO will chose the nearest region for you in the wizard
   # region: nyc
@@ -15,7 +15,7 @@ spec:
       environment_slug: node-js # Runtime environment
       git:
         branch: main # Git branch to deploy
-        repo_clone_url: https://github.com/digitalocean/do-starter-kit-internal # Repository URL
+        repo_clone_url: https://github.com/digitalocean/sea-notes-saas-starter-kit # Repository URL
       source_dir: ./application # Directory containing the service source code
       build_command: "npm install && npm run build" # Command to build the service
       run_command: "npx prisma migrate deploy; npm run start" # Command to run the service
@@ -27,7 +27,7 @@ spec:
         # You can check the documentation about variable binding here:
         # https://docs.digitalocean.com/products/app-platform/how-to/use-environment-variables/#using-bindable-variables-within-environment-variables
         - key: "DATABASE_URL"
-          value: "${do-starter-kit-db.DATABASE_URL}"
+          value: "${sea-notes-saas-starter-kit-db.DATABASE_URL}"
           type: "SECRET"
         - key: "SPACES_KEY_ID"
           value: ""
@@ -72,11 +72,11 @@ spec:
 
   # Configuration for databases
   databases:
-    - name: do-starter-kit-db # Name of the resource
+    - name: sea-notes-saas-starter-kit-db # Name of the resource
       engine: PG # Database engine (PostgreSQL)
       version: "15" # Database version
       production: false # Whether the database is for production
-      cluster_name: do-starter-kit-cluster # Name of the database cluster
+      cluster_name: sea-notes-saas-starter-kit-cluster # Name of the database cluster
       # Optionally you can specify the database name and user, otherwise the resource name will be used
       # db_name: example-db
       # db_user: example-user
