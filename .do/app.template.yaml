@@ -62,7 +62,7 @@ services:
         value: "${DO_INFERENCE_API_KEY}"
         type: "SECRET"
       - key: "NEXT_PUBLIC_DIGITALOCEAN_GRADIENTAI_ENABLED"
-        value: "${NEXT_PUBLIC_DIGITALOCEAN_GRADIENTAI_ENABLED}"
+        value: "true"
 
 databases:
   - name: ${DB_NAME}
