@@ -33,7 +33,7 @@ You can use SeaNotes in two ways:
 
 Want to try it out right away? Deploy SeaNotes to DigitalOcean App Platform in one click:
 
-[![Deploy to DigitalOcean](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/digitalocean/do-starter-kit-internal/tree/main)
+[![Deploy to DigitalOcean](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/digitalocean/sea-notes-saas-starter-kit/tree/main)
 
 ## What's Included
 
@@ -97,8 +97,8 @@ SeaNotes can be run [locally](#quick-start-local-development) or on [DigitalOcea
 Clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/digitalocean/do-starter-kit-internal.git
-cd do-starter-kit/application
+git clone https://github.com/digitalocean/sea-notes-saas-starter-kit.git
+cd sea-notes-saas-starter-kit/application
 npm install
 ```
 
@@ -307,7 +307,7 @@ To enable file uploads, you'll need to set up a DigitalOcean Spaces bucket and a
    - Click **Create Access Key** 
    ![alt text](docs/images/digitalocean_spaces_storage_settings.png)
    - Set permissions to **Full Access**, so your app can read, write, and delete files
-   - Name the key (e.g., `do-starter-kit-demo-access-key`) and click **Create Access Key**
+   - Name the key (e.g., `sea-notes-demo-access-key`) and click **Create Access Key**
    - **Important:** Save the Access Key and Secret Key—this is the only time you'll see the Secret Key!
    ![alt text](docs/images/digitalocean_create_access_key.png)
 
@@ -476,7 +476,7 @@ SeaNotes is designed to deploy seamlessly to DigitalOcean App Platform. You have
 
 1. Click on the one-click deployment button below. If you are not currently logged in with your DigitalOcean account, this button prompts you to log in.
 
-[![Deploy to DigitalOcean](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/digitalocean/do-starter-kit-internal/tree/main)
+[![Deploy to DigitalOcean](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/digitalocean/sea-notes-saas-starter-kit/tree/main)
 
 2. After deployment is complete, configure the environment variables under Settings -> saas-application.
    - DATABASE_URL: is automatically populated, but if you want to use a DigitalOcean Managed DB, replace the connection string value.

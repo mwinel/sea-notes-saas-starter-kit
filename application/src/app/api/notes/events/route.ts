@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
       return new Response('CORS error: No allowed origins configured', { status: 400 });
     }
     const origin = request.headers.get('origin');
-    const corsOrigin = allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
+    const corsOrigin = origin && allowedOrigins.includes(origin) ? origin : allowedOrigins[0] as string;
 
     // Create SSE response headers
     const headers = new Headers({

@@ -5,7 +5,7 @@ services:
     environment_slug: node-js
     source_dir: ./application
     github:
-      repo: do-yard/do-starter-kit
+      repo: digitalocean/sea-notes-saas-starter-kit
       branch: ${GITHUB_BRANCH}
       deploy_on_push: false
     build_command: "npm install && npm run build"
@@ -58,6 +58,9 @@ services:
         value: "__APP_URL_BIND__"
       - key: "ENABLE_EMAIL_INTEGRATION"
         value: "false"
+      - key: "DO_INFERENCE_API_KEY"
+        value: "${DO_INFERENCE_API_KEY}"
+        type: "SECRET"
 
 databases:
   - name: ${DB_NAME}
