@@ -31,7 +31,7 @@ export interface GeneratedInvoice {
  * and send them via email when users subscribe to plans.
  */
 export class InvoiceService implements ConfigurableService {
-  private static readonly serviceName = 'Invoice Service (DigitalOcean Serverless Inference)';
+  private static readonly serviceName = 'Invoice Service (DigitalOcean GradientAI Serverless Inference)';
   private isConfigured: boolean = false;
   private lastConnectionError: string = '';
   private description: string = 'The following features are impacted: automatic invoice generation and emailing';
@@ -39,7 +39,7 @@ export class InvoiceService implements ConfigurableService {
 
   // Required config items with their corresponding env var names and descriptions
   private static requiredConfig = {
-    secureAgentKey: { envVar: 'SECURE_AGENT_KEY', description: 'DigitalOcean Secure Agent Key for serverless inference' },
+    doInferenceApiKey: { envVar: 'DO_INFERENCE_API_KEY', description: 'DigitalOcean GradientAI Serverless Inference API Key' },
   };
 
   constructor() {
@@ -47,19 +47,19 @@ export class InvoiceService implements ConfigurableService {
   }
 
   private initialize(): void {
-    const secureAgentKey = serverConfig.Invoice?.secureAgentKey;
+    const apiKey = serverConfig.GradientAI?.doInferenceApiKey;
     
-    if (secureAgentKey) {
+    if (apiKey) {
       this.isConfigured = true;
       this.client = new OpenAI({
-        apiKey: secureAgentKey,
+        apiKey: apiKey,
         baseURL: 'https://inference.do-ai.run/v1',
         timeout: 30000, // 30 second timeout
         maxRetries: 3
       });
     } else {
       this.isConfigured = false;
-      this.lastConnectionError = 'SECURE_AGENT_KEY not configured';
+      this.lastConnectionError = 'DO_INFERENCE_API_KEY not configured';
     }
   }
 

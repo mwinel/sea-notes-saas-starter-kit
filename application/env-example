@@ -99,9 +99,9 @@ STRIPE_PORTAL_CONFIG_ID=          # ID for customer portal configuration
 # ====================
 # General application settings that affect multiple components
 
-#Invoice Generation (DigitalOcean Serverless Inference)
-INVOICE_PROVIDER=DigitalOcean Serverless Inference
-SECURE_AGENT_KEY= # DigitalOcean Secure Agent Key for serverless inference
+# Invoice Generation (DigitalOcean GradientAI)
+# Uses the same DO_INFERENCE_API_KEY as AI title generation
+INVOICE_PROVIDER=DigitalOcean GradientAI
 
 
 # Base URL of your application (used for callbacks, email links, etc.)

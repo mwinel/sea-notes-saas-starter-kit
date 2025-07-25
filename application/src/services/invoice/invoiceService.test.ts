@@ -6,12 +6,12 @@ const mockAxios = require('axios');
 
 // Mock serverConfig
 const mockServerConfig: {
-  Invoice: {
-    secureAgentKey?: string;
+  GradientAI: {
+    doInferenceApiKey?: string;
   };
 } = {
-  Invoice: {
-    secureAgentKey: 'test-secure-agent-key',
+  GradientAI: {
+    doInferenceApiKey: 'test-api-key',
   },
 };
 
@@ -38,13 +38,13 @@ describe('InvoiceService', () => {
     it('should return configured false when config is missing', async () => {
       // Temporarily modify the mock
       const originalConfig = { ...mockServerConfig };
-      mockServerConfig.Invoice.secureAgentKey = undefined;
+      mockServerConfig.GradientAI.doInferenceApiKey = undefined;
 
       const newService = new InvoiceService();
       const config = await newService.checkConfiguration();
       
       expect(config.configured).toBe(false);
-      expect(config.configToReview).toContain('SECURE_AGENT_KEY');
+      expect(config.configToReview).toContain('doInferenceApiKey');
 
       // Restore original config
       Object.assign(mockServerConfig, originalConfig);
@@ -107,7 +107,7 @@ describe('InvoiceService', () => {
         expect.objectContaining({
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer test-secure-agent-key',
+            'Authorization': 'Bearer test-api-key',
           },
         })
       );
@@ -152,7 +152,7 @@ describe('InvoiceService', () => {
     it('should throw error when service is not configured', async () => {
       // Temporarily modify the mock to simulate unconfigured service
       const originalConfig = { ...mockServerConfig };
-      mockServerConfig.Invoice.secureAgentKey = undefined;
+      mockServerConfig.GradientAI.doInferenceApiKey = undefined;
 
       const newService = new InvoiceService();
 

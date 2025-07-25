@@ -140,12 +140,17 @@ const Subscription: React.FC = () => {
               Invoice
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-              Generate a professional invoice for your current subscription.
+              Click the button below to have your latest invoice for your current subscription emailed to you.
             </Typography>
             <GetInvoiceButton 
               variant="outlined"
               size="medium"
             />
+            <Box sx={{ mt: 2, p: 2, bgcolor: '#f5f7fa', borderRadius: 2, border: '1px solid #e0e0e0' }}>
+              <Typography variant="body2" color="text.secondary">
+                <strong>Note for developers:</strong> Invoice details (plan, amount, etc.) are fetched live from Stripe, and a professional invoice is generated and sent to the user via email.
+              </Typography>
+            </Box>
           </Box>
         </Box>
       ) : (

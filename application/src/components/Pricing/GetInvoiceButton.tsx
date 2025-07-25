@@ -90,7 +90,7 @@ export default function GetInvoiceButton({
           },
         }}
       >
-        {loading ? 'Generating Invoice...' : 'Get Invoice'}
+        {loading ? 'Generating Invoice...' : 'Email Latest Invoice'}
       </Button>
 
       <Snackbar

@@ -6,7 +6,7 @@ export interface ServerConfig {
   invoiceProvider: string;
   enableEmailIntegration: boolean;
   baseURL?: string;
-  AI: {
+  GradientAI: {
     doInferenceApiKey?: string;
   };
   Database: {
@@ -30,9 +30,6 @@ export interface ServerConfig {
     webhookSecret?: string;
     portalConfigId?: string;
   };
-  Invoice: {
-    secureAgentKey?: string;
-  };
 }
 
 export const serverConfig: ServerConfig = {
@@ -40,7 +37,7 @@ export const serverConfig: ServerConfig = {
   storageProvider: process.env.STORAGE_PROVIDER || 'Spaces',
   emailProvider: process.env.EMAIL_PROVIDER || 'Resend',
   billingProvider: process.env.BILLING_PROVIDER || 'Stripe',
-  invoiceProvider: process.env.INVOICE_PROVIDER || 'DigitalOcean GenAI',
+  invoiceProvider: process.env.INVOICE_PROVIDER || 'DigitalOcean GradientAI',
   enableEmailIntegration: process.env.ENABLE_EMAIL_INTEGRATION
     ? process.env.ENABLE_EMAIL_INTEGRATION === 'true'
     : false,
@@ -66,10 +63,7 @@ export const serverConfig: ServerConfig = {
     webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
     portalConfigId: process.env.STRIPE_PORTAL_CONFIG_ID,
   },
-  Invoice: {
-    secureAgentKey: process.env.SECURE_AGENT_KEY,
-  },
-  AI: {
+  GradientAI: {
     doInferenceApiKey: process.env.DO_INFERENCE_API_KEY,
   },
 };
@@ -79,6 +73,6 @@ export const serverConfig: ServerConfig = {
 // Controls visibility of "Generate Note with AI" button in note creation
 export const hasDigitalOceanGradientAIEnabled = process.env.NEXT_PUBLIC_DIGITALOCEAN_GRADIENTAI_ENABLED === 'true';
 
-// Server-side check for AI configuration
+// Server-side check for GradientAI configuration
 // Used by API routes and background services that require AI functionality
-export const hasAIConfiguredServer = !!serverConfig.AI.doInferenceApiKey;
+export const hasAIConfiguredServer = !!serverConfig.GradientAI.doInferenceApiKey;

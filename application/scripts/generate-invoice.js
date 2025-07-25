@@ -8,10 +8,10 @@ const path = require('path');
 const OpenAI = require('openai');
 
 // DigitalOcean Serverless Inference configuration
-const apiKey = process.env.SECURE_AGENT_KEY;
+const apiKey = process.env.DO_INFERENCE_API_KEY;
 
 if (!apiKey) {
-  console.error('❌ Error: API key not found. Please set the SECURE_AGENT_KEY or DO_API_TOKEN environment variable.');
+  console.error('❌ Error: API key not found. Please set the DO_INFERENCE_API_KEY environment variable.');
   process.exit(1);
 }
 
