@@ -11,6 +11,7 @@ import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Link as MuiLink } from '@mui/material';
 import Link from 'next/link';
+import GetInvoiceButton from 'components/Pricing/GetInvoiceButton';
 
 /**
  * Main component for managing user subscriptions.
@@ -56,8 +57,17 @@ const Subscription: React.FC = () => {
     try {
       const result = await stripeApi.checkout();
       window.location.href = result.url;
-    } catch {
-      setError('Upgrade failed');
+    } catch (error) {
+      // Handle specific error cases
+      if (error instanceof Error) {
+        if (error.message.includes('already on the')) {
+          setError('You are already on the PRO plan');
+        } else {
+          setError('Upgrade failed');
+        }
+      } else {
+        setError('Upgrade failed');
+      }
     } finally {
       setUpgrading(false);
     }
@@ -123,6 +133,25 @@ const Subscription: React.FC = () => {
               Cancel Subscription
             </Button>
           )}
+
+          {/* Get Invoice Button for all active subscriptions */}
+          <Box sx={{ mt: 3, pt: 2, borderTop: '1px solid #e0e0e0', width: '100%' }}>
+            <Typography variant="h6" gutterBottom>
+              Invoice
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              Click the button below to have your latest invoice for your current subscription emailed to you.
+            </Typography>
+            <GetInvoiceButton 
+              variant="outlined"
+              size="medium"
+            />
+            <Box sx={{ mt: 2, p: 2, bgcolor: '#f5f7fa', borderRadius: 2, border: '1px solid #e0e0e0' }}>
+              <Typography variant="body2" color="text.secondary">
+                <strong>Note for developers:</strong> Invoice details (plan, amount, etc.) are fetched live from Stripe, and a professional invoice is generated and sent to the user via email.
+              </Typography>
+            </Box>
+          </Box>
         </Box>
       ) : (
         <Box display={'flex'} flexDirection="column" alignItems="flex-start" mt={2}>

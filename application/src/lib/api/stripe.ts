@@ -48,7 +48,10 @@ export class StripeClient {
       method: 'POST',
       credentials: 'include',
     });
-    if (!res.ok) throw new Error('Failed to update to pro');
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(errorData.error || 'Failed to update to pro');
+    }
     return await res.json();
   }
 }

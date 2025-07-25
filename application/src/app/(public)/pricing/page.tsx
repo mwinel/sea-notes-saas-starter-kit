@@ -2,6 +2,7 @@ import { Box, Button, Card, CardContent, Typography, List, ListItem } from '@mui
 import CheckIcon from '@mui/icons-material/Check';
 import Link from 'next/link';
 import { createBillingService } from 'services/billing/billingFactory';
+import GetInvoiceButton from 'components/Pricing/GetInvoiceButton';
 
 export const dynamic = 'force-dynamic'; // Ensure this page is always revalidated
 
@@ -60,6 +61,8 @@ export default async function PricingPage() {
                   </ListItem>
                 ))}
               </List>
+              
+              {/* Get Started Button */}
               <Button
                 variant="contained"
                 fullWidth
@@ -78,6 +81,21 @@ export default async function PricingPage() {
           </Card>
         ))}
       </Box>
+
+      {/* Single Get Invoice Button - positioned below the plans */}
+      <Box sx={{ mt: 6, textAlign: 'center' }}>
+        <Typography variant="h5" gutterBottom>
+          Need an invoice for your current subscription?
+        </Typography>
+        <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+          Generate and receive a professional invoice for your current plan via email.
+        </Typography>
+        <GetInvoiceButton 
+          variant="outlined"
+          size="large"
+        />
+      </Box>
     </Box>
   );
 }
+
