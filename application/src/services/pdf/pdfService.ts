@@ -309,12 +309,11 @@ ${html}
         .contact-button, 
         a.contact-button,
         a[class*="contact-button"],
-        a[href*="mailto:support"],
-        a[href*="mailto:support@dostarterkit.com"],
+        a[href*="mailto:"],
         .support-section .contact-button,
         .support-section a[href*="mailto"],
         div a.contact-button,
-        div a[href*="mailto:support"] { 
+        div a[href*="mailto:"] { 
           display: inline-block !important; 
           background: #0061EB !important; 
           background-color: #0061EB !important; 
@@ -344,7 +343,7 @@ ${html}
         .contact-button:hover, 
         a.contact-button:hover,
         a[class*="contact-button"]:hover,
-        a[href*="mailto:support"]:hover,
+        a[href*="mailto:"]:hover,
         a[href*="mailto:support@dostarterkit.com"]:hover,
         .support-section .contact-button:hover,
         .support-section a[href*="mailto"]:hover,
@@ -356,7 +355,7 @@ ${html}
         .contact-button:active, 
         a.contact-button:active,
         a[class*="contact-button"]:active,
-        a[href*="mailto:support"]:active,
+        a[href*="mailto:"]:active,
         a[href*="mailto:support@dostarterkit.com"]:active,
         .support-section .contact-button:active,
         .support-section a[href*="mailto"]:active,
@@ -369,12 +368,11 @@ ${html}
           .contact-button, 
           a.contact-button,
           a[class*="contact-button"],
-          a[href*="mailto:support"],
-          a[href*="mailto:support@dostarterkit.com"],
-          .support-section .contact-button,
+          a[href*="mailto:"],
+            .support-section .contact-button,
           .support-section a[href*="mailto"],
           div a.contact-button,
-          div a[href*="mailto:support"] { 
+          div a[href*="mailto:"] { 
             display: block !important; 
             width: 100% !important; 
             text-align: center !important; 

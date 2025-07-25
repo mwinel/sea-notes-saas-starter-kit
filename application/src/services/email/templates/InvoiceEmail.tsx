@@ -11,6 +11,7 @@ export interface InvoiceEmailProps {
   planName: string;
   amount: number;
   invoiceNumber: string;
+  fromEmail: string;
 }
 
 /**
@@ -23,15 +24,16 @@ export function InvoiceEmail({
   customerName, 
   planName, 
   amount, 
-  invoiceNumber 
+  invoiceNumber,
+  fromEmail
 }: InvoiceEmailProps) {
   // Before rendering, replace the contact button with a table-based, inline-styled button for email compatibility
   let safeInvoiceHtml = invoiceHtml.replace(
-    /<a[^>]*class=['"]contact-button['"][^>]*href=['"]mailto:support@dostarterkit.com['"][^>]*>.*?<\/a>/gi,
-    `<table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin: 16px auto;">
+    /<a[^>]*class=['"]contact-button['"][^>]*href=['"]mailto:([^'"]*)['"][^>]*>.*?<\/a>/gi,
+    (_, emailAddress) => `<table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin: 16px auto;">
       <tr>
         <td align="center" bgcolor="#0061EB" style="border-radius:6px;">
-          <a href="mailto:support@dostarterkit.com" target="_blank" style="display:inline-block;padding:12px 24px;font-size:14px;font-weight:500;color:#fff;text-decoration:none;border-radius:6px;background:#0061EB;">Contact Support</a>
+          <a href="mailto:${emailAddress}" target="_blank" style="display:inline-block;padding:12px 24px;font-size:14px;font-weight:500;color:#fff;text-decoration:none;border-radius:6px;background:#0061EB;">Contact Support</a>
         </td>
       </tr>
     </table>`
@@ -75,7 +77,7 @@ export function InvoiceEmail({
             A PDF version of this invoice is attached to this email for your records.
           </Text>
           <Text style={{ fontSize: 14, color: '#666', textAlign: 'center', margin: '8px 0 0 0' }}>
-            If you have any questions about this invoice, please don't hesitate to contact our support team.
+            If you have any questions about this invoice, please contact us at {fromEmail}.
           </Text>
           <Text style={{ fontSize: 14, color: '#666', textAlign: 'center', margin: '8px 0 0 0' }}>
             Thank you for choosing SeaNotes!
