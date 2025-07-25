@@ -10,6 +10,7 @@ const customJestConfig = {
     '^hooks/(.*)$': '<rootDir>/src/hooks/$1',
     '^components/(.*)$': '<rootDir>/src/components/$1',
     '^lib/(.*)$': '<rootDir>/src/lib/$1',
+    '^settings$': '<rootDir>/src/settings',
   },
   transformIgnorePatterns: ['/node_modules/(?!next-auth|@auth/core).+\\.js$'],
   testPathIgnorePatterns: [

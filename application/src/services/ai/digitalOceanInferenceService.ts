@@ -15,12 +15,12 @@ export class DigitalOceanInferenceService {
   private client: OpenAI;
 
   constructor() {
-    if (!serverConfig.AI.doInferenceApiKey) {
+    if (!serverConfig.GradientAI.doInferenceApiKey) {
       throw new Error('DigitalOcean Inference API key is not configured');
     }
 
     this.client = new OpenAI({
-      apiKey: serverConfig.AI.doInferenceApiKey,
+      apiKey: serverConfig.GradientAI.doInferenceApiKey,
       baseURL: 'https://inference.do-ai.run/v1',
     });
   }
@@ -157,7 +157,7 @@ export function generateTimestampTitle(): string {
  * @returns Generated title or timestamp fallback
  */
 export async function generateTitleWithFallback(content: string): Promise<string> {
-  if (!serverConfig.AI.doInferenceApiKey) {
+  if (!serverConfig.GradientAI.doInferenceApiKey) {
     throw new Error('AI title generation is not configured');
   }
 

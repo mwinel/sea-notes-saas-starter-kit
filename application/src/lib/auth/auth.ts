@@ -91,6 +91,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.id = user.id;
         token.role = (user as User).role;
         token.email = (user as User).email;
+        token.name = (user as User).name;
       }
 
       if (trigger === 'update') {

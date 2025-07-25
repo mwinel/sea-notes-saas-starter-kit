@@ -4,6 +4,7 @@ import { createDatabaseService } from '../database/databaseFactory';
 import { ServiceStatus } from './serviceConfigStatus';
 import { createBillingService } from 'services/billing/billingFactory';
 import { createAuthService } from 'services/auth/authFactory';
+import { createInvoiceService } from 'services/invoice/invoiceFactory';
 
 /**
  * Interface for application health state.
@@ -271,6 +272,36 @@ export class StatusService {
   }
 
   /**
+   * Checks the configuration and connectivity status of the invoice service.
+   * Uses the InvoiceService interface to check the current invoice provider.
+   *
+   * @returns {Promise<ServiceStatus>} The status of the invoice service.
+   */
+  static async checkInvoiceStatus(): Promise<ServiceStatus> {
+    try {
+      const invoiceService = await createInvoiceService();
+
+      // Get configuration status from the service and add required classification
+      const configStatus = await invoiceService.checkConfiguration();
+      return {
+        ...configStatus,
+        required: invoiceService.isRequired(),
+      };
+    } catch (error) {
+      return {
+        name: 'Invoice Service',
+        configured: false,
+        connected: false,
+        required: false, // Invoice service is optional
+        error:
+          error instanceof Error
+            ? `Failed to initialize invoice service: ${error.message}`
+            : 'Failed to initialize invoice service: Unknown error',
+      };
+    }
+  }
+
+  /**
    * Checks the status of all configured services.
    * This method will automatically check all available services.
    *
@@ -296,6 +327,10 @@ export class StatusService {
 
     const authStatus = await this.checkAuthStatus();
     services.push(authStatus);
+
+    // Check invoice service
+    const invoiceStatus = await this.checkInvoiceStatus();
+    services.push(invoiceStatus);
 
     return services;
   }
