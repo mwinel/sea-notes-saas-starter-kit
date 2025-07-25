@@ -1,13 +1,13 @@
 # Invoice Generation Guide
 
-This guide explains how to use **SeaNotes**' AI-powered invoice generation feature, which automatically creates invoices for user subscriptions using DigitalOcean's Serverless Inference API.
+This guide explains how to use **SeaNotes**' AI-powered invoice generation feature, which automatically creates invoices for user subscriptions using DigitalOcean's [GradientAI Serverless Inference API](https://docs.digitalocean.com/products/gradientai-platform/how-to/use-serverless-inference).
 
 ## Overview
 
 The invoice generation feature provides:
 
 - **Automatic Invoice Creation**: Generates invoice when users subscribe to plans
-- **AI-Powered Design**: Uses DigitalOcean's Serverless Inference to create invoices
+- **AI-Powered Design**: Uses DigitalOcean's GradientAI Serverless Inference API to create invoices
 - **Email Delivery**: Sends invoices directly to users with PDF attachments
 - **Manual Generation**: Allows users to request invoices on-demand from the billing page
 
@@ -21,7 +21,7 @@ Before setting up invoice generation, ensure you have:
 
 ## Part 1: Set Up DigitalOcean Serverless Inference
 
-The invoice generation feature uses DigitalOcean's Serverless Inference API to create professional, AI-generated invoices. This setup is based on the [DigitalOcean Serverless Inference tutorial](https://www.digitalocean.com/community/tutorials/serverless-inference-gradientai).
+The invoice generation feature uses DigitalOcean's [GradientAI Serverless Inference API](https://docs.digitalocean.com/products/gradientai-platform/how-to/use-serverless-inference/) to create professional, AI-generated invoices. Since the system emails invoices to users, you'll need Resend configured for email delivery.
 
 ### Step 1: Access DigitalOcean Agent Platform
 
@@ -46,12 +46,12 @@ The invoice generation feature uses DigitalOcean's Serverless Inference API to c
    Add the following environment variable to your `.env` file:
 
    ```bash
-   # Invoice Generation (DigitalOcean Serverless Inference)
-   INVOICE_PROVIDER=DigitalOcean Serverless Inference
-   SECURE_AGENT_KEY=your-digitalocean-secure-agent-key-here
+   # Invoice Generation (DigitalOcean GradientAI Serverless Inference)
+   INVOICE_PROVIDER=DigitalOcean GradientAI
+   DO_INFERENCE_API_KEY=your-digitalocean-inference-api-key-here
    ```
 
-   Replace `your-digitalocean-secure-agent-key-here` with the key you copied in Step 2.
+   Replace `your-digitalocean-inference-api-key-here` with the key you copied in Step 2.
 
 2. **For Production Deployment**:
    
@@ -60,9 +60,9 @@ The invoice generation feature uses DigitalOcean's Serverless Inference API to c
    ```yaml
    envs:
      - key: "INVOICE_PROVIDER"
-       value: "DigitalOcean Serverless Inference"
-     - key: "SECURE_AGENT_KEY"
-       value: "${SECURE_AGENT_KEY}"
+       value: "DigitalOcean GradientAI"
+     - key: "DO_INFERENCE_API_KEY"
+       value: "${DO_INFERENCE_API_KEY}"
        type: "SECRET"
    ```
 
@@ -76,7 +76,7 @@ The invoice generation feature uses DigitalOcean's Serverless Inference API to c
    ```
 
    This script will:
-   - Test the connection to DigitalOcean Serverless Inference
+   - Test the connection to the Serverless Inference API
    - Generate a sample invoice
    - Save the results to `scripts/output/` directory
 
@@ -93,7 +93,7 @@ The invoice generation feature uses DigitalOcean's Serverless Inference API to c
    💰 Amount: $12.00
    📅 Invoice #: INV-20241201-1234
    
-   🤖 Generating invoice with DigitalOcean Serverless Inference...
+   🤖 Generating invoice with Serverless Inference API...
    ✅ Received response from serverless inference
    ✅ Invoice generated successfully!
    📧 Subject: Invoice #INV-20241201-1234 - Pro Plan Subscription
@@ -131,7 +131,7 @@ Content-Type: application/json
 
 The invoice generation uses a layered service architecture:
 
-1. **InvoiceService**: Main service using DigitalOcean Serverless Inference
+1. **InvoiceService**: Main service using the Serverless Inference API
 2. **PDFService**: Converts HTML invoices to PDF attachments
 3. **EmailService**: Sends invoices with attachments
 4. **BillingService**: Provides subscription and plan data
@@ -187,7 +187,7 @@ If the AI service is unavailable, the system gracefully falls back to:
 **Problem**: "Invoice service not configured or connected"
 
 **Solutions**:
-1. Verify `SECURE_AGENT_KEY` is set correctly
+1. Verify `DO_INFERENCE_API_KEY` is set correctly
 2. Check DigitalOcean Agent Platform access
 3. Ensure the key has proper permissions
 4. Test connection with the script: `node scripts/generate-invoice.js`
