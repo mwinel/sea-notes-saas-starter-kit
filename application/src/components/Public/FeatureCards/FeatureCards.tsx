@@ -25,13 +25,16 @@ const featureIcons = {
 
 const FeatureCards = () => {
   return (
-    <Box py={DIMENSIONS.spacing.section} bgcolor="background.default">
+    <Box component="section" py={DIMENSIONS.spacing.section} bgcolor="background.default" aria-labelledby="features-title">
       <Container maxWidth="lg">
         <Stack spacing={DIMENSIONS.spacing.card}>
-          <Typography variant="h4" component="h3" fontWeight="bold" textAlign="center">
-            What's included
-          </Typography>
+          <Box component="header">
+            <Typography variant="h4" component="h3" id="features-title" fontWeight="bold" textAlign="center">
+              What's included
+            </Typography>
+          </Box>
           <Box
+            role="grid"
             sx={{
               display: 'grid',
               gridTemplateColumns: {
@@ -43,7 +46,7 @@ const FeatureCards = () => {
             }}
           >
             {FEATURES.map((feature, idx) => (
-              <Card key={idx} sx={{ height: '100%' }}>
+              <Card component="article" key={idx} role="gridcell" sx={{ height: '100%' }}>
                 <CardContent>
                   <Stack spacing={DIMENSIONS.spacing.stack} alignItems="center" textAlign="center">
                     <Box sx={{ 
@@ -59,9 +62,11 @@ const FeatureCards = () => {
                     }}>
                       {featureIcons[feature.title as keyof typeof featureIcons]}
                     </Box>
-                    <Typography variant="h6" component="h4" fontWeight="bold">
-                      {feature.title}
-                    </Typography>
+                    <Box component="header">
+                      <Typography variant="h6" component="h4" fontWeight="bold">
+                        {feature.title}
+                      </Typography>
+                    </Box>
                     <Typography variant="body2" color="text.secondary">
                       {feature.description}
                     </Typography>

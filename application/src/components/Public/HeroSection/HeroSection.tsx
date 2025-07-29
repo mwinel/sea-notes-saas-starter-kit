@@ -6,7 +6,7 @@ import { DIMENSIONS } from 'constants/landing';
 
 const HeroSection = () => {
   return (
-    <Box bgcolor="background.default" py={DIMENSIONS.spacing.section}>
+    <Box component="section" bgcolor="background.default" py={DIMENSIONS.spacing.section} aria-labelledby="hero-title">
       <Container maxWidth="lg">
         <Box sx={{ 
           position: 'relative',
@@ -15,18 +15,26 @@ const HeroSection = () => {
           alignItems: { xs: 'center', lg: 'flex-start' },
           gap: DIMENSIONS.spacing.container
         }}>
-          {/* Terminal */}
-          <TerminalMockup />
+          {/* Code example */}
+          <Box component="aside" aria-label="Code example" sx={{ order: { xs: 1, lg: 2 } }}>
+            <TerminalMockup />
+          </Box>
           
           {/* Main hero content */}
-          <Stack spacing={DIMENSIONS.spacing.container} textAlign="center" alignItems="center" sx={{ 
+          <Box component="header" sx={{ 
             order: { xs: 2, lg: 1 },
             flex: 1,
-            minWidth: 0
+            minWidth: 0,
+            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: DIMENSIONS.spacing.container
           }}>
             <Typography 
               variant="h1" 
               component="h1" 
+              id="hero-title"
               fontWeight="bold"
               sx={{ 
                 textAlign: 'center',
@@ -60,8 +68,10 @@ const HeroSection = () => {
             >
               Launch your SaaS product in record time with our powerful, ready-to-use template. Packed with modern technologies and essential integrations.
             </Typography>
-            <CTAButtons />
-          </Stack>
+            <Box component="nav" aria-label="Primary actions">
+              <CTAButtons />
+            </Box>
+          </Box>
         </Box>
       </Container>
     </Box>

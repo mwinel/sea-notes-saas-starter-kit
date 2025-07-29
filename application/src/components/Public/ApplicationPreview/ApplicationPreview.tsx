@@ -5,24 +5,33 @@ import { DIMENSIONS } from 'constants/landing';
 
 const ApplicationPreview = () => {
   return (
-    <Box py={DIMENSIONS.spacing.section} bgcolor="background.default">
+    <Box component="section" py={DIMENSIONS.spacing.section} bgcolor="background.default" aria-labelledby="preview-title">
       <Container maxWidth="lg">
         <Stack spacing={DIMENSIONS.spacing.card} textAlign="center">
+          <Box component="header" className="sr-only">
+            <Typography variant="h3" component="h3" id="preview-title">
+              Application Preview
+            </Typography>
+          </Box>
           <Box sx={{ 
             position: 'relative',
             display: 'flex',
             justifyContent: 'center'
           }}>
-            <Box sx={{ 
-              bgcolor: 'background.paper', 
-              borderRadius: 3, 
-              border: '1px solid',
-              borderColor: 'divider',
-              overflow: 'hidden',
-              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
-              maxWidth: '100%',
-              width: '100%'
-            }}>
+            <Box 
+              component="figure" 
+              aria-label="SeaNotes application interface mockup"
+              sx={{ 
+                bgcolor: 'background.paper', 
+                borderRadius: 3, 
+                border: '1px solid',
+                borderColor: 'divider',
+                overflow: 'hidden',
+                boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
+                maxWidth: '100%',
+                width: '100%',
+                margin: 0
+              }}>
               {/* Mock application screenshot */}
               <Box sx={{
                 bgcolor: '#1a1a1a',

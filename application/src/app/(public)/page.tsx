@@ -7,7 +7,7 @@ import CTASection from 'components/Public/CTASection/CTASection';
 
 const Home = () => {
   return (
-    <Box>
+    <Box component="main">
       <HeroSection />
       <ApplicationPreview />
       <FeatureCards />
