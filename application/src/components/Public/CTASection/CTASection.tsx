@@ -1,12 +1,13 @@
 import React from 'react';
 import { Typography, Box, Container, Stack } from '@mui/material';
 import CTAButtons from 'components/Public/CTAButtons/CTAButtons';
+import { DIMENSIONS } from 'constants/landing';
 
 const CTASection = () => {
   return (
-    <Box py={8} bgcolor="grey.50">
+    <Box py={DIMENSIONS.spacing.section} bgcolor="grey.50">
       <Container maxWidth="md">
-        <Stack spacing={4} textAlign="center">
+        <Stack spacing={DIMENSIONS.spacing.container} textAlign="center">
           <Typography variant="h4" component="h3" fontWeight="bold">
             Ready to launch your SaaS?
           </Typography>

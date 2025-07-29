@@ -1,12 +1,13 @@
 import React from 'react';
 import { Typography, Box, Container, Stack, Card } from '@mui/material';
 import { Button } from '@mui/material';
+import { DIMENSIONS } from 'constants/landing';
 
 const ApplicationPreview = () => {
   return (
-    <Box py={8} bgcolor="background.default">
+    <Box py={DIMENSIONS.spacing.section} bgcolor="background.default">
       <Container maxWidth="lg">
-        <Stack spacing={6} textAlign="center">
+        <Stack spacing={DIMENSIONS.spacing.card} textAlign="center">
           <Box sx={{ 
             position: 'relative',
             display: 'flex',
@@ -25,16 +26,16 @@ const ApplicationPreview = () => {
               {/* Mock application screenshot */}
               <Box sx={{
                 bgcolor: '#1a1a1a',
-                p: 3,
+                p: DIMENSIONS.spacing.stack,
                 borderBottom: '1px solid',
                 borderColor: 'divider',
                 display: 'flex',
                 alignItems: 'center',
-                gap: 2
+                gap: DIMENSIONS.spacing.small
               }}>
-                <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#ff5f56' }} />
-                <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#ffbd2e' }} />
-                <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#27ca3f' }} />
+                <Box sx={{ width: DIMENSIONS.terminalDot.width, height: DIMENSIONS.terminalDot.height, borderRadius: '50%', bgcolor: '#ff5f56' }} />
+                <Box sx={{ width: DIMENSIONS.terminalDot.width, height: DIMENSIONS.terminalDot.height, borderRadius: '50%', bgcolor: '#ffbd2e' }} />
+                <Box sx={{ width: DIMENSIONS.terminalDot.width, height: DIMENSIONS.terminalDot.height, borderRadius: '50%', bgcolor: '#27ca3f' }} />
                 <Typography variant="body2" sx={{ color: 'grey.400', ml: 2, fontFamily: 'monospace' }}>
                   SeaNotes - localhost:3000
                 </Typography>
@@ -42,18 +43,18 @@ const ApplicationPreview = () => {
               
               <Box sx={{
                 display: 'flex',
-                minHeight: 400,
+                minHeight: DIMENSIONS.layout.minHeight,
                 bgcolor: '#f8f9fa'
               }}>
                 {/* Sidebar */}
                 <Box sx={{
-                  width: 240,
+                  width: DIMENSIONS.layout.sidebarWidth,
                   bgcolor: 'white',
                   borderRight: '1px solid',
                   borderColor: 'divider',
-                  p: 2
+                  p: DIMENSIONS.spacing.small
                 }}>
-                  <Stack spacing={2}>
+                  <Stack spacing={DIMENSIONS.spacing.small}>
                     <Typography variant="h6" sx={{ color: 'primary.main', fontWeight: 'bold' }}>
                       🐳 SeaNotes
                     </Typography>
@@ -74,8 +75,8 @@ const ApplicationPreview = () => {
                 </Box>
                 
                 {/* Main content */}
-                <Box sx={{ flex: 1, p: 3 }}>
-                  <Stack spacing={3}>
+                <Box sx={{ flex: 1, p: DIMENSIONS.spacing.stack }}>
+                  <Stack spacing={DIMENSIONS.spacing.stack}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <Typography variant="h5" fontWeight="bold">
                         My Notes
@@ -88,7 +89,7 @@ const ApplicationPreview = () => {
                     <Box sx={{
                       display: 'grid',
                       gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-                      gap: 2
+                      gap: DIMENSIONS.spacing.small
                     }}>
                       {/* Note cards */}
                       {[
@@ -96,7 +97,7 @@ const ApplicationPreview = () => {
                         { title: 'Meeting Notes', content: 'Discuss new features...', date: '1 day ago' },
                         { title: 'Todo List', content: 'Implement authentication...', date: '3 days ago' }
                       ].map((note, index) => (
-                        <Card key={index} sx={{ p: 2, cursor: 'pointer', '&:hover': { bgcolor: 'grey.50' } }}>
+                        <Card key={index} sx={{ p: DIMENSIONS.spacing.small, cursor: 'pointer', '&:hover': { bgcolor: 'grey.50' } }}>
                           <Typography variant="h6" fontWeight="bold" sx={{ mb: 1 }}>
                             {note.title}
                           </Typography>

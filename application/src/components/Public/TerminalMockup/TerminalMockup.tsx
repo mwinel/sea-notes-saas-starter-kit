@@ -4,19 +4,20 @@ import React, { useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CheckIcon from '@mui/icons-material/Check';
+import { TERMINAL, DIMENSIONS } from 'constants/landing';
 
 const TerminalMockup = () => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText('git clone https://github.com/digitalocean/sea-notes-saas-starter-kit.git\ncd sea-notes-saas-starter-kit\nnpm install\nnpm run dev');
+      await navigator.clipboard.writeText(TERMINAL.commands);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       // Fallback for browsers that don't support clipboard API or when permissions are denied
       const textArea = document.createElement('textarea');
-      textArea.value = 'git clone https://github.com/digitalocean/sea-notes-saas-starter-kit.git\ncd sea-notes-saas-starter-kit\nnpm install\nnpm run dev';
+      textArea.value = TERMINAL.commands;
       textArea.style.position = 'fixed';
       textArea.style.left = '-999999px';
       textArea.style.top = '-999999px';
@@ -38,7 +39,7 @@ const TerminalMockup = () => {
   return (
     <Box sx={{
       order: { xs: 1, lg: 2 },
-      width: { xs: '100%', lg: 500 },
+      width: { xs: '100%', lg: DIMENSIONS.layout.terminalWidth },
       maxWidth: '100%',
       flexShrink: 0
     }}>
@@ -62,27 +63,27 @@ const TerminalMockup = () => {
           borderColor: 'divider'
         }}>
           <Box sx={{ display: 'flex', gap: 1 }}>
-            <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#ff5f56' }} />
-            <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#ffbd2e' }} />
-            <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#27ca3f' }} />
+            <Box sx={{ width: DIMENSIONS.terminalDot.width, height: DIMENSIONS.terminalDot.height, borderRadius: '50%', bgcolor: '#ff5f56' }} />
+            <Box sx={{ width: DIMENSIONS.terminalDot.width, height: DIMENSIONS.terminalDot.height, borderRadius: '50%', bgcolor: '#ffbd2e' }} />
+            <Box sx={{ width: DIMENSIONS.terminalDot.width, height: DIMENSIONS.terminalDot.height, borderRadius: '50%', bgcolor: '#27ca3f' }} />
           </Box>
           <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
             Terminal
           </Typography>
         </Box>
         {/* Terminal content */}
-        <Box sx={{ p: 3 }}>
-          <Typography variant="body1" sx={{ fontFamily: 'monospace', color: 'text.primary', mb: 1.5, fontSize: '0.95rem' }}>
-            $ git clone https://github.com/digitalocean/sea-notes-saas-starter-kit.git
-          </Typography>
-          <Typography variant="body1" sx={{ fontFamily: 'monospace', color: 'text.primary', mb: 1.5, fontSize: '0.95rem' }}>
-            $ cd sea-notes-saas-starter-kit
-          </Typography>
-          <Typography variant="body1" sx={{ fontFamily: 'monospace', color: 'text.primary', mb: 1.5, fontSize: '0.95rem' }}>
-            $ npm install
-          </Typography>
-          <Typography variant="body1" sx={{ fontFamily: 'monospace', color: 'text.primary', mb: 2, fontSize: '0.95rem' }}>
-            $ npm run dev
+        <Box sx={{ p: DIMENSIONS.spacing.stack }}>
+          <Typography 
+            variant="body1" 
+            sx={{ 
+              fontFamily: 'monospace', 
+              color: 'text.primary', 
+              mb: DIMENSIONS.spacing.small, 
+              fontSize: '0.95rem',
+              whiteSpace: 'pre-line'
+            }}
+          >
+            {TERMINAL.commands}
           </Typography>
           <Button
             variant="outlined"

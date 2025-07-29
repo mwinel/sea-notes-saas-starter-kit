@@ -9,60 +9,25 @@ import PsychologyIcon from '@mui/icons-material/Psychology';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
+import { FEATURES, DIMENSIONS } from 'constants/landing';
 
-const features = [
-  {
-    icon: <RocketLaunchIcon sx={{ fontSize: 40, color: '#795548' }} />,
-    title: 'One-Click Deployment',
-    description: 'Deploy directly to DigitalOcean App Platform with automated setup and configuration.'
-  },
-  {
-    icon: <CloudIcon sx={{ fontSize: 40, color: '#00bcd4' }} />,
-    title: 'DigitalOcean Spaces',
-    description: 'File storage and CDN integration using DigitalOcean Spaces.'
-  },
-  {
-    icon: <PsychologyIcon sx={{ fontSize: 40, color: '#e91e63' }} />,
-    title: 'DigitalOcean Gradient',
-    description: 'AI-powered invoice generation using DigitalOcean\'s Serverless Inference API.'
-  },
-  {
-    icon: <StorageIcon sx={{ fontSize: 40, color: '#4caf50' }} />,
-    title: 'PostgreSQL and Prisma ORM',
-    description: 'Database used for efficient data management and scalability.'
-  },
-  {
-    icon: <PaymentIcon sx={{ fontSize: 40, color: '#ff9800' }} />,
-    title: 'Stripe Integration',
-    description: 'Used for subscription management.'
-  },
-  {
-    icon: <SecurityIcon sx={{ fontSize: 40, color: '#f44336' }} />,
-    title: 'NextAuth Authentication',
-    description: 'Built-in authentication system for better user management.'
-  },
-  {
-    icon: <EmailIcon sx={{ fontSize: 40, color: '#9c27b0' }} />,
-    title: 'Resend Email Service',
-    description: 'Email service used for sending authentication emails as well as invoices.'
-  },
-  {
-    icon: <AdminPanelSettingsIcon sx={{ fontSize: 40, color: '#607d8b' }} />,
-    title: 'Admin Dashboard',
-    description: 'Complete admin interface for managing users, subscriptions, and system monitoring.'
-  },
-  {
-    icon: <MonitorHeartIcon sx={{ fontSize: 40, color: '#4caf50' }} />,
-    title: 'System Health Monitoring',
-    description: 'Real-time monitoring of all services including database, email, storage, and AI services.'
-  }
-];
+const featureIcons = {
+  'One-Click Deployment': <RocketLaunchIcon sx={{ fontSize: DIMENSIONS.iconSize.large, color: FEATURES[0].color }} />,
+  'DigitalOcean Spaces': <CloudIcon sx={{ fontSize: DIMENSIONS.iconSize.large, color: FEATURES[1].color }} />,
+  'DigitalOcean Gradient': <PsychologyIcon sx={{ fontSize: DIMENSIONS.iconSize.large, color: FEATURES[2].color }} />,
+  'PostgreSQL and Prisma ORM': <StorageIcon sx={{ fontSize: DIMENSIONS.iconSize.large, color: FEATURES[3].color }} />,
+  'Stripe Integration': <PaymentIcon sx={{ fontSize: DIMENSIONS.iconSize.large, color: FEATURES[4].color }} />,
+  'NextAuth Authentication': <SecurityIcon sx={{ fontSize: DIMENSIONS.iconSize.large, color: FEATURES[5].color }} />,
+  'Resend Email Service': <EmailIcon sx={{ fontSize: DIMENSIONS.iconSize.large, color: FEATURES[6].color }} />,
+  'Admin Dashboard': <AdminPanelSettingsIcon sx={{ fontSize: DIMENSIONS.iconSize.large, color: FEATURES[7].color }} />,
+  'System Health Monitoring': <MonitorHeartIcon sx={{ fontSize: DIMENSIONS.iconSize.large, color: FEATURES[8].color }} />,
+};
 
 const FeatureCards = () => {
   return (
-    <Box py={8} bgcolor="background.default">
+    <Box py={DIMENSIONS.spacing.section} bgcolor="background.default">
       <Container maxWidth="lg">
-        <Stack spacing={6}>
+        <Stack spacing={DIMENSIONS.spacing.card}>
           <Typography variant="h4" component="h3" fontWeight="bold" textAlign="center">
             What's included
           </Typography>
@@ -74,25 +39,25 @@ const FeatureCards = () => {
                 sm: 'repeat(2, 1fr)',
                 md: 'repeat(3, 1fr)',
               },
-              gap: 3,
+              gap: DIMENSIONS.spacing.stack,
             }}
           >
-            {features.map((feature, idx) => (
+            {FEATURES.map((feature, idx) => (
               <Card key={idx} sx={{ height: '100%' }}>
                 <CardContent>
-                  <Stack spacing={3} alignItems="center" textAlign="center">
+                  <Stack spacing={DIMENSIONS.spacing.stack} alignItems="center" textAlign="center">
                     <Box sx={{ 
                       display: 'flex', 
                       alignItems: 'center', 
                       justifyContent: 'center',
-                      width: 80,
-                      height: 80,
+                      width: DIMENSIONS.iconContainer.width,
+                      height: DIMENSIONS.iconContainer.height,
                       borderRadius: 2,
                       bgcolor: 'grey.50',
                       border: '1px solid',
                       borderColor: 'divider'
                     }}>
-                      {feature.icon}
+                      {featureIcons[feature.title as keyof typeof featureIcons]}
                     </Box>
                     <Typography variant="h6" component="h4" fontWeight="bold">
                       {feature.title}

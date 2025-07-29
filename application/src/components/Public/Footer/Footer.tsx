@@ -12,32 +12,33 @@ import SupportIcon from '@mui/icons-material/Support';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import ForumIcon from '@mui/icons-material/Forum';
 import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
+import { URLS, DIMENSIONS } from 'constants/landing';
 
 const footerSections = [
   {
     title: 'Product & Code',
     links: [
-      { label: 'GitHub Repository', href: 'https://github.com/digitalocean/sea-notes-saas-starter-kit', icon: <GitHubIcon sx={{ fontSize: 16 }} /> },
-      { label: 'Documentation', href: 'https://docs.digitalocean.com', icon: <MenuBookIcon sx={{ fontSize: 16 }} /> },
-      { label: 'Live Demo', href: '#', icon: <LaunchIcon sx={{ fontSize: 16 }} /> },
+      { label: 'GitHub Repository', href: URLS.githubRepo, icon: <GitHubIcon sx={{ fontSize: DIMENSIONS.iconSize.small }} /> },
+      { label: 'Documentation', href: URLS.documentation, icon: <MenuBookIcon sx={{ fontSize: DIMENSIONS.iconSize.small }} /> },
+      { label: 'Live Demo', href: '#', icon: <LaunchIcon sx={{ fontSize: DIMENSIONS.iconSize.small }} /> },
     ],
   },
   {
     title: 'DigitalOcean Services',
     links: [
-      { label: 'App Platform', href: 'https://www.digitalocean.com/products/app-platform', icon: <CloudIcon sx={{ fontSize: 16 }} /> },
-      { label: 'Spaces Storage', href: 'https://www.digitalocean.com/products/spaces', icon: <StorageIcon sx={{ fontSize: 16 }} /> },
-      { label: 'Managed Databases', href: 'https://www.digitalocean.com/products/managed-databases', icon: <DatabaseIcon sx={{ fontSize: 16 }} /> },
-      { label: 'Gradient', href: 'https://www.digitalocean.com/products/gradientai', icon: <PsychologyIcon sx={{ fontSize: 16 }} /> },
+      { label: 'App Platform', href: URLS.appPlatform, icon: <CloudIcon sx={{ fontSize: DIMENSIONS.iconSize.small }} /> },
+      { label: 'Spaces Storage', href: URLS.spaces, icon: <StorageIcon sx={{ fontSize: DIMENSIONS.iconSize.small }} /> },
+      { label: 'Managed Databases', href: URLS.databases, icon: <DatabaseIcon sx={{ fontSize: DIMENSIONS.iconSize.small }} /> },
+      { label: 'Gradient', href: URLS.gradient, icon: <PsychologyIcon sx={{ fontSize: DIMENSIONS.iconSize.small }} /> },
     ],
   },
   {
     title: 'Support & Community',
     links: [
-      { label: 'DigitalOcean Support', href: 'https://www.digitalocean.com/support', icon: <SupportIcon sx={{ fontSize: 16 }} /> },
-      { label: 'DigitalOcean Twitter', href: 'https://twitter.com/digitalocean', icon: <TwitterIcon sx={{ fontSize: 16 }} /> },
-      { label: 'Community Forum', href: 'https://www.digitalocean.com/community', icon: <ForumIcon sx={{ fontSize: 16 }} /> },
-      { label: 'Status Page', href: 'https://status.digitalocean.com', icon: <MonitorHeartIcon sx={{ fontSize: 16 }} /> },
+      { label: 'DigitalOcean Support', href: URLS.support, icon: <SupportIcon sx={{ fontSize: DIMENSIONS.iconSize.small }} /> },
+      { label: 'DigitalOcean Twitter', href: URLS.twitter, icon: <TwitterIcon sx={{ fontSize: DIMENSIONS.iconSize.small }} /> },
+      { label: 'Community Forum', href: URLS.community, icon: <ForumIcon sx={{ fontSize: DIMENSIONS.iconSize.small }} /> },
+      { label: 'Status Page', href: URLS.status, icon: <MonitorHeartIcon sx={{ fontSize: DIMENSIONS.iconSize.small }} /> },
     ],
   },
 ];
@@ -54,7 +55,7 @@ export default function Footer() {
       component="footer"
       sx={{
         backgroundColor: 'background.paper',
-        py: 6,
+        py: DIMENSIONS.spacing.card,
         borderTop: `1px solid ${theme.palette.divider}`,
       }}
     >
@@ -67,16 +68,16 @@ export default function Footer() {
               sm: 'repeat(2, 1fr)',
               md: 'repeat(3, 1fr)',
             },
-            gap: 4,
-            mb: 4,
+            gap: DIMENSIONS.spacing.container,
+            mb: DIMENSIONS.spacing.container,
           }}
         >
           {footerSections.map((section) => (
             <Box key={section.title}>
-              <Typography variant="h6" fontWeight={600} sx={{ color: 'text.primary', mb: 2 }}>
+              <Typography variant="h6" fontWeight={600} sx={{ color: 'text.primary', mb: DIMENSIONS.spacing.small }}>
                 {section.title}
               </Typography>
-              <Stack spacing={1.5}>
+              <Stack spacing={DIMENSIONS.spacing.tiny}>
                 {section.links.map((link) => (
                   <Box key={link.label} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     <Box sx={{ color: 'text.secondary' }}>
@@ -106,7 +107,7 @@ export default function Footer() {
           ))}
         </Box>
         
-        <Box sx={{ pt: 4, borderTop: `1px solid ${theme.palette.divider}`, textAlign: 'center' }}>
+        <Box sx={{ pt: DIMENSIONS.spacing.container, borderTop: `1px solid ${theme.palette.divider}`, textAlign: 'center' }}>
           <Typography variant="body2" color="text.secondary">
             © 2025 SeaNotes. Built with ❤️ using DigitalOcean services.
           </Typography>

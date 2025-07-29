@@ -2,23 +2,24 @@ import React from 'react';
 import { Typography, Box, Container, Stack } from '@mui/material';
 import TerminalMockup from 'components/Public/TerminalMockup/TerminalMockup';
 import CTAButtons from 'components/Public/CTAButtons/CTAButtons';
+import { DIMENSIONS } from 'constants/landing';
 
 const HeroSection = () => {
   return (
-    <Box bgcolor="background.default" py={8}>
+    <Box bgcolor="background.default" py={DIMENSIONS.spacing.section}>
       <Container maxWidth="lg">
         <Box sx={{ 
           position: 'relative',
           display: 'flex',
           flexDirection: { xs: 'column', lg: 'row' },
           alignItems: { xs: 'center', lg: 'flex-start' },
-          gap: 4
+          gap: DIMENSIONS.spacing.container
         }}>
           {/* Terminal */}
           <TerminalMockup />
           
           {/* Main hero content */}
-          <Stack spacing={4} textAlign="center" alignItems="center" sx={{ 
+          <Stack spacing={DIMENSIONS.spacing.container} textAlign="center" alignItems="center" sx={{ 
             order: { xs: 2, lg: 1 },
             flex: 1,
             minWidth: 0
@@ -51,7 +52,7 @@ const HeroSection = () => {
               component="p" 
               color="text.secondary" 
               sx={{ 
-                maxWidth: 600, 
+                maxWidth: DIMENSIONS.layout.maxContentWidth, 
                 mx: 'auto',
                 textAlign: 'center',
                 width: '100%'
