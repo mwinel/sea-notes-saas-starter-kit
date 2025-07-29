@@ -1,12 +1,8 @@
-'use client';
-
-import React, { useState } from 'react';
-import { Button, Typography, Box, Container, Stack, Card, CardContent, IconButton, Tooltip } from '@mui/material';
+import React from 'react';
+import { Button, Typography, Box, Container, Stack, Card, CardContent } from '@mui/material';
 import Link from 'next/link';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LaunchIcon from '@mui/icons-material/Launch';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import CheckIcon from '@mui/icons-material/Check';
 import StorageIcon from '@mui/icons-material/Storage';
 import PaymentIcon from '@mui/icons-material/Payment';
 import SecurityIcon from '@mui/icons-material/Security';
@@ -16,6 +12,7 @@ import PsychologyIcon from '@mui/icons-material/Psychology';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import MonitorHeartIcon from '@mui/icons-material/MonitorHeart';
+import TerminalMockup from 'components/Public/TerminalMockup/TerminalMockup';
 
 const features = [
   {
@@ -66,14 +63,6 @@ const features = [
 ];
 
 const Home = () => {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText('git clone https://github.com/digitalocean/sea-notes-saas-starter-kit.git\ncd sea-notes-saas-starter-kit\nnpm install\nnpm run dev');
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   return (
     <Box>
     {/* Hero Section */}
@@ -86,75 +75,8 @@ const Home = () => {
           alignItems: { xs: 'center', lg: 'flex-start' },
           gap: 4
         }}>
-                             {/* Terminal */}
-                   <Box sx={{
-                     order: { xs: 1, lg: 2 },
-                     width: { xs: '100%', lg: 500 },
-                     maxWidth: '100%',
-                     flexShrink: 0
-                   }}>
-                     <Box sx={{
-                       bgcolor: 'white',
-                       borderRadius: 2,
-                       border: '1px solid',
-                       borderColor: 'divider',
-                       overflow: 'hidden',
-                       boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
-                     }}>
-                       {/* Terminal header */}
-                       <Box sx={{
-                         bgcolor: '#f5f5f5',
-                         px: 2,
-                         py: 1,
-                         display: 'flex',
-                         alignItems: 'center',
-                         justifyContent: 'space-between',
-                         borderBottom: '1px solid',
-                         borderColor: 'divider'
-                       }}>
-                         <Box sx={{ display: 'flex', gap: 1 }}>
-                           <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#ff5f56' }} />
-                           <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#ffbd2e' }} />
-                           <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#27ca3f' }} />
-                         </Box>
-                         <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
-                           Terminal
-                         </Typography>
-                       </Box>
-                       {/* Terminal content */}
-                       <Box sx={{ p: 3 }}>
-                         <Typography variant="body1" sx={{ fontFamily: 'monospace', color: 'text.primary', mb: 1.5, fontSize: '0.95rem' }}>
-                           $ git clone https://github.com/digitalocean/sea-notes-saas-starter-kit.git
-                         </Typography>
-                         <Typography variant="body1" sx={{ fontFamily: 'monospace', color: 'text.primary', mb: 1.5, fontSize: '0.95rem' }}>
-                           $ cd sea-notes-saas-starter-kit
-                         </Typography>
-                         <Typography variant="body1" sx={{ fontFamily: 'monospace', color: 'text.primary', mb: 1.5, fontSize: '0.95rem' }}>
-                           $ npm install
-                         </Typography>
-                         <Typography variant="body1" sx={{ fontFamily: 'monospace', color: 'text.primary', mb: 2, fontSize: '0.95rem' }}>
-                           $ npm run dev
-                         </Typography>
-                         <Button
-                           variant="outlined"
-                           size="small"
-                           startIcon={copied ? <CheckIcon /> : <ContentCopyIcon />}
-                           onClick={handleCopy}
-                           sx={{
-                             borderColor: 'grey.400',
-                             color: 'text.primary',
-                             '&:hover': {
-                               borderColor: 'primary.main',
-                               bgcolor: 'primary.main',
-                               color: 'white'
-                             }
-                           }}
-                         >
-                           {copied ? 'Copied!' : 'Copy all'}
-                         </Button>
-                       </Box>
-                     </Box>
-                   </Box>
+          {/* Terminal */}
+          <TerminalMockup />
           
           {/* Main hero content */}
           <Stack spacing={4} textAlign="center" alignItems="center" sx={{ 
