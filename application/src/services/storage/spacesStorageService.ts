@@ -44,7 +44,7 @@ export class SpacesStorageService extends StorageService {
    */
   private initializeClient(): void {
     try {
-          const accessKeyId = serverConfig.Spaces.SEANOTES_SPACES_KEY_ID;
+    const accessKeyId = serverConfig.Spaces.SEANOTES_SPACES_KEY_ID;
     const secretAccessKey = serverConfig.Spaces.SEANOTES_SPACES_KEY_SECRET;
     const bucketName = serverConfig.Spaces.SEANOTES_SPACES_BUCKET_NAME;
     const region = serverConfig.Spaces.SEANOTES_SPACES_REGION;

@@ -168,7 +168,7 @@ const Subscription: React.FC = () => {
         </Box>
       ) : (
         <Box display={'flex'} flexDirection="column" alignItems="flex-start" mt={2}>
-          <Typography variant="body1" mb={2}>\
+          <Typography variant="body1" mb={2}>
             You currently do not have an active subscription. Your account most likely was created
             without Stripe being configured.
           </Typography>
