@@ -72,10 +72,10 @@ Make sure these are configured in your `.env` file:
 
 ```bash
 # DigitalOcean Spaces (for storage)
-SEANOTES_SPACES_KEY_ID=your-access-key-id
-SEANOTES_SPACES_KEY_SECRET=your-access-key-secret
-SEANOTES_SPACES_REGION=blr1
-SEANOTES_SPACES_BUCKET_NAME=sea-notes-storage
+SPACES_KEY_ID=your-access-key-id
+SPACES_KEY_SECRET=your-access-key-secret
+SPACES_REGION=blr1
+SPACES_BUCKET_NAME=sea-notes-storage
 
 # AI Service (for invoice generation)
 DO_INFERENCE_API_KEY=your-do-inference-api-key
