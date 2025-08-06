@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Container, Typography, Alert, CircularProgress, Button, Stack } from '@mui/material';
+import { useRouter } from 'next/navigation';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -29,6 +30,7 @@ interface SystemInfo {
  * This component is service-agnostic and renders any services returned by the API.
  */
 const SystemStatusPage: React.FC = () => {
+  const router = useRouter();
   const [services, setServices] = useState<ServiceStatus[]>([]);
   const [systemInfo, setSystemInfo] = useState<SystemInfo | null>(null);
   const [loading, setLoading] = useState(true);
@@ -128,7 +130,12 @@ const SystemStatusPage: React.FC = () => {
               Refresh Status
             </Button>
             {!hasRequiredIssues && (
-              <Button variant="outlined" startIcon={<HomeIcon />} href="/" disabled={loading}>
+              <Button 
+                variant="outlined" 
+                startIcon={<HomeIcon />} 
+                onClick={() => router.push('/')}
+                disabled={loading}
+              >
                 Return Home
               </Button>
             )}
