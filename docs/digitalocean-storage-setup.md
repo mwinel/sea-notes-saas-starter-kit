@@ -36,7 +36,7 @@ STORAGE_PROVIDER=Spaces
 
 # Spaces credentials (from your DigitalOcean dashboard)
 SPACES_KEY_ID=your-access-key-id-here
-SPACES_KEY_SECRET=your-access-key-secret-here
+SPACES_SECRET_KEY=your-access-key-secret-here
 
 # Spaces configuration
 SPACES_REGION=blr1
