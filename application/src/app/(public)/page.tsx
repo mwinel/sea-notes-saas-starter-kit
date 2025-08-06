@@ -5,6 +5,9 @@ import ApplicationPreview from 'components/Public/ApplicationPreview/Application
 import FeatureCards from 'components/Public/FeatureCards/FeatureCards';
 import CTASection from 'components/Public/CTASection/CTASection';
 
+/**
+ * Home page component
+ */
 const Home = () => {
   return (
     <Box component="main">

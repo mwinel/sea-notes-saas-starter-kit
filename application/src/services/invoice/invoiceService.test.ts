@@ -2,7 +2,7 @@ import { InvoiceService, InvoiceData } from './invoiceService';
 
 // Mock axios
 jest.mock('axios');
-const mockAxios = require('axios');
+import mockAxios from 'axios';
 
 // Mock serverConfig
 const mockServerConfig: {

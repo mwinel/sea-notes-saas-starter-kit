@@ -70,7 +70,7 @@ export class ResendEmailService extends EmailService {
 
     try {
       // Prepare email data
-      const emailData: any = {
+      const emailData: Record<string, unknown> = {
         from: this.fromEmail,
         to: [to],
         subject,
