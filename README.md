@@ -315,7 +315,7 @@ To enable file uploads, you'll need to set up a DigitalOcean Spaces bucket and a
 
    After creating your Spaces bucket and access key, you'll need to add the following values to your `.env` file:
 
-   - **SEANOTES_SPACES_REGION**: This is your selected datacenter region (e.g., nyc3, sfo2, etc.)
+   - **SPACES_REGION**: This is your selected datacenter region (e.g., nyc3, sfo2, etc.)
 
    - **SPACES_BUCKET_NAME**: This is simply the name you gave your Spaces bucket when you created it
 

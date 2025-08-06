@@ -35,12 +35,12 @@ Add these variables to your `.env` file:
 STORAGE_PROVIDER=Spaces
 
 # Spaces credentials (from your DigitalOcean dashboard)
-SEANOTES_SPACES_KEY_ID=your-access-key-id-here
-SEANOTES_SPACES_KEY_SECRET=your-access-key-secret-here
+SPACES_KEY_ID=your-access-key-id-here
+SPACES_KEY_SECRET=your-access-key-secret-here
 
 # Spaces configuration
-SEANOTES_SPACES_REGION=blr1
-SEANOTES_SPACES_BUCKET_NAME=sea-notes-storage
+SPACES_REGION=blr1
+SPACES_BUCKET_NAME=sea-notes-storage
 ```
 
 ## Step 4: Verify Configuration

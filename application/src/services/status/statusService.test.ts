@@ -87,10 +87,10 @@ const mockCreateAuthService = createAuthService as jest.MockedFunction<typeof cr
 describe('StatusService', () => {
   const originalConfig = {
     storageProvider: serverConfig.storageProvider,
-    accessKey: serverConfig.Spaces.SEANOTES_SPACES_KEY_ID,
-    secretKey: serverConfig.Spaces.SEANOTES_SPACES_KEY_SECRET,
-    bucketName: serverConfig.Spaces.SEANOTES_SPACES_BUCKET_NAME,
-    region: serverConfig.Spaces.SEANOTES_SPACES_REGION,
+    accessKey: serverConfig.Spaces.SPACES_KEY_ID,
+    secretKey: serverConfig.Spaces.SPACES_KEY_SECRET,
+    bucketName: serverConfig.Spaces.SPACES_BUCKET_NAME,
+    region: serverConfig.Spaces.SPACES_REGION,
   };
 
   beforeEach(() => {
@@ -110,10 +110,10 @@ describe('StatusService', () => {
 
     // Set default mock values for testing
     serverConfig.storageProvider = 'Spaces';
-    serverConfig.Spaces.SEANOTES_SPACES_KEY_ID = 'test-access-key';
-    serverConfig.Spaces.SEANOTES_SPACES_KEY_SECRET = 'test-secret-key';
-    serverConfig.Spaces.SEANOTES_SPACES_BUCKET_NAME = 'test-bucket';
-    serverConfig.Spaces.SEANOTES_SPACES_REGION = 'test-region';
+    serverConfig.Spaces.SPACES_KEY_ID = 'test-access-key';
+    serverConfig.Spaces.SPACES_KEY_SECRET = 'test-secret-key';
+    serverConfig.Spaces.SPACES_BUCKET_NAME = 'test-bucket';
+    serverConfig.Spaces.SPACES_REGION = 'test-region';
 
     // Setup default mock responses
     mockStorageService.checkConfiguration.mockResolvedValue({
@@ -160,10 +160,10 @@ describe('StatusService', () => {
   afterAll(() => {
     // Restore original config
     serverConfig.storageProvider = originalConfig.storageProvider;
-    serverConfig.Spaces.SEANOTES_SPACES_KEY_ID = originalConfig.accessKey;
-    serverConfig.Spaces.SEANOTES_SPACES_KEY_SECRET = originalConfig.secretKey;
-    serverConfig.Spaces.SEANOTES_SPACES_BUCKET_NAME = originalConfig.bucketName;
-    serverConfig.Spaces.SEANOTES_SPACES_REGION = originalConfig.region;
+    serverConfig.Spaces.SPACES_KEY_ID = originalConfig.accessKey;
+    serverConfig.Spaces.SPACES_KEY_SECRET = originalConfig.secretKey;
+    serverConfig.Spaces.SPACES_BUCKET_NAME = originalConfig.bucketName;
+    serverConfig.Spaces.SPACES_REGION = originalConfig.region;
   });
 
   describe('checkStorageStatus', () => {

@@ -13,10 +13,10 @@ export interface ServerConfig {
     url?: string;
   };
   Spaces: {
-    SEANOTES_SPACES_KEY_ID?: string;
-    SEANOTES_SPACES_KEY_SECRET?: string;
-    SEANOTES_SPACES_BUCKET_NAME?: string;
-    SEANOTES_SPACES_REGION?: string;
+    SPACES_KEY_ID?: string;
+    SPACES_KEY_SECRET?: string;
+    SPACES_BUCKET_NAME?: string;
+    SPACES_REGION?: string;
   };
   Resend: {
     apiKey?: string;
@@ -46,10 +46,10 @@ export const serverConfig: ServerConfig = {
     url: process.env.DATABASE_URL,
   },
   Spaces: {
-    SEANOTES_SPACES_KEY_ID: process.env.SEANOTES_SPACES_KEY_ID,
-    SEANOTES_SPACES_KEY_SECRET: process.env.SEANOTES_SPACES_KEY_SECRET,
-    SEANOTES_SPACES_BUCKET_NAME: process.env.SEANOTES_SPACES_BUCKET_NAME,
-    SEANOTES_SPACES_REGION: process.env.SEANOTES_SPACES_REGION,
+    SPACES_KEY_ID: process.env.SPACES_KEY_ID,
+    SPACES_KEY_SECRET: process.env.SPACES_KEY_SECRET,
+    SPACES_BUCKET_NAME: process.env.SPACES_BUCKET_NAME,
+    SPACES_REGION: process.env.SPACES_REGION,
   },
   Resend: {
     apiKey: process.env.RESEND_API_KEY,
