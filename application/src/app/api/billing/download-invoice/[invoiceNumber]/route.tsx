@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { withAuth } from 'lib/auth/withAuth';
 import { HTTP_STATUS } from 'lib/api/http';
 import { createStorageService } from 'services/storage/storageFactory';
-import { createDatabaseService } from 'services/database/databaseFactory';
 
 /**
  * API endpoint to download a specific invoice by invoice number.

@@ -1,9 +1,12 @@
 import React from 'react';
-import { Typography, Box, Container, Stack } from '@mui/material';
+import { Typography, Box, Container } from '@mui/material';
 import TerminalMockup from 'components/Public/TerminalMockup/TerminalMockup';
 import CTAButtons from 'components/Public/CTAButtons/CTAButtons';
 import { DIMENSIONS } from 'constants/landing';
 
+/**
+ * HeroSection component
+ */
 const HeroSection = () => {
   return (
     <Box component="section" bgcolor="background.default" py={DIMENSIONS.spacing.section} aria-labelledby="hero-title">

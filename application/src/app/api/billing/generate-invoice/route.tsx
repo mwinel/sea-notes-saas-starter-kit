@@ -40,7 +40,6 @@ async function generateInvoiceHandler(
 
     // Get user's current subscription
     let userSubscription = await db.subscription.findByUserId(user.id);
-    let subscription;
     
     // If no subscription exists, create a FREE subscription
     if (!userSubscription || userSubscription.length === 0) {
@@ -82,7 +81,7 @@ async function generateInvoiceHandler(
       userSubscription = await db.subscription.findByUserId(user.id);
     }
 
-    subscription = userSubscription[0];
+    const subscription = userSubscription[0];
     
     if (!subscription.plan) {
       // Default to FREE if no plan is set
@@ -90,6 +89,7 @@ async function generateInvoiceHandler(
         plan: SubscriptionPlanEnum.FREE,
         status: SubscriptionStatusEnum.ACTIVE,
       });
+      // Update local copy to match database
       subscription.plan = SubscriptionPlanEnum.FREE;
     }
 
@@ -141,7 +141,7 @@ async function generateInvoiceHandler(
         pdfBuffer = await pdfService.generateInvoicePDF(generatedInvoice.html);
         pdfFilename = `invoice-${invoiceData.invoiceNumber}-${userDetails.name.replace(/\s+/g, '-')}.pdf`;
       }
-    } catch (pdfError) {
+    } catch {
       // PDF generation failed, continue without attachment
     }
     
@@ -189,7 +189,7 @@ async function generateInvoiceHandler(
       );
     }
     
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Failed to generate invoice' },
       { status: HTTP_STATUS.INTERNAL_SERVER_ERROR }

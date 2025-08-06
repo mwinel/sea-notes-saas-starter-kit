@@ -3,6 +3,9 @@ import { Typography, Box, Container, Stack, Card } from '@mui/material';
 import { Button } from '@mui/material';
 import { DIMENSIONS } from 'constants/landing';
 
+/**
+ * ApplicationPreview component
+ */
 const ApplicationPreview = () => {
   return (
     <Box component="section" py={DIMENSIONS.spacing.section} bgcolor="background.default" aria-labelledby="preview-title">

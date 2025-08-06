@@ -10,7 +10,7 @@ interface GetInvoiceButtonProps {
   variant?: 'text' | 'outlined' | 'contained';
   fullWidth?: boolean;
   size?: 'small' | 'medium' | 'large';
-  sx?: any;
+  sx?: Record<string, unknown>;
 }
 
 /**
@@ -61,7 +61,7 @@ export default function GetInvoiceButton({
           text: data.error || 'Failed to generate invoice'
         });
       }
-    } catch (error) {
+    } catch {
       setMessage({
         type: 'error',
         text: 'Network error. Please try again.'

@@ -36,7 +36,6 @@ async function generateInvoiceStorageHandler(
 
     // Get user's current subscription
     let userSubscription = await db.subscription.findByUserId(user.id);
-    let subscription;
     
     // If no subscription exists, create a FREE subscription
     if (!userSubscription || userSubscription.length === 0) {
@@ -78,7 +77,7 @@ async function generateInvoiceStorageHandler(
       userSubscription = await db.subscription.findByUserId(user.id);
     }
 
-    subscription = userSubscription[0];
+    const subscription = userSubscription[0];
     
     if (!subscription.plan) {
       // Default to FREE if no plan is set
@@ -86,6 +85,7 @@ async function generateInvoiceStorageHandler(
         plan: SubscriptionPlanEnum.FREE,
         status: SubscriptionStatusEnum.ACTIVE,
       });
+      // Update local copy to match database
       subscription.plan = SubscriptionPlanEnum.FREE;
     }
 
