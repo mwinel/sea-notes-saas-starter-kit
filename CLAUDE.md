@@ -82,7 +82,6 @@ Key environment variables (see `env-example`):
 - `STRIPE_SECRET_KEY` - Stripe API key
 - `RESEND_API_KEY` - Email service API key
 - `SPACES_*` - DigitalOcean Spaces configuration
-- `SPACES_*` - DigitalOcean Spaces configuration
 
 ## Testing Strategy
 
