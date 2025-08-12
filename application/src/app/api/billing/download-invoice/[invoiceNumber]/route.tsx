@@ -20,7 +20,6 @@ async function downloadInvoiceHandler(
 ): Promise<Response> {
   try {
     const resolvedParams = await params;
-    console.log('Resolved params:', resolvedParams);
     
     if (!resolvedParams || !resolvedParams.invoiceNumber) {
       console.error('Invalid params structure:', resolvedParams);
