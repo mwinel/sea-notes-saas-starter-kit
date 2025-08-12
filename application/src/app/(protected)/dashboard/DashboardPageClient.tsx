@@ -8,13 +8,22 @@ import { SubscriptionPlanEnum } from 'types';
 /**
  * DashboardPageClient renders the dashboard UI and allows the user to send a test email to themselves.
  * @param userEmail - The email address of the logged-in user.
+ * @param userName - The full name of the logged-in user.
  */
-export default function DashboardPageClient({ userEmail }: { userEmail: string }) {
+export default function DashboardPageClient({ userEmail, userName }: { userEmail: string; userName: string }) {
   const [subscription, setSubscription] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const stripeApi = useMemo(() => new StripeClient(), []);
   const theme = useTheme();
   const subscriptionLabel = 'Your current subscription plan is: ';
+  
+  // Extract first name from full name, fallback to email if name is empty
+  const getDisplayName = () => {
+    if (userName && userName.trim()) {
+      return userName.trim().split(' ')[0];
+    }
+    return userEmail.split('@')[0]; // Fallback to email username
+  };
 
   useEffect(() => {
     const fetchSubscription = async () => {
@@ -39,7 +48,7 @@ export default function DashboardPageClient({ userEmail }: { userEmail: string }
       alignItems="center"
       minHeight="80vh"
     >
-      <Typography variant="h4">Welcome back, {userEmail}!</Typography>
+      <Typography variant="h4">Welcome back, {getDisplayName()}!</Typography>
       <Typography variant="h5" mt={2}>
         {loading ? (
           'Loading subscription...'

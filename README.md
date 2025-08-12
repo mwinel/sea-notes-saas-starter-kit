@@ -27,7 +27,7 @@ You can use SeaNotes in two ways:
 1. As a **starter kit** to build your own SaaS application by replacing the notes functionality with your business logic
 2. As a **reference app** by pointing your LLMs (like ChatGPT or Claude) to this codebase to understand how to implement similar features in your own projects
 
-![alt text](docs/images/launch_your_saas_on_digitalocean.png)
+![alt text](docs/images/application-preview.png)
 
 ## Quick Deploy
 

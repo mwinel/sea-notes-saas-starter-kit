@@ -48,12 +48,12 @@ STORAGE_PROVIDER=Spaces
 # Spaces credentials (from your DigitalOcean dashboard)
 # These are used to authenticate API requests to DigitalOcean Spaces
 SPACES_KEY_ID=your-access-key-id-here
-SPACES_KEY_SECRET=your-access-key-secret-here
+SPACES_SECRET_KEY=your-access-key-secret-here
 
 # Spaces configuration
 # These define which bucket and region your files will be stored in
 SPACES_REGION=nyc3                # Your selected datacenter region (e.g., nyc3, sfo2)
-SPACES_BUCKET_NAME=my-app-bucket  # Name of your Spaces bucket
+SPACES_BUCKET_NAME=my-app-bucket  # Name of your Spaces bucket 
 
 # ====================
 # EMAIL CONFIGURATION (Resend)

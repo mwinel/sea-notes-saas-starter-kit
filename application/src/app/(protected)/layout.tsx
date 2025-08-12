@@ -1,11 +1,8 @@
-'use client';
-
 import { Box } from '@mui/material';
 import Sidebar from 'components/Common/Sidebar/Sidebar';
 import MaterialThemeProvider from 'components/Theme/Theme';
 import { ThemePicker } from 'components/Theme/ThemePicker';
-import { useNavigating } from 'hooks/navigation';
-import { useEffect } from 'react';
+import NavigationHandler from './NavigationHandler';
 
 /**
  * Dashboard layout wrapper.
@@ -14,14 +11,9 @@ import { useEffect } from 'react';
  * @param children - Content of the pages inside the dashboard layout.
  */
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
-  const { setNavigating } = useNavigating();
-
-  useEffect(() => {
-    setNavigating(false);
-  }, [setNavigating]);
-
   return (
     <MaterialThemeProvider>
+      <NavigationHandler />
       <Box sx={{ display: 'flex', minHeight: '100vh', width: '100%' }}>
         <Sidebar />
         <Box

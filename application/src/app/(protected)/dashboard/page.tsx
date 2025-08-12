@@ -9,5 +9,8 @@ import DashboardPageClient from './DashboardPageClient';
  */
 export default async function DashboardPage() {
   const session = await auth();
-  return <DashboardPageClient userEmail={session?.user.email ?? ''} />;
+  return <DashboardPageClient 
+    userEmail={session?.user.email ?? ''} 
+    userName={session?.user.name ?? ''} 
+  />;
 }

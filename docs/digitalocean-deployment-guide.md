@@ -90,7 +90,8 @@ The App Spec is a YAML file that defines how your application should be deployed
 > **Note:** The script automatically transfers settings from your `.env` file to the app spec, including:
 >
 > - `APP_NAME`: Name for your app in DigitalOcean
-> - `SPACES_KEY_ID`, `SPACES_SECRET_KEY`, `SPACES_BUCKET_NAME`, `SPACES_REGION`: Your Spaces storage configuration
+> - `SPACES_KEY_ID`, `SPACES_SECRET_KEY`, `SPACES_BUCKET_NAME`, `SPACES_REGION`: Your Spaces storage 
+configuration
 > - `AUTH_SECRET`: Secret string for Auth.js
 > - `RESEND_API_KEY`, `RESEND_EMAIL_SENDER`: Your email service configuration
 > - `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_FREE_PRICE_ID`, `STRIPE_PRO_PRICE_ID`, `STRIPE_PRO_GIFT_PRICE_ID`, `STRIPE_PORTAL_CONFIG_ID`: Your Stripe configuration
