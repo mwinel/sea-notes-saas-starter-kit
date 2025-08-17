@@ -94,10 +94,13 @@ SeaNotes can be run [locally](#quick-start-local-development) or on [DigitalOcea
 
 ### Step 1: Get the Code
 
-Clone the repository and install dependencies:
+We recommend **forking** this repository to your own GitHub account before cloning, so your changes are saved in your own repo and you can still pull updates from the upstream project later.
 
 ```bash
-git clone https://github.com/digitalocean/sea-notes-saas-starter-kit.git
+# 1. Fork the repo to your GitHub account (button in the top right on GitHub)
+# 2. Clone your fork locally:
+git clone https://github.com/<your-username>/sea-notes-saas-starter-kit.git
+
 cd sea-notes-saas-starter-kit/application
 npm install
 ```
