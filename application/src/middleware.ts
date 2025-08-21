@@ -19,29 +19,35 @@ export async function middleware(request: NextRequest) {
   const isLoggedIn = !!session?.user;
   const role = session?.user?.role as UserRole;
 
-  // Redirect authenticated users from root to their dashboard
+  // 1. Redirect authenticated users from root directly to their role-based dashboard
   if (pathname === '/' && isLoggedIn && role) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+    return NextResponse.redirect(new URL(ROLE_HOME_URL[role], request.url));
   }
 
-  // Redirect authenticated users from /dashboard to their role-based dashboard
+  // 2. Redirect from generic /dashboard to role-based dashboard
+  // This handles backward compatibility and direct /dashboard access
   if (pathname === '/dashboard' && isLoggedIn && role) {
     return NextResponse.redirect(new URL(ROLE_HOME_URL[role], request.url));
   }
 
+  // 3. Protect dashboard routes - redirect unauthenticated users to login
   if (pathname.startsWith('/dashboard') && !isLoggedIn) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
+  // 4. Redirect logged-in users from auth pages directly to their role-based dashboard
   if (isLoggedIn && role && (pathname === '/login' || pathname === '/signup')) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+    return NextResponse.redirect(new URL(ROLE_HOME_URL[role], request.url));
   }
 
-  if (pathname.startsWith('/admin') && role !== USER_ROLES.ADMIN) {
+  // 5. Protect admin routes
+  if (pathname.startsWith('/admin')) {
     if (!isLoggedIn) {
+      // Redirect unauthenticated users to login
       return NextResponse.redirect(new URL('/login', request.url));
-    } else {
-      return NextResponse.redirect(new URL('/dashboard', request.url));
+    } else if (role !== USER_ROLES.ADMIN) {
+      // Redirect non-admin users to their role-based dashboard
+      return NextResponse.redirect(new URL(ROLE_HOME_URL[role], request.url));
     }
   }
 
