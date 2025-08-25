@@ -43,7 +43,7 @@ const LoginForm: React.FC = () => {
       setNavigating(false);
       setError(res?.code || 'Something went wrong');
     } else if (res.ok) {
-      navigate('/');
+      navigate('/dashboard/my-notes');
     }
   };
   return (
