@@ -70,8 +70,8 @@ const createSubscription = async (db: DatabaseClient, user: User) => {
  */
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, password } = await req.json();
-    if (!email || !password || !name) {
+    const { firstName, lastName, email, password } = await req.json();
+    if (!email || !password || !firstName || !lastName) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: HTTP_STATUS.BAD_REQUEST }
@@ -93,7 +93,8 @@ export async function POST(req: NextRequest) {
     const verificationToken = !isEmailEnabled ? null : uuidv4();
 
     const user = await dbClient.user.create({
-      name,
+      firstName,
+      lastName,
       email,
       image: null,
       passwordHash: hashedPassword,

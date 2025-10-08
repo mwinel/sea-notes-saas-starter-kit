@@ -30,7 +30,7 @@ export function prepareInvoiceData(
   subscriptionId: string
 ): InvoiceData {
   return {
-    customerName: user.name,
+    customerName: `${user.firstName} ${user.lastName}`.trim(),
     customerEmail: user.email,
     planName: plan.name,
     planDescription: plan.description,

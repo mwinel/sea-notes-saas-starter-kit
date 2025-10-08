@@ -3,7 +3,8 @@ import { USER_ROLES } from 'lib/auth/roles';
 // User type
 export interface User {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   passwordHash: string;
   image: string | null;

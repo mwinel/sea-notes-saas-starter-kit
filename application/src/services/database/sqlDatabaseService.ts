@@ -48,7 +48,11 @@ export class SqlDatabaseService extends DatabaseClient {
       const skip = (page - 1) * pageSize;
       const where: Record<string, unknown> = {};
       if (options?.searchName) {
-        where.name = { contains: options.searchName, mode: 'insensitive' };
+        // Search across firstName and lastName
+        where.OR = [
+          { firstName: { contains: options.searchName, mode: 'insensitive' } },
+          { lastName: { contains: options.searchName, mode: 'insensitive' } },
+        ];
       }
       if (options?.filterPlan || options?.filterStatus) {
         where.subscription = { plan: {}, status: {} };
@@ -68,7 +72,10 @@ export class SqlDatabaseService extends DatabaseClient {
         prisma.user.findMany({
           where,
           include: { subscription: true },
-          orderBy: { name: 'asc' },
+          orderBy: [
+            { firstName: 'asc' },
+            { lastName: 'asc' },
+          ],
           skip,
           take: pageSize,
         }),
