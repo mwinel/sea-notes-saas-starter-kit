@@ -2,7 +2,7 @@ import React, { type ReactNode } from 'react';
 import MaterialThemeProvider from 'components/Theme/Theme';
 import { ThemePicker } from 'components/Theme/ThemePicker';
 import NavigationHandler from './NavigationHandler';
-import AppSidebar from '@/components/Common/Sidebar/AppSidebar';
+import AppSidebar from '@/components/app-sidebar';
 
 /**
  * Dashboard layout wrapper.
