@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import ForgotPasswordForm from '@/components/Public/ForgotPasswordForm/ForgotPasswordForm';
+import { ForgotPasswordForm } from '@/components/forgot-password-form';
 
 /**
  * Forgot password page using the auth layout and brand header.

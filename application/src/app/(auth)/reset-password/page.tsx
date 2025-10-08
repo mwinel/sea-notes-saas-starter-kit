@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import ResetPasswordForm from '@/components/Public/ResetPasswordForm/ResetPasswordForm';
+import { ResetPasswordForm } from '@/components/reset-password-form';
 
 /**
  * Reset password page using the auth layout and brand header.
