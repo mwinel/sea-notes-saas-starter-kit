@@ -6,7 +6,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import {
   Field,
   FieldDescription,
-  FieldError,
   FieldGroup,
   FieldLabel,
   FieldSeparator,
@@ -31,7 +30,7 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<'div'>)
     register,
     handleSubmit,
     setError,
-    formState: { isSubmitting, isSubmitSuccessful, errors },
+    formState: { isSubmitting, errors },
     reset,
   } = useForm({ resolver });
 
