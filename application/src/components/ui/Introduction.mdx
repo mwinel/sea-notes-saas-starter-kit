@@ -1,0 +1,93 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Introduction" />
+
+# UI Component Library
+
+Welcome to our UI component library built with **React**, **TypeScript**, **Tailwind CSS**, and **Radix UI**.
+
+## Overview
+
+This component library provides a comprehensive set of reusable UI components designed for modern web applications. Each component is:
+
+- **Accessible**: Built with accessibility in mind using Radix UI primitives
+- **Customizable**: Styled with Tailwind CSS and supports custom styling
+- **Type-safe**: Written in TypeScript with full type definitions
+- **Tested**: Each component includes comprehensive Storybook stories for testing and documentation
+- **Consistent**: Uses a unified design system with consistent spacing, colors, and typography
+
+## Design System
+
+Our design system is based on:
+
+- **Colors**: A carefully crafted color palette with light and dark mode support
+- **Typography**: Consistent font sizes and weights
+- **Spacing**: Standardized spacing scale
+- **Radius**: Consistent border radius values
+- **Shadows**: Subtle shadow system for depth
+
+## Components
+
+### Available Components
+
+- **Button**: Versatile button component with multiple variants and sizes
+- **Card**: Container component for grouping related content
+- **Input**: Form input component with validation states
+- **Label**: Accessible label component for form fields
+- **Separator**: Visual separator for content sections
+- **Spinner**: Loading indicator component
+
+### Planned Components
+
+More components will be added to this library as needed:
+
+- **Dialog**: Modal dialog component
+- **Dropdown**: Dropdown menu component
+- **Tooltip**: Tooltip component for additional information
+- **Form**: Comprehensive form components
+- **Navigation**: Navigation components
+- **Data Display**: Tables, lists, and other data display components
+
+## Usage
+
+Each component can be imported individually:
+
+```tsx
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+
+function MyComponent() {
+  return (
+    <Card>
+      <Input placeholder="Enter your name" />
+      <Button>Submit</Button>
+    </Card>
+  );
+}
+```
+
+## Theming
+
+The component library supports both light and dark themes. You can toggle between themes using the theme switcher in the Storybook toolbar.
+
+## Development
+
+When developing new components:
+
+1. Create the component in `src/components/ui/`
+2. Add comprehensive Storybook stories
+3. Include accessibility considerations
+4. Add TypeScript types
+5. Test in both light and dark themes
+6. Document usage examples
+
+## Contributing
+
+When contributing to this component library:
+
+- Follow the existing code style and patterns
+- Include comprehensive tests and stories
+- Ensure accessibility compliance
+- Update documentation as needed
+- Test across different browsers and devices
