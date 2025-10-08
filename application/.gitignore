@@ -46,3 +46,5 @@ npm-error.log
 
 # npm cache
 .npm-cache
+*storybook.log
+storybook-static
