@@ -2,30 +2,41 @@
 
 import React, { useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Box, Card, CardContent, Typography, TextField, Stack, Button } from '@mui/material';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Field, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui/field';
+import { PasswordInput } from '@/components/ui/password-input';
+import { useForm } from 'react-hook-form';
+
+type ResetFormValues = {
+  password?: string;
+  confirmPassword?: string;
+};
 
 /**
  * ResetPasswordForm renders a form for users to reset their password using a token from the URL.
- * Handles validation, API request, and displays success or error messages.
  */
-const ResetPasswordForm: React.FC = () => {
+function ResetPasswordForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const token = searchParams.get('token') || '';
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { isSubmitting, isSubmitSuccessful, errors },
+  } = useForm<ResetFormValues>();
   const [success, setSuccess] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
+  const onSubmit = async (data: ResetFormValues) => {
+    const { password, confirmPassword } = data;
     if (!password || !confirmPassword) {
-      setError('Please fill in all fields.');
+      setError('root', { type: 'manual', message: 'Please fill in all fields.' });
       return;
     }
     if (password !== confirmPassword) {
-      setError('Passwords do not match.');
+      setError('root', { type: 'manual', message: 'Passwords do not match.' });
       return;
     }
     try {
@@ -34,85 +45,71 @@ const ResetPasswordForm: React.FC = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token, password }),
       });
-      const data = await res.json();
-      if (!res.ok || data.error) {
-        setError(data.error || 'Something went wrong.');
+      const json = await res.json();
+      if (!res.ok || json.error) {
+        setError('root', { type: 'server', message: json.error || 'Something went wrong.' });
       } else {
         setSuccess(true);
       }
-    } catch (err) {
-      setError(
-        'Something went wrong. Please try again later. ' +
-          (err instanceof Error ? `: ${err.message}` : '')
-      );
+    } catch {
+      setError('root', { type: 'server', message: 'Something went wrong. Please try again later.' });
     }
   };
 
   if (success) {
     return (
-      <Box
-        display="flex"
-        minHeight="100vh"
-        alignItems="center"
-        justifyContent="center"
-        bgcolor="#f3f4f6"
-      >
-        <Card sx={{ width: '100%', maxWidth: 400 }}>
+      <div className="flex flex-col gap-6">
+        <Card>
           <CardContent>
-            <Stack spacing={3} alignItems="center">
-              <Typography variant="h5" fontWeight="bold">
-                Password Reset Successful
-              </Typography>
-              <Typography>
+            <div className="flex flex-col items-center gap-3 text-center">
+              <CardTitle className="text-xl">Password Reset Successful</CardTitle>
+              <CardDescription>
                 Your password has been updated. You can now log in with your new password.
-              </Typography>
-              <Button variant="contained" color="primary" onClick={() => router.push('/login')}>
-                Go to Login
-              </Button>
-            </Stack>
+              </CardDescription>
+              <Button onClick={() => router.push('/login')}>Go to Login</Button>
+            </div>
           </CardContent>
         </Card>
-      </Box>
+      </div>
     );
   }
 
   return (
-    <Box display="flex" minHeight="100vh" alignItems="center" justifyContent="center">
-      <Card sx={{ width: '100%', maxWidth: 400 }}>
+    <div className="flex flex-col gap-6">
+      <Card>
+        <CardHeader className="text-center">
+          <CardTitle className="text-xl">Reset Password</CardTitle>
+          <CardDescription>Enter your new password below.</CardDescription>
+        </CardHeader>
         <CardContent>
-          <Stack spacing={3}>
-            <Typography variant="h5" fontWeight="bold">
-              Reset Password
-            </Typography>
-            <form onSubmit={handleSubmit}>
-              <Stack spacing={2}>
-                <TextField
-                  label="New Password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  fullWidth
-                />
-                <TextField
-                  label="Confirm Password"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                  fullWidth
-                />
-                {error && <Typography color="error">{error}</Typography>}
-                <Button type="submit" variant="contained" color="primary" fullWidth>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor="new-password">New Password</FieldLabel>
+                <PasswordInput id="new-password" placeholder="Enter new password" {...register('password')} />
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="confirm-password">Confirm Password</FieldLabel>
+                <PasswordInput id="confirm-password" placeholder="Confirm new password" {...register('confirmPassword')} />
+              </Field>
+              <Field>
+                <Button
+                  type="submit"
+                  loading={isSubmitting || isSubmitSuccessful}
+                  disabled={isSubmitting || isSubmitSuccessful}
+                >
                   Update Password
                 </Button>
-              </Stack>
-            </form>
-          </Stack>
+              </Field>
+              <Field>
+                <FieldDescription>{errors.root?.message}</FieldDescription>
+              </Field>
+            </FieldGroup>
+          </form>
         </CardContent>
       </Card>
-    </Box>
+    </div>
   );
-};
+}
 
 export default ResetPasswordForm;
