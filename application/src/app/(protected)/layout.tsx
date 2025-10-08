@@ -1,8 +1,8 @@
-import { Box } from '@mui/material';
-import Sidebar from 'components/Common/Sidebar/Sidebar';
+import React, { type ReactNode } from 'react';
 import MaterialThemeProvider from 'components/Theme/Theme';
 import { ThemePicker } from 'components/Theme/ThemePicker';
 import NavigationHandler from './NavigationHandler';
+import AppSidebar from '@/components/Common/Sidebar/AppSidebar';
 
 /**
  * Dashboard layout wrapper.
@@ -10,38 +10,28 @@ import NavigationHandler from './NavigationHandler';
  *
  * @param children - Content of the pages inside the dashboard layout.
  */
-export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
+interface ProtectedLayoutProps { children: ReactNode }
+
+export default function ProtectedLayout(props: ProtectedLayoutProps) {
+  const { children } = props;
   return (
     <MaterialThemeProvider>
       <NavigationHandler />
-      <Box sx={{ display: 'flex', minHeight: '100vh', width: '100%' }}>
-        <Sidebar />
-        <Box
-          sx={{
-            flexGrow: 1,
-            padding: '1rem',
-            overflowY: 'auto',
-            position: 'relative',
-          }}
-        >
-          <Box
-            sx={{
-              position: 'absolute',
-              top: 16,
-              right: 16,
-              zIndex: 10,
-              display: { xs: 'none', md: 'block' }, // Hide on mobile since FAB is used
-            }}
-          >
+      <div className="flex min-h-screen w-full bg-background">
+        <aside className="hidden md:flex">
+          <AppSidebar />
+        </aside>
+        <div className="flex min-w-0 grow flex-col">
+          <div className="sticky top-0 z-20 flex h-12 items-center justify-end border-b bg-background/80 px-4 backdrop-blur md:h-14">
             <ThemePicker />
-          </Box>
-          {/* Mobile theme picker renders itself with fixed positioning */}
-          <Box sx={{ display: { xs: 'block', md: 'none' } }}>
-            <ThemePicker />
-          </Box>
-          {children}
-        </Box>
-      </Box>
+          </div>
+          <main className="p-4 md:p-6">
+            <div className="mx-auto w-full max-w-6xl">
+              {children}
+            </div>
+          </main>
+        </div>
+      </div>
     </MaterialThemeProvider>
   );
 }
