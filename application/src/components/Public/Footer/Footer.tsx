@@ -39,6 +39,8 @@ const footerSections = [
       { label: 'DigitalOcean Twitter', href: URLS.twitter, icon: <TwitterIcon sx={{ fontSize: DIMENSIONS.iconSize.small }} /> },
       { label: 'Community Forum', href: URLS.community, icon: <ForumIcon sx={{ fontSize: DIMENSIONS.iconSize.small }} /> },
       { label: 'Status Page', href: URLS.status, icon: <MonitorHeartIcon sx={{ fontSize: DIMENSIONS.iconSize.small }} /> },
+      { label: 'Terms of Service', href: '/terms', icon: <MenuBookIcon sx={{ fontSize: DIMENSIONS.iconSize.small }} /> },
+      { label: 'Privacy Policy', href: '/privacy', icon: <MenuBookIcon sx={{ fontSize: DIMENSIONS.iconSize.small }} /> },
     ],
   },
 ];
