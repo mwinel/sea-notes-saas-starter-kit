@@ -62,13 +62,3 @@ export const Error: Story = {
 Error.play = async () => {
   toast.error('Something went wrong');
 };
-
-export const PromiseToast: Story = {};
-PromiseToast.play = async () => {
-  const work = new Promise<void>((resolve) => setTimeout(resolve, 50));
-  toast.promise(work, {
-    loading: 'Saving...',
-    success: 'Saved!',
-    error: 'Failed to save',
-  });
-};
