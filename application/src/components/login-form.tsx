@@ -137,8 +137,9 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
         </CardContent>
       </Card>
       <FieldDescription className="px-6 text-center">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a> and{' '}
-        <a href="#">Privacy Policy</a>.
+        By clicking continue, you agree to our{' '}
+        <a href="#" target="_blank" rel="noopener noreferrer">Terms of Service</a> and{' '}
+        <a href="#" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.
       </FieldDescription>
     </div>
   );
