@@ -1,4 +1,4 @@
-import type { Preview } from '@storybook/react';
+import type { Preview } from '@storybook/nextjs';
 import { withThemeByClassName } from '@storybook/addon-themes';
 
 import '../src/app/globals.css';
@@ -13,15 +13,21 @@ export const decorators = [
 
 const preview: Preview = {
   parameters: {
-    actions: { argTypesRegex: '^on[A-Z].*' },
     controls: {
       matchers: {
         color: /(background|color)$/i,
         date: /Date$/i,
       },
     },
+    actions: { argTypesRegex: '^on[A-Z].*' },
+    docs: {
+      source: {
+        state: 'open', // This ensures the code block is open by default
+      },
+    },
   },
+  //👇 Enables auto-generated documentation for all stories
+  tags: ['autodocs'],
 };
 
 export default preview;
-

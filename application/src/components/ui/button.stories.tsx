@@ -1,9 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Plus } from 'lucide-react';
 import { Button } from './button';
 
 const meta: Meta<typeof Button> = {
-  title: 'UI/Button',
+  title: 'Design System/Button',
   component: Button,
   args: { children: 'Button' },
   argTypes: {
@@ -52,4 +52,3 @@ export const IconLg: Story = {
     </Button>
   ),
 };
-
