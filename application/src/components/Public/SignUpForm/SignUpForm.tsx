@@ -181,6 +181,17 @@ const SignUpForm: React.FC = () => {
                     Sign in
                   </MuiLink>
                 </Stack>
+                <Typography variant="body2" color="text.secondary" textAlign="center">
+                  By clicking continue, you agree to our{' '}
+                  <MuiLink href="#" target="_blank" rel="noopener noreferrer">
+                    Terms of Service
+                  </MuiLink>{' '}
+                  and{' '}
+                  <MuiLink href="#" target="_blank" rel="noopener noreferrer">
+                    Privacy Policy
+                  </MuiLink>
+                  .
+                </Typography>
               </Stack>
             </Stack>
           </CardContent>
