@@ -1,4 +1,4 @@
-import SignUpForm from 'components/Public/SignUpForm/SignUpForm';
+import SignupForm from 'components/signup-form';
 import React from 'react';
 
 /**
@@ -8,7 +8,7 @@ import React from 'react';
  * @returns Registration page with benefits presentation and call to action.
  */
 const SignupPage: React.FC = () => {
-  return <SignUpForm />;
+  return <SignupForm />;
 };
 
 export default SignupPage;
