@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState } from 'react';
 import {
@@ -16,11 +16,7 @@ import FormButton from 'components/Public/FormButton/FormButton';
 import { useNavigating } from 'hooks/navigation';
 import { USER_ROLES } from 'lib/auth/roles';
 
-/**
- * User registration form.
- * Includes password validation, Auth.js integration and error handling.
- */
-const SignUpForm: React.FC = () => {
+const SignupForm: React.FC = () => {
   const { setNavigating } = useNavigating();
 
   const [email, setEmail] = useState('');
@@ -58,16 +54,10 @@ const SignUpForm: React.FC = () => {
     }
     setNavigating(false);
   };
+
   return (
     <Container maxWidth="sm">
-      <Box
-        display="flex"
-        minHeight="100vh"
-        alignItems="center"
-        justifyContent="center"
-        px={2}
-        py={4}
-      >
+      <Box display="flex" minHeight="100vh" alignItems="center" justifyContent="center" px={2} py={4}>
         <Card sx={{ width: '100%', maxWidth: 400, mx: 'auto' }}>
           <CardContent>
             <Stack spacing={4}>
@@ -89,12 +79,7 @@ const SignUpForm: React.FC = () => {
                   </Typography>
                 </Stack>
               ) : (
-                <Box
-                  component="form"
-                  onSubmit={handleSubmit}
-                  data-testid="signup-form"
-                  autoComplete="on"
-                >
+                <Box component="form" onSubmit={handleSubmit} data-testid="signup-form" autoComplete="on">
                   <Stack spacing={3}>
                     <Stack spacing={1}>
                       <Typography variant="body2" fontWeight={500} color="text.primary">
@@ -154,12 +139,7 @@ const SignUpForm: React.FC = () => {
                     </Stack>
 
                     {error && (
-                      <Typography
-                        color="error"
-                        variant="body2"
-                        textAlign="center"
-                        data-testid="signup-error-message"
-                      >
+                      <Typography color="error" variant="body2" textAlign="center" data-testid="signup-error-message">
                         {error}
                       </Typography>
                     )}
@@ -201,4 +181,4 @@ const SignUpForm: React.FC = () => {
   );
 };
 
-export default SignUpForm;
+export default SignupForm;
