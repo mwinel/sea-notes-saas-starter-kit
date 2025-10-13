@@ -2,10 +2,11 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Field, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui/field';
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
+import { toast } from 'sonner';
 import { useYupValidationResolver } from 'hooks/useYupValidationResolver';
 import { useNavigating } from 'hooks/navigation';
 
@@ -17,41 +18,49 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
   const { setNavigating } = useNavigating();
 
   const validationSchema = yup.object().shape({
-    email: yup.string().optional(),
+    email: yup
+      .string()
+      .required('Please enter a valid email address.')
+      .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, 'Please enter a valid email address.'),
   });
   const resolver = useYupValidationResolver(validationSchema);
   const {
     register,
     handleSubmit,
     setError,
-    formState: { isSubmitting, isSubmitSuccessful, errors },
+    formState: { isSubmitting, errors },
+    reset,
     watch,
   } = useForm<ForgotFormValues>({ resolver });
 
   const email = watch('email') || '';
 
   const onSubmit = async (data: ForgotFormValues) => {
-    setNavigating(true);
     try {
-      if (!data.email) {
-        setError('root', { type: 'server', message: 'Something went wrong' });
-        return;
-      }
       const res = await fetch('/api/forgot-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: data.email }),
       });
+
       const json = await res.json();
+
       if (!res.ok || json.error) {
-        setError('root', { type: 'server', message: json.error || 'Something went wrong, please try again later.' });
-      } else {
-        setError('root', { type: 'server', message: 'If your email exists in our system, a reset link has been sent.' });
+        toast.error(json.error || 'Something went wrong, please try again later.');
+        setError('root', {
+          type: 'server',
+          message: json.error || 'Something went wrong, please try again later.',
+        });
+        return;
       }
+      toast.success('A reset link has been sent to your email inbox.');
+      reset();
     } catch {
-      setError('root', { type: 'server', message: 'Something went wrong, please try again later.' });
-    } finally {
-      setNavigating(false);
+      toast.error('Something went wrong, please try again later.');
+      setError('root', {
+        type: 'server',
+        message: 'Something went wrong, please try again later.',
+      });
     }
   };
 
@@ -65,12 +74,22 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
       });
       const json = await res.json();
       if (!res.ok || json.error) {
-        setError('root', { type: 'server', message: json.error || 'Something went wrong, please try again later.' });
+        setError('root', {
+          type: 'server',
+          message: json.error || 'Something went wrong, please try again later.',
+        });
       } else {
-        setError('root', { type: 'server', message: 'Magic link sent! Please check your email inbox.' });
+        setError('root', {
+          type: 'server',
+          message: 'Magic link sent! Please check your email inbox.',
+        });
       }
     } catch {
-      setError('root', { type: 'server', message: 'Something went wrong, please try again later.' });
+      toast.error('Something went wrong, please try again later.');
+      setError('root', {
+        type: 'server',
+        message: 'Something went wrong, please try again later.',
+      });
     } finally {
       setNavigating(false);
     }
@@ -86,28 +105,34 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} data-testid="forgot-password-form">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col gap-4"
+            data-testid="forgot-password-form"
+          >
             <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input id="email" type="email" placeholder="Enter your email" {...register('email')} />
+              <Field data-invalid={!!errors.email}>
+                <FieldLabel htmlFor="email">Email address</FieldLabel>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email address"
+                  {...register('email')}
+                  aria-invalid={!!errors.email}
+                />
+                {errors.email && <FieldError errors={[errors.email]} />}
               </Field>
               <Field>
-                <Button
-                  type="submit"
-                  loading={isSubmitting || isSubmitSuccessful}
-                  disabled={isSubmitting || isSubmitSuccessful}
-                >
+                <Button type="submit" loading={isSubmitting} disabled={isSubmitting}>
                   Reset Password
                 </Button>
               </Field>
+            </FieldGroup>
+            <FieldGroup>
               <Field>
                 <Button type="button" variant="outline" onClick={onMagicLink}>
-                  Send Magic Link
+                  Send magic link
                 </Button>
-              </Field>
-              <Field>
-                <FieldDescription>{errors.root?.message}</FieldDescription>
               </Field>
             </FieldGroup>
           </form>
@@ -116,4 +141,3 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
     </div>
   );
 }
-
