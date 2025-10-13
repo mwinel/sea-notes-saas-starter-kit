@@ -43,7 +43,7 @@ describe('POST /api/auth/magic-link', () => {
     const res = await POST(req);
     expect(res.status).toBe(HTTP_STATUS.BAD_REQUEST);
     const json = await res.json();
-    expect(json.error).toMatch(/email is required/i);
+    expect(json.error).toMatch(/email address is required/i);
   });
 
   it('returns 404 if user is not found', async () => {

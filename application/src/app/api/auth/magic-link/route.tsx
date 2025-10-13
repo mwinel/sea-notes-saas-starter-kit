@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
 
     if (!emailService.isEmailEnabled()) {
       return NextResponse.json(
-        { error: 'Email feature is disabled' },
+        { error: 'Email feature is disabled.' },
         { status: HTTP_STATUS.INTERNAL_SERVER_ERROR }
       );
     }
@@ -35,20 +35,23 @@ export async function POST(request: NextRequest) {
     if (!emailStatus.configured || !emailStatus.connected) {
       console.error('Magic link email not configured');
       return NextResponse.json(
-        { error: 'Email not configured or connected. Check System Status page' },
+        { error: 'Email not configured or connected. Check System Status page.' },
         { status: HTTP_STATUS.INTERNAL_SERVER_ERROR }
       );
     }
 
     const { email } = await request.json();
     if (!email) {
-      return NextResponse.json({ error: 'Email is required' }, { status: HTTP_STATUS.BAD_REQUEST });
+      return NextResponse.json(
+        { error: 'Email address is required.' },
+        { status: HTTP_STATUS.BAD_REQUEST }
+      );
     }
 
     const db = await createDatabaseService();
     const user = await db.user.findByEmail(email);
     if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: HTTP_STATUS.NOT_FOUND });
+      return NextResponse.json({ error: 'User not found.' }, { status: HTTP_STATUS.NOT_FOUND });
     }
 
     // Generate a random token and expiry

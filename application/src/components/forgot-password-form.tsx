@@ -15,7 +15,7 @@ type ForgotFormValues = {
 };
 
 export function ForgotPasswordForm({ className, ...props }: React.ComponentProps<'div'>) {
-  const { setNavigating } = useNavigating();
+  const { setNavigating, navigating } = useNavigating();
 
   const validationSchema = yup.object().shape({
     email: yup
@@ -74,16 +74,15 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
       });
       const json = await res.json();
       if (!res.ok || json.error) {
+        toast.error(json.error || 'Something went wrong, please try again later.');
         setError('root', {
           type: 'server',
           message: json.error || 'Something went wrong, please try again later.',
         });
-      } else {
-        setError('root', {
-          type: 'server',
-          message: 'Magic link sent! Please check your email inbox.',
-        });
+        return;
       }
+      toast.success('A magic link has been sent to your email inbox.');
+      reset();
     } catch {
       toast.error('Something went wrong, please try again later.');
       setError('root', {
@@ -92,6 +91,7 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
       });
     } finally {
       setNavigating(false);
+      reset();
     }
   };
 
@@ -130,7 +130,7 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
             </FieldGroup>
             <FieldGroup>
               <Field>
-                <Button type="button" variant="outline" onClick={onMagicLink}>
+                <Button type="button" variant="outline" onClick={onMagicLink} loading={navigating}>
                   Send magic link
                 </Button>
               </Field>

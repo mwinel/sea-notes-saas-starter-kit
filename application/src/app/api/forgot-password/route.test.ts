@@ -31,7 +31,7 @@ describe('POST /api/forgot-password', () => {
     const res = await POST(req);
     expect(res.status).toBe(HTTP_STATUS.BAD_REQUEST);
     const data = await res.json();
-    expect(data.error).toBe('Email is required');
+    expect(data.error).toBe('Email address is required.');
   });
 
   it('returns success if user does not exist', async () => {
