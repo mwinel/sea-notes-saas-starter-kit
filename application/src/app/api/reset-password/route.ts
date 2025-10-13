@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
   try {
     const { token, password } = await req.json();
     if (!token || !password) {
-      return NextResponse.json({ error: 'Token and password are required' }, { status: 400 });
+      return NextResponse.json({ error: 'Token and password are required.' }, { status: 400 });
     }
 
     const db = await createDatabaseService();
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     // Find token
     const verificationToken = await db.verificationToken.findByToken(token);
     if (!verificationToken || verificationToken.expires < new Date()) {
-      return NextResponse.json({ error: 'Invalid or expired token' }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid or expired token.' }, { status: 400 });
     }
 
     // Update user password
@@ -36,6 +36,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Reset password error:', error);
-    return NextResponse.json({ error: 'An unexpected error occurred.' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'An unexpected error occurred. Please try again later.' },
+      { status: 500 }
+    );
   }
 }

@@ -14,15 +14,16 @@ type ForgotFormValues = {
   email?: string;
 };
 
+const validationSchema = yup.object().shape({
+  email: yup
+    .string()
+    .required('Please enter a valid email address.')
+    .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, 'Please enter a valid email address.'),
+});
+
 export function ForgotPasswordForm({ className, ...props }: React.ComponentProps<'div'>) {
   const { setNavigating, navigating } = useNavigating();
 
-  const validationSchema = yup.object().shape({
-    email: yup
-      .string()
-      .required('Please enter a valid email address.')
-      .matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, 'Please enter a valid email address.'),
-  });
   const resolver = useYupValidationResolver(validationSchema);
   const {
     register,
