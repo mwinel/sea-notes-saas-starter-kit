@@ -72,10 +72,7 @@ export class SqlDatabaseService extends DatabaseClient {
         prisma.user.findMany({
           where,
           include: { subscription: true },
-          orderBy: [
-            { firstName: 'asc' },
-            { lastName: 'asc' },
-          ],
+          orderBy: [{ firstName: 'asc' }, { lastName: 'asc' }],
           skip,
           take: pageSize,
         }),
@@ -146,10 +143,13 @@ export class SqlDatabaseService extends DatabaseClient {
     findByUserId: async (userId: string): Promise<Note[]> => {
       return prisma.note.findMany({ where: { userId } });
     },
-    create: async (note: Omit<Note, 'id' | 'createdAt'>): Promise<Note> => {
+    create: async (note: Omit<Note, 'id' | 'createdAt' | 'updatedAt'>): Promise<Note> => {
       return prisma.note.create({ data: note });
     },
-    update: async (id: string, note: Partial<Omit<Note, 'id' | 'createdAt'>>): Promise<Note> => {
+    update: async (
+      id: string,
+      note: Partial<Omit<Note, 'id' | 'createdAt' | 'updatedAt'>>
+    ): Promise<Note> => {
       return prisma.note.update({ where: { id }, data: note });
     },
     delete: async (id: string): Promise<void> => {
@@ -158,14 +158,19 @@ export class SqlDatabaseService extends DatabaseClient {
     findMany: async (args: {
       userId: string;
       search?: string;
+      categories?: string[];
+      statuses?: string[];
       skip: number;
       take: number;
       orderBy: {
         createdAt?: 'desc' | 'asc';
-        title?: 'asc';
+        updatedAt?: 'desc' | 'asc';
+        title?: 'desc' | 'asc';
+        category?: 'desc' | 'asc';
+        status?: 'desc' | 'asc';
       };
     }) => {
-      const { userId, search, skip, take, orderBy } = args;
+      const { userId, search, categories, statuses, skip, take, orderBy } = args;
       return prisma.note.findMany({
         where: {
           userId,
@@ -177,13 +182,27 @@ export class SqlDatabaseService extends DatabaseClient {
                 ],
               }
             : {}),
+          ...(categories && categories.length > 0
+            ? {
+                category: {
+                  in: categories,
+                },
+              }
+            : {}),
+          ...(statuses && statuses.length > 0
+            ? {
+                status: {
+                  in: statuses,
+                },
+              }
+            : {}),
         },
         skip,
         take,
         orderBy,
       });
     },
-    count: async (userId: string, search?: string) => {
+    count: async (userId: string, search?: string, categories?: string[], statuses?: string[]) => {
       return prisma.note.count({
         where: {
           userId,
@@ -193,6 +212,20 @@ export class SqlDatabaseService extends DatabaseClient {
                   { title: { contains: search, mode: 'insensitive' } },
                   { content: { contains: search, mode: 'insensitive' } },
                 ],
+              }
+            : {}),
+          ...(categories && categories.length > 0
+            ? {
+                category: {
+                  in: categories,
+                },
+              }
+            : {}),
+          ...(statuses && statuses.length > 0
+            ? {
+                status: {
+                  in: statuses,
+                },
               }
             : {}),
         },

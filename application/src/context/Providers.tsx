@@ -3,6 +3,11 @@ import { SessionProvider } from 'next-auth/react';
 import { UserProvider } from './UserContext';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import { NavigatingProvider } from './Navigation';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+// Create a client
+const queryClient = new QueryClient();
 
 /**
  * Global wrapper that groups all context providers used in the application.
@@ -13,11 +18,14 @@ import { NavigatingProvider } from './Navigation';
 export const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <SessionProvider>
-      <AppRouterCacheProvider options={{ enableCssLayer: true }}>
-        <UserProvider>
-          <NavigatingProvider>{children}</NavigatingProvider>
-        </UserProvider>
-      </AppRouterCacheProvider>
+      <QueryClientProvider client={queryClient}>
+        <AppRouterCacheProvider options={{ enableCssLayer: true }}>
+          <UserProvider>
+            <NavigatingProvider>{children}</NavigatingProvider>
+          </UserProvider>
+        </AppRouterCacheProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
     </SessionProvider>
   );
 };

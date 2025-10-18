@@ -32,7 +32,10 @@ export interface Note {
   userId: string;
   title: string;
   content: string;
+  category: string | null;
+  status: string | null;
   createdAt: Date;
+  updatedAt: Date;
 }
 
 export type UserRole = (typeof USER_ROLES)[keyof typeof USER_ROLES];
@@ -55,3 +58,12 @@ export enum SubscriptionPlanEnum {
   FREE = 'FREE',
   PRO = 'PRO',
 }
+
+export type PaginatedData<T> = {
+  result: T[];
+  rowCount: number;
+};
+
+export type PaginationParams = { pageIndex: number; pageSize: number };
+export type SortParams = { sortBy: `${string}.${'asc' | 'desc'}` };
+export type Filters<T> = Partial<T & PaginationParams & SortParams>;

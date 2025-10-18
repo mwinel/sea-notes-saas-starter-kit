@@ -53,7 +53,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
         });
         return;
       } else if (res.ok) {
-        navigate('/dashboard/my-notes');
+        navigate('/dashboard');
       }
     } catch (error) {
       toast.error('An unexpected error occurred');

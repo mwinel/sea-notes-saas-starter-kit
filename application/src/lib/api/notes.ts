@@ -3,17 +3,24 @@ export interface Note {
   userId: string;
   title: string;
   content: string;
+  category: string | null;
+  status: string | null;
   createdAt: string;
+  updatedAt: string;
 }
 
 export interface CreateNoteData {
   title?: string;
   content: string;
+  category?: string;
+  status?: string;
 }
 
 export interface UpdateNoteData {
   title?: string;
   content?: string;
+  category?: string;
+  status?: string;
 }
 
 export interface PaginatedNotes {
@@ -33,6 +40,8 @@ export class NotesApiClient {
     pageSize?: number;
     search?: string;
     sortBy?: string;
+    categories?: string[];
+    statuses?: string[];
   }): Promise<PaginatedNotes> {
     let url = `${this.baseURL}`;
     if (
@@ -40,13 +49,21 @@ export class NotesApiClient {
       (params.page !== undefined ||
         params.pageSize !== undefined ||
         params.search !== undefined ||
-        params.sortBy !== undefined)
+        params.sortBy !== undefined ||
+        params.categories !== undefined ||
+        params.statuses !== undefined)
     ) {
       const query = new URLSearchParams();
       if (params.page !== undefined) query.append('page', params.page.toString());
       if (params.pageSize !== undefined) query.append('pageSize', params.pageSize.toString());
       if (params.search !== undefined) query.append('search', params.search);
       if (params.sortBy !== undefined) query.append('sortBy', params.sortBy);
+      if (params.categories !== undefined && params.categories.length > 0) {
+        query.append('categories', params.categories.join(','));
+      }
+      if (params.statuses !== undefined && params.statuses.length > 0) {
+        query.append('statuses', params.statuses.join(','));
+      }
       url += `?${query.toString()}`;
     }
     const res = await fetch(url);
