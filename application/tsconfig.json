@@ -33,6 +33,6 @@
     "jest.setup.ts",
     "jest.server.config.ts",
     "jest.config.ts"
-  ],
+, "setup/seed.mjs"  ],
   "exclude": ["node_modules"]
 }

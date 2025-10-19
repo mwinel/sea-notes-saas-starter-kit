@@ -91,12 +91,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.id = user.id;
         token.role = (user as User).role;
         token.email = (user as User).email;
-        token.name = (user as User).name;
+        token.firstName = (user as User).firstName;
+        token.lastName = (user as User).lastName;
       }
 
       if (trigger === 'update') {
         token.image = session.user.image;
-        token.name = session.user.name;
+        token.firstName = session.user.firstName;
+        token.lastName = session.user.lastName;
       }
 
       return token;
@@ -113,8 +115,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.image = token.image as string;
       }
 
-      if (token.name) {
-        session.user.name = token.name as string;
+      if (token.firstName && token.lastName) {
+        session.user.firstName = token.firstName as string;
+        session.user.lastName = token.lastName as string;
       }
 
       return session;

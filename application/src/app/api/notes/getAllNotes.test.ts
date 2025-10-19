@@ -64,13 +64,13 @@ describe('getAllNotes', () => {
     expect(await res.json()).toEqual({ notes, total: 1 });
   });
 
-  it('calls findMany and count with sortBy=oldest if provided', async () => {
+  it('calls findMany and count with sortBy=createdAt:asc if provided', async () => {
     const notes: TestNote[] = [
       { id: 'n1', userId: 'user-1', title: 'meeting', content: 'notes', createdAt: 'now' },
     ];
     mockFindMany.mockResolvedValue(notes);
     mockCount.mockResolvedValue(1);
-    const req = makeRequest('http://localhost/api/notes?page=1&pageSize=10&sortBy=oldest');
+    const req = makeRequest('http://localhost/api/notes?page=1&pageSize=10&sortBy=createdAt:asc');
     const res = await getAllNotes(req, user);
     expect(mockFindMany).toHaveBeenCalledWith({
       userId: 'user-1',
@@ -83,19 +83,76 @@ describe('getAllNotes', () => {
     expect(await res.json()).toEqual({ notes, total: 1 });
   });
 
-  it('calls findMany and count with sortBy=title if provided', async () => {
+  it('calls findMany and count with sortBy=title:asc if provided', async () => {
     const notes: TestNote[] = [
       { id: 'n1', userId: 'user-1', title: 'Alpha', content: 'notes', createdAt: 'now' },
     ];
     mockFindMany.mockResolvedValue(notes);
     mockCount.mockResolvedValue(1);
-    const req = makeRequest('http://localhost/api/notes?page=1&pageSize=10&sortBy=title');
+    const req = makeRequest('http://localhost/api/notes?page=1&pageSize=10&sortBy=title:asc');
     const res = await getAllNotes(req, user);
     expect(mockFindMany).toHaveBeenCalledWith({
       userId: 'user-1',
       skip: 0,
       take: 10,
       orderBy: { title: 'asc' },
+    });
+    expect(mockCount).toHaveBeenCalledWith('user-1', undefined);
+    expect(res.status).toBe(HTTP_STATUS.OK);
+    expect(await res.json()).toEqual({ notes, total: 1 });
+  });
+
+  it('calls findMany and count with sortBy=category:desc if provided', async () => {
+    const notes: TestNote[] = [
+      { id: 'n1', userId: 'user-1', title: 'meeting', content: 'notes', createdAt: 'now' },
+    ];
+    mockFindMany.mockResolvedValue(notes);
+    mockCount.mockResolvedValue(1);
+    const req = makeRequest('http://localhost/api/notes?page=1&pageSize=10&sortBy=category:desc');
+    const res = await getAllNotes(req, user);
+    expect(mockFindMany).toHaveBeenCalledWith({
+      userId: 'user-1',
+      skip: 0,
+      take: 10,
+      orderBy: { category: 'desc' },
+    });
+    expect(mockCount).toHaveBeenCalledWith('user-1', undefined);
+    expect(res.status).toBe(HTTP_STATUS.OK);
+    expect(await res.json()).toEqual({ notes, total: 1 });
+  });
+
+  it('calls findMany and count with sortBy=status:asc if provided', async () => {
+    const notes: TestNote[] = [
+      { id: 'n1', userId: 'user-1', title: 'meeting', content: 'notes', createdAt: 'now' },
+    ];
+    mockFindMany.mockResolvedValue(notes);
+    mockCount.mockResolvedValue(1);
+    const req = makeRequest('http://localhost/api/notes?page=1&pageSize=10&sortBy=status:asc');
+    const res = await getAllNotes(req, user);
+    expect(mockFindMany).toHaveBeenCalledWith({
+      userId: 'user-1',
+      skip: 0,
+      take: 10,
+      orderBy: { status: 'asc' },
+    });
+    expect(mockCount).toHaveBeenCalledWith('user-1', undefined);
+    expect(res.status).toBe(HTTP_STATUS.OK);
+    expect(await res.json()).toEqual({ notes, total: 1 });
+  });
+
+  it('defaults to createdAt:desc for invalid sortBy field', async () => {
+    const notes: TestNote[] = [
+      { id: 'n1', userId: 'user-1', title: 'meeting', content: 'notes', createdAt: 'now' },
+    ];
+    mockFindMany.mockResolvedValue(notes);
+    mockCount.mockResolvedValue(1);
+    const req = makeRequest('http://localhost/api/notes?page=1&pageSize=10&sortBy=invalid:asc');
+    const res = await getAllNotes(req, user);
+    expect(mockFindMany).toHaveBeenCalledWith({
+      userId: 'user-1',
+      skip: 0,
+      take: 10,
+      orderBy: { createdAt: 'asc' },
     });
     expect(mockCount).toHaveBeenCalledWith('user-1', undefined);
     expect(res.status).toBe(HTTP_STATUS.OK);

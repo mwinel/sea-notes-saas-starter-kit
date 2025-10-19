@@ -17,7 +17,7 @@ export const createNote = async (
 ): Promise<NextResponse> => {
   try {
     const userId = user.id;
-    const { title, content } = await request.json();
+    const { title, content, category, status } = await request.json();
 
     if (!content) {
       return NextResponse.json(
@@ -36,6 +36,8 @@ export const createNote = async (
       userId,
       title: finalTitle,
       content,
+      category,
+      status,
     });
 
     // Trigger background title generation if no title provided and AI configured
