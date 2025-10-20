@@ -20,7 +20,7 @@ export const getAllNotes = async (
     const pageSize = parseInt(searchParams.get('pageSize') || '10', 10);
     const searchParam = searchParams.get('search')?.trim();
     const search = searchParam && searchParam.length > 0 ? searchParam : undefined;
-    const sortBy = searchParams.get('sortBy') || 'updatedAt:desc';
+    const sortBy = searchParams.get('sortBy') || 'position:asc';
     const categoriesParam = searchParams.get('categories');
     const categories = categoriesParam ? categoriesParam.split(',').filter(Boolean) : undefined;
     const statusesParam = searchParams.get('statuses');
@@ -34,8 +34,15 @@ export const getAllNotes = async (
     const skip = page === 1 ? 0 : (page - 1) * pageSize;
 
     // Define valid sort fields
-    const validSortFields = ['title', 'category', 'status', 'createdAt', 'updatedAt'] as const;
-    const field = validSortFields.includes(sortField as any) ? sortField : 'createdAt';
+    const validSortFields = [
+      'title',
+      'category',
+      'status',
+      'createdAt',
+      'updatedAt',
+      'position',
+    ] as const;
+    const field = validSortFields.includes(sortField as any) ? sortField : 'position';
 
     const findManyParams: {
       userId: string;
@@ -44,12 +51,14 @@ export const getAllNotes = async (
       search?: string;
       categories?: string[];
       statuses?: string[];
-      orderBy:
-        | { title: 'asc' | 'desc' }
-        | { category: 'asc' | 'desc' }
-        | { status: 'asc' | 'desc' }
-        | { createdAt: 'asc' | 'desc' }
-        | { updatedAt: 'asc' | 'desc' };
+      orderBy: {
+        createdAt?: 'desc' | 'asc';
+        updatedAt?: 'desc' | 'asc';
+        title?: 'desc' | 'asc';
+        category?: 'desc' | 'asc';
+        status?: 'desc' | 'asc';
+        position?: 'desc' | 'asc';
+      };
     } = {
       userId,
       skip,

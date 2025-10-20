@@ -35,6 +35,7 @@ export interface Note {
   category: string | null;
   status: string | null;
   isFavorite: boolean;
+  position: number;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -6,6 +6,7 @@ export interface Note {
   category: string | null;
   status: string | null;
   isFavorite: boolean;
+  position: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -111,5 +112,15 @@ export class NotesApiClient {
   // Toggle favorite status
   async toggleFavorite(id: string, isFavorite: boolean): Promise<Note> {
     return this.updateNote(id, { isFavorite });
+  }
+
+  // Reorder notes
+  async reorderNotes(items: { id: string; position: number }[]): Promise<void> {
+    const res = await fetch(`${this.baseURL}/reorder`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items }),
+    });
+    if (!res.ok) throw new Error('Failed to reorder notes');
   }
 }

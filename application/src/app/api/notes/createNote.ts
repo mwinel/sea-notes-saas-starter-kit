@@ -1,6 +1,6 @@
 import { HTTP_STATUS } from 'lib/api/http';
 import { NextRequest, NextResponse } from 'next/server';
-import { createDatabaseService } from 'services/database/databaseFactory';
+import { prisma } from 'lib/prisma';
 import { generateTimestampTitle } from '../../../services/ai/digitalOceanInferenceService';
 import { triggerBackgroundTitleGeneration } from '../../../services/ai/backgroundTitleService';
 import { hasAIConfiguredServer } from '../../../settings';
@@ -29,15 +29,26 @@ export const createNote = async (
     // Use provided title or generate timestamp title for fast save
     const finalTitle = title || generateTimestampTitle();
 
-    const dbClient = await createDatabaseService();
+    // Create note at position 0 and shift all existing notes down
+    const note = await prisma.$transaction(async (tx) => {
+      // Increment all existing notes' positions by 1
+      await tx.note.updateMany({
+        where: { userId },
+        data: { position: { increment: 1 } },
+      });
 
-    // Save note immediately with timestamp title
-    const note = await dbClient.note.create({
-      userId,
-      title: finalTitle,
-      content,
-      category,
-      status,
+      // Create new note at position 0 (top of the list)
+      return tx.note.create({
+        data: {
+          userId,
+          title: finalTitle,
+          content,
+          category,
+          status,
+          position: 0,
+          isFavorite: false,
+        },
+      });
     });
 
     // Trigger background title generation if no title provided and AI configured

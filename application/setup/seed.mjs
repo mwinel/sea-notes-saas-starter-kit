@@ -255,6 +255,8 @@ async function main() {
       content: generateContent(),
       category,
       status,
+      position: i, // Set position based on creation order
+      isFavorite: Math.random() > 0.8, // 20% chance of being favorite
     });
 
     // Progress indicator

@@ -44,8 +44,11 @@ model Note {
   category   String?
   status     String?
   isFavorite Boolean  @default(false)
+  position   Int      @default(0)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  @@index([userId, position])
 }
 
 model VerificationToken {

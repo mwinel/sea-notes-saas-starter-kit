@@ -168,6 +168,7 @@ export class SqlDatabaseService extends DatabaseClient {
         title?: 'desc' | 'asc';
         category?: 'desc' | 'asc';
         status?: 'desc' | 'asc';
+        position?: 'desc' | 'asc';
       };
     }) => {
       const { userId, search, categories, statuses, skip, take, orderBy } = args;

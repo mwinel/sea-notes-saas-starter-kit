@@ -132,6 +132,7 @@ export const schema = z.object({
   category: z.string().nullable(),
   status: z.string().nullable(),
   isFavorite: z.boolean(),
+  position: z.number(),
   createdAt: z.string(),
   updatedAt: z.string(),
 });
@@ -487,12 +488,14 @@ export function DataTable() {
   });
   const [selectedCategories, setSelectedCategories] = React.useState<string[]>([]);
   const [selectedStatuses, setSelectedStatuses] = React.useState<string[]>([]);
+  const [localData, setLocalData] = React.useState<z.infer<typeof schema>[]>([]);
   const sortableId = React.useId();
   const sensors = useSensors(
     useSensor(MouseSensor, {}),
     useSensor(TouchSensor, {}),
     useSensor(KeyboardSensor, {})
   );
+  const queryClient = useQueryClient();
 
   const {
     data: apiData,
@@ -528,10 +531,36 @@ export function DataTable() {
   const data = React.useMemo(() => apiData?.notes || [], [apiData]);
   const totalCount = apiData?.total || 0;
 
-  const dataIds = React.useMemo<UniqueIdentifier[]>(() => data?.map(({ id }) => id) || [], [data]);
+  // Sync local data with API data
+  React.useEffect(() => {
+    if (data.length > 0) {
+      setLocalData(data);
+    }
+  }, [data]);
+
+  const dataIds = React.useMemo<UniqueIdentifier[]>(
+    () => localData?.map(({ id }) => id) || [],
+    [localData]
+  );
+
+  // Mutation for reordering notes
+  const reorderMutation = useMutation({
+    mutationFn: (items: { id: string; position: number }[]) => apiClient.reorderNotes(items),
+    onSuccess: () => {
+      // Invalidate and refetch notes queries to sync with server
+      queryClient.invalidateQueries({ queryKey: ['notes'] });
+    },
+    onError: (error) => {
+      toast.error('Failed to reorder notes', {
+        description: error instanceof Error ? error.message : 'An unexpected error occurred',
+      });
+      // Revert to server data on error
+      queryClient.invalidateQueries({ queryKey: ['notes'] });
+    },
+  });
 
   const table = useReactTable({
-    data,
+    data: localData,
     columns,
     manualFiltering: true,
     manualSorting: true,
@@ -562,8 +591,31 @@ export function DataTable() {
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (active && over && active.id !== over.id) {
-      // TODO: Implement drag-and-drop reordering with backend API
-      console.log('Reordering:', { from: active.id, to: over.id });
+      // Optimistically update local state
+      setLocalData((currentData) => {
+        const oldIndex = currentData.findIndex((item) => item.id === active.id);
+        const newIndex = currentData.findIndex((item) => item.id === over.id);
+
+        if (oldIndex === -1 || newIndex === -1) return currentData;
+
+        // Reorder the array
+        const reorderedData = arrayMove(currentData, oldIndex, newIndex);
+
+        // Update positions based on new order
+        const updatedData = reorderedData.map((item, index) => ({
+          ...item,
+          position: index,
+        }));
+
+        // Persist to backend
+        const reorderItems = updatedData.map((item) => ({
+          id: item.id,
+          position: item.position,
+        }));
+        reorderMutation.mutate(reorderItems);
+
+        return updatedData;
+      });
     }
   };
 
