@@ -731,7 +731,11 @@ export function DataTable() {
                   </TableRow>
                 ))}
               </TableHeader>
-              <TableBody className="**:data-[slot=table-cell]:first:w-8">
+              <TableBody
+                className={`**:data-[slot=table-cell]:first:w-8 transition-opacity duration-200 ${
+                  isFetching && !isLoading ? 'opacity-50' : 'opacity-100'
+                }`}
+              >
                 {isLoading ? (
                   <TableRow>
                     <TableCell colSpan={columns.length} className="h-24 text-center">
