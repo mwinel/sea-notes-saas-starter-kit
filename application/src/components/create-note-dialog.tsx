@@ -281,7 +281,7 @@ export function CreateNoteDialog({ trigger, mode, noteId }: CreateNoteDialogProp
                   createNoteMutation.isPending || (!titleValue?.trim() && !contentValue?.trim())
                 }
               >
-                {createNoteMutation.isPending ? 'Creating...' : 'Save Note'}
+                {createNoteMutation.isPending ? 'Creating...' : 'Create Note'}
               </Button>
             </div>
           </DialogFooter>
