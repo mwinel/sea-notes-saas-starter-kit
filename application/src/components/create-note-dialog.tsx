@@ -5,7 +5,7 @@
  *
  * Unified component for creating, editing, and viewing notes with optional AI features.
  */
-import { ReactNode, useState } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Command,
@@ -32,7 +32,7 @@ import { hasDigitalOceanGradientAIEnabled } from '@/settings';
 import { useYupValidationResolver } from 'hooks/useYupValidationResolver';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
@@ -44,6 +44,8 @@ interface CreateNoteDialogProps {
   trigger: ReactNode;
   mode: 'create' | 'edit' | 'view';
   noteId?: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
   onSave?: (note: { id?: string; title?: string; content: string }) => void;
   onCancel?: () => void;
 }
@@ -119,20 +121,23 @@ const categories = [
   },
 ];
 
-export function CreateNoteDialog({ trigger, mode, noteId }: CreateNoteDialogProps) {
-  const [open, setOpen] = useState(false);
+export function CreateNoteDialog({
+  trigger,
+  mode,
+  noteId,
+  open: externalOpen,
+  onOpenChange: externalOnOpenChange,
+}: CreateNoteDialogProps) {
+  const [internalOpen, setInternalOpen] = useState(false);
   const [openFramework, setOpenFramework] = useState(false);
   const resolver = useYupValidationResolver(validationSchema);
   const queryClient = useQueryClient();
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setValue,
-    watch,
-    formState: { isSubmitting },
-  } = useForm<CreateNoteData>({
+  // Use external open state if provided, otherwise use internal state
+  const open = externalOpen !== undefined ? externalOpen : internalOpen;
+  const setOpen = externalOnOpenChange || setInternalOpen;
+
+  const { register, handleSubmit, reset, setValue, watch } = useForm<CreateNoteData>({
     resolver,
     defaultValues: {
       category: 'Personal',
@@ -143,6 +148,25 @@ export function CreateNoteDialog({ trigger, mode, noteId }: CreateNoteDialogProp
   const contentValue = watch('content');
   const categoryValue = watch('category');
   const statusValue = watch('status');
+
+  // Fetch note data when in edit mode
+  const { data: noteData, isLoading: isLoadingNote } = useQuery({
+    queryKey: ['note', noteId],
+    queryFn: () => apiClient.getNote(noteId!),
+    enabled: mode === 'edit' && !!noteId,
+  });
+
+  // Populate form with note data when fetched
+  useEffect(() => {
+    if (noteData && mode === 'edit') {
+      reset({
+        title: noteData.title,
+        content: noteData.content,
+        category: noteData.category || 'Personal',
+        status: noteData.status || 'Draft',
+      });
+    }
+  }, [noteData, mode, reset]);
 
   // Create mutation for posting notes
   const createNoteMutation = useMutation({
@@ -162,17 +186,46 @@ export function CreateNoteDialog({ trigger, mode, noteId }: CreateNoteDialogProp
     },
   });
 
+  // Update mutation for editing notes
+  const updateNoteMutation = useMutation({
+    mutationFn: (data: CreateNoteData) => apiClient.updateNote(noteId!, data),
+    onSuccess: () => {
+      toast.success('Note updated successfully!');
+      // Invalidate and refetch notes queries
+      queryClient.invalidateQueries({ queryKey: ['notes'] });
+      queryClient.invalidateQueries({ queryKey: ['note', noteId] });
+      // Reset form and close dialog
+      reset();
+      setOpen(false);
+    },
+    onError: (error) => {
+      toast.error('Failed to update note', {
+        description: error instanceof Error ? error.message : 'An unexpected error occurred',
+      });
+    },
+  });
+
   const onSubmit = async (data: CreateNoteData) => {
-    createNoteMutation.mutate(data);
+    if (mode === 'edit') {
+      updateNoteMutation.mutate(data);
+    } else {
+      createNoteMutation.mutate(data);
+    }
   };
+
+  const isSubmitting = createNoteMutation.isPending || updateNoteMutation.isPending;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent>
+      <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
         <DialogHeader>
-          <DialogTitle>Create a new note</DialogTitle>
-          <DialogDescription>Create a new note with the following details.</DialogDescription>
+          <DialogTitle>{mode === 'edit' ? 'Edit note' : 'Create a new note'}</DialogTitle>
+          <DialogDescription>
+            {mode === 'edit'
+              ? 'Update your note with the following details.'
+              : 'Create a new note with the following details.'}
+          </DialogDescription>
         </DialogHeader>
         <form className="flex flex-col gap-4" data-testid="create-note-form">
           <FieldGroup>
@@ -182,7 +235,7 @@ export function CreateNoteDialog({ trigger, mode, noteId }: CreateNoteDialogProp
                 id="title"
                 placeholder="Title (optional - will auto-generate if empty)"
                 {...register('title')}
-                disabled={createNoteMutation.isPending}
+                disabled={isSubmitting || isLoadingNote}
               />
             </Field>
             <Field>
@@ -191,7 +244,7 @@ export function CreateNoteDialog({ trigger, mode, noteId }: CreateNoteDialogProp
                 id="content"
                 placeholder="Start typing your note..."
                 {...register('content')}
-                disabled={createNoteMutation.isPending}
+                disabled={isSubmitting || isLoadingNote}
               />
             </Field>
             <Field>
@@ -262,7 +315,7 @@ export function CreateNoteDialog({ trigger, mode, noteId }: CreateNoteDialogProp
             </Field>
           </FieldGroup>
           <DialogFooter className="flex !justify-between items-center">
-            <Button variant="gradient" type="button" disabled={createNoteMutation.isPending}>
+            <Button variant="gradient" type="button" disabled={isSubmitting}>
               ✨ Generate Note with AI
             </Button>
             <div className="flex gap-2">
@@ -270,18 +323,22 @@ export function CreateNoteDialog({ trigger, mode, noteId }: CreateNoteDialogProp
                 variant="outline"
                 type="button"
                 onClick={() => setOpen(false)}
-                disabled={createNoteMutation.isPending}
+                disabled={isSubmitting}
               >
                 Cancel
               </Button>
               <Button
                 type="button"
                 onClick={handleSubmit(onSubmit)}
-                disabled={
-                  createNoteMutation.isPending || (!titleValue?.trim() && !contentValue?.trim())
-                }
+                disabled={isSubmitting || (!titleValue?.trim() && !contentValue?.trim())}
               >
-                {createNoteMutation.isPending ? 'Creating...' : 'Create Note'}
+                {isSubmitting
+                  ? mode === 'edit'
+                    ? 'Updating...'
+                    : 'Creating...'
+                  : mode === 'edit'
+                    ? 'Update Note'
+                    : 'Create Note'}
               </Button>
             </div>
           </DialogFooter>
