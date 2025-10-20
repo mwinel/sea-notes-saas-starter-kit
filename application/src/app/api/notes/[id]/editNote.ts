@@ -17,12 +17,12 @@ export const editNote = async (
   try {
     const { id: noteId } = await params;
     const userId = user.id;
-    const { title, content } = await request.json();
+    const { title, content, category, status } = await request.json();
     const dbClient = await createDatabaseService();
 
-    if (!title && !content) {
+    if (!title && !content && !category && !status) {
       return NextResponse.json(
-        { error: 'At least one field (title or content) is required' },
+        { error: 'At least one field (title, content, category, or status) is required' },
         { status: HTTP_STATUS.BAD_REQUEST }
       );
     }
@@ -40,6 +40,8 @@ export const editNote = async (
     const updatedNote = await dbClient.note.update(noteId, {
       title,
       content,
+      category,
+      status,
     });
 
     return NextResponse.json(updatedNote, { status: HTTP_STATUS.OK });
