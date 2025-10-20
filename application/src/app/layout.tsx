@@ -23,7 +23,7 @@ export const metadata: Metadata = {
  * @returns HTML layout with fonts and providers applied.
  */
 const RootLayout = ({ children }: { children: React.ReactNode }) => (
-  <html lang="en" className={`${inter.variable} antialiased`}>
+  <html lang="en" className={`${inter.variable} antialiased`} suppressHydrationWarning>
     <body>
       <Providers>
         {children}

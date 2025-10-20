@@ -5,6 +5,7 @@ import { IconDashboard, IconHelp, IconListDetails, IconSettings } from '@tabler/
 import { NavMain } from '@/components/nav-main';
 import { NavSecondary } from '@/components/nav-secondary';
 import { NavUser } from '@/components/nav-user';
+import { ThemeToggle } from '@/components/theme-toggle';
 import {
   Sidebar,
   SidebarContent,
@@ -86,7 +87,9 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavSecondary items={data.navSecondary} className="mt-auto">
+          <ThemeToggle />
+        </NavSecondary>
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={userData} />
