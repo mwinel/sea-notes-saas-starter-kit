@@ -139,6 +139,8 @@ export function CreateNoteDialog({ trigger, mode, noteId }: CreateNoteDialogProp
       status: 'Draft',
     },
   });
+  const titleValue = watch('title');
+  const contentValue = watch('content');
   const categoryValue = watch('category');
   const statusValue = watch('status');
 
@@ -277,7 +279,9 @@ export function CreateNoteDialog({ trigger, mode, noteId }: CreateNoteDialogProp
               <Button
                 type="button"
                 onClick={handleSubmit(onSubmit)}
-                disabled={createNoteMutation.isPending}
+                disabled={
+                  createNoteMutation.isPending || (!titleValue?.trim() && !contentValue?.trim())
+                }
               >
                 {createNoteMutation.isPending ? 'Creating...' : 'Save Note'}
               </Button>
