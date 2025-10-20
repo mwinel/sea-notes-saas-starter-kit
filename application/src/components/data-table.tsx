@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   closestCenter,
   DndContext,
@@ -56,6 +56,16 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import {
   Drawer,
   DrawerClose,
   DrawerContent,
@@ -98,6 +108,7 @@ import { EmptyState } from '@/components/empty-state';
 import { ErrorState } from '@/components/error-state';
 import { MultiSelectFilter } from '@/components/ui/multi-select-filter';
 import { NotesApiClient } from '@/lib/api/notes';
+import { toast } from 'sonner';
 
 const apiClient = new NotesApiClient();
 
@@ -197,6 +208,28 @@ function getCategoryColor(category: string | null): string {
 // Actions cell component for edit/delete
 function ActionsCell({ row }: { row: Row<z.infer<typeof schema>> }) {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const queryClient = useQueryClient();
+
+  // Delete mutation
+  const deleteMutation = useMutation({
+    mutationFn: (noteId: string) => apiClient.deleteNote(noteId),
+    onSuccess: () => {
+      toast.success('Note deleted successfully!');
+      // Invalidate and refetch notes queries
+      queryClient.invalidateQueries({ queryKey: ['notes'] });
+      setDeleteDialogOpen(false);
+    },
+    onError: (error) => {
+      toast.error('Failed to delete note', {
+        description: error instanceof Error ? error.message : 'An unexpected error occurred',
+      });
+    },
+  });
+
+  const handleDelete = () => {
+    deleteMutation.mutate(row.original.id);
+  };
 
   return (
     <>
@@ -218,7 +251,9 @@ function ActionsCell({ row }: { row: Row<z.infer<typeof schema>> }) {
           <DropdownMenuItem>Make a copy</DropdownMenuItem>
           <DropdownMenuItem>Favorite</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
+          <DropdownMenuItem variant="destructive" onSelect={() => setDeleteDialogOpen(true)}>
+            Delete
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <CreateNoteDialog
@@ -228,6 +263,28 @@ function ActionsCell({ row }: { row: Row<z.infer<typeof schema>> }) {
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
       />
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete note</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete{' '}
+              <span className="font-medium">"{row.original.title}"</span>? This action cannot be
+              undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleteMutation.isPending}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={deleteMutation.isPending}
+              className="bg-destructive text-white hover:bg-destructive/90"
+            >
+              {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }
