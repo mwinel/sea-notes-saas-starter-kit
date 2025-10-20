@@ -235,6 +235,31 @@ function ActionsCell({ row }: { row: Row<z.infer<typeof schema>> }) {
     },
   });
 
+  // Copy mutation
+  const copyMutation = useMutation({
+    mutationFn: async (noteId: string) => {
+      // Fetch the original note
+      const originalNote = await apiClient.getNote(noteId);
+      // Create a copy with "Copy - " prefix
+      return apiClient.createNote({
+        title: `Copy - ${originalNote.title}`,
+        content: originalNote.content,
+        category: originalNote.category || undefined,
+        status: originalNote.status || undefined,
+      });
+    },
+    onSuccess: () => {
+      toast.success('Note copied successfully!');
+      // Invalidate and refetch notes queries
+      queryClient.invalidateQueries({ queryKey: ['notes'] });
+    },
+    onError: (error) => {
+      toast.error('Failed to copy note', {
+        description: error instanceof Error ? error.message : 'An unexpected error occurred',
+      });
+    },
+  });
+
   const handleDelete = () => {
     deleteMutation.mutate(row.original.id);
   };
@@ -244,6 +269,10 @@ function ActionsCell({ row }: { row: Row<z.infer<typeof schema>> }) {
       noteId: row.original.id,
       isFavorite: !row.original.isFavorite,
     });
+  };
+
+  const handleCopy = () => {
+    copyMutation.mutate(row.original.id);
   };
 
   return (
@@ -263,7 +292,9 @@ function ActionsCell({ row }: { row: Row<z.infer<typeof schema>> }) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-40">
           <DropdownMenuItem onSelect={() => setEditDialogOpen(true)}>Edit</DropdownMenuItem>
-          <DropdownMenuItem>Make a copy</DropdownMenuItem>
+          <DropdownMenuItem onSelect={handleCopy} disabled={copyMutation.isPending}>
+            {copyMutation.isPending ? 'Copying...' : 'Make a copy'}
+          </DropdownMenuItem>
           <DropdownMenuItem onSelect={handleToggleFavorite} disabled={favoriteMutation.isPending}>
             {row.original.isFavorite ? 'Unfavorite' : 'Favorite'}
           </DropdownMenuItem>
