@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { within } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
-import { Input } from './input';
+import { Input } from '@/components/ui/input';
 
 const meta: Meta<typeof Input> = {
   title: 'Design System/Input',

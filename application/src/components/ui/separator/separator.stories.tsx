@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
-import { Separator } from './separator';
+import { Separator } from '.';
 
 const meta: Meta<typeof Separator> = {
   title: 'Design System/Separator',

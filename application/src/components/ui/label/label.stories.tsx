@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { within } from '@testing-library/dom';
-import { Label } from './label';
+import { Label } from '.';
 
 const meta: Meta<typeof Label> = {
   title: 'Design System/Label',

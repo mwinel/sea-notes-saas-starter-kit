@@ -11,7 +11,7 @@ import {
   FieldError,
   FieldSeparator,
   FieldTitle,
-} from './field';
+} from '.';
 
 const meta: Meta<typeof Field> = {
   title: 'Design System/Field',

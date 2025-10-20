@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { within } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
-import { PasswordInput } from './password-input';
+import { PasswordInput } from '@/components/ui/password-input';
 
 const meta: Meta<typeof PasswordInput> = {
   title: 'Design System/PasswordInput',
