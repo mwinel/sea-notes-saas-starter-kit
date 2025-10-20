@@ -147,10 +147,8 @@ export function CreateNoteDialog({ trigger, mode, noteId }: CreateNoteDialogProp
   // Create mutation for posting notes
   const createNoteMutation = useMutation({
     mutationFn: (data: CreateNoteData) => apiClient.createNote(data),
-    onSuccess: (createdNote) => {
-      toast.success('Note created successfully!', {
-        description: `"${createdNote.title}" has been added to your notes.`,
-      });
+    onSuccess: () => {
+      toast.success('Note created successfully!');
       // Invalidate and refetch notes queries
       queryClient.invalidateQueries({ queryKey: ['notes'] });
       // Reset form and close dialog
