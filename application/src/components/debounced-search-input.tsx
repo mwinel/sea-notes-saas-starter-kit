@@ -36,7 +36,7 @@ export function DebouncedSearchInput({
   return (
     <div
       className={cn(
-        'flex flex-1 max-w-xs h-8 border border-input rounded-md overflow-hidden shadow-xs',
+        'flex flex-1 max-w-xs h-8 border border-input rounded-md overflow-hidden',
         className
       )}
     >
