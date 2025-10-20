@@ -478,7 +478,7 @@ export function DataTable() {
     );
   }
 
-  if (data.length === 0) {
+  if (totalCount === 0 && !searchValue) {
     return (
       <EmptyState
         title="No notes found"
