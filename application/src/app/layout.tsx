@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Geist } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/context/providers';
 import { Toaster } from '@/components/ui/sonner';
 
-const inter = Inter({
+const geist = Geist({
   weight: ['300', '400', '500', '600', '700'],
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-geist',
 });
 
 export const metadata: Metadata = {
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
  * @returns HTML layout with fonts and providers applied.
  */
 const RootLayout = ({ children }: { children: React.ReactNode }) => (
-  <html lang="en" className={`${inter.variable} antialiased`} suppressHydrationWarning>
+  <html lang="en" className={`${geist.variable} antialiased`} suppressHydrationWarning>
     <body>
       <Providers>
         {children}

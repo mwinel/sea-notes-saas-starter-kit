@@ -251,7 +251,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
 
       return (
         <div className="w-32">
-          <Badge variant="outline" className={`px-1.5 ${colorClasses}`}>
+          <Badge variant="outline" className={`px-1.5 font-normal ${colorClasses}`}>
             {category}
           </Badge>
         </div>
@@ -265,7 +265,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     accessorKey: 'status',
     header: ({ column }) => <SortableHeader column={column}>Status</SortableHeader>,
     cell: ({ row }) => (
-      <Badge variant="outline" className="text-muted-foreground px-1.5">
+      <Badge variant="outline" className="text-muted-foreground px-1.5 font-normal">
         {row.original.status === 'Done' ? (
           <IconCircleCheckFilled className="fill-green-500 dark:fill-green-400" />
         ) : (
@@ -459,9 +459,7 @@ export function DataTable() {
   const searchValue = columnFilters.find((filter) => filter.id === 'global')?.value || '';
 
   if (isLoading) {
-    return (
-      <LoadingState message="Loading notes..." />
-    );
+    return <LoadingState message="Loading notes..." />;
   }
 
   if (isError) {
