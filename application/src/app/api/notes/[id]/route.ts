@@ -10,10 +10,10 @@ import { deleteNote } from './deleteNote';
 export const GET = withAuth(getNote);
 
 /**
- * Handles PUT requests to edit a note.
+ * Handles PATCH requests to edit a note.
  * This route is protected and requires authentication.
  */
-export const PUT = withAuth(editNote);
+export const PATCH = withAuth(editNote);
 
 /**
  * Handles DELETE requests to delete a note by its ID.

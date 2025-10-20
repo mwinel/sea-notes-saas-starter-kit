@@ -34,6 +34,7 @@ import {
   IconLoader,
   IconPlus,
   IconCaretUpDownFilled,
+  IconStarFilled,
 } from '@tabler/icons-react';
 import {
   ColumnDef,
@@ -130,6 +131,7 @@ export const schema = z.object({
   content: z.string(),
   category: z.string().nullable(),
   status: z.string().nullable(),
+  isFavorite: z.boolean(),
   createdAt: z.string(),
   updatedAt: z.string(),
 });
@@ -215,8 +217,33 @@ function ActionsCell({ row }: { row: Row<z.infer<typeof schema>> }) {
     },
   });
 
+  // Favorite mutation
+  const favoriteMutation = useMutation({
+    mutationFn: ({ noteId, isFavorite }: { noteId: string; isFavorite: boolean }) =>
+      apiClient.toggleFavorite(noteId, isFavorite),
+    onSuccess: (_, variables) => {
+      toast.success(
+        variables.isFavorite ? 'Note added to favorites!' : 'Note removed from favorites!'
+      );
+      // Invalidate and refetch notes queries
+      queryClient.invalidateQueries({ queryKey: ['notes'] });
+    },
+    onError: (error) => {
+      toast.error('Failed to update favorite', {
+        description: error instanceof Error ? error.message : 'An unexpected error occurred',
+      });
+    },
+  });
+
   const handleDelete = () => {
     deleteMutation.mutate(row.original.id);
+  };
+
+  const handleToggleFavorite = () => {
+    favoriteMutation.mutate({
+      noteId: row.original.id,
+      isFavorite: !row.original.isFavorite,
+    });
   };
 
   return (
@@ -234,10 +261,12 @@ function ActionsCell({ row }: { row: Row<z.infer<typeof schema>> }) {
             </Button>
           </span>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-32">
+        <DropdownMenuContent align="end" className="w-40">
           <DropdownMenuItem onSelect={() => setEditDialogOpen(true)}>Edit</DropdownMenuItem>
           <DropdownMenuItem>Make a copy</DropdownMenuItem>
-          <DropdownMenuItem>Favorite</DropdownMenuItem>
+          <DropdownMenuItem onSelect={handleToggleFavorite} disabled={favoriteMutation.isPending}>
+            {row.original.isFavorite ? 'Unfavorite' : 'Favorite'}
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem variant="destructive" onSelect={() => setDeleteDialogOpen(true)}>
             Delete
@@ -738,28 +767,33 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
 
   return (
     <>
-      {isTruncated ? (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <span
-              className="text-foreground w-fit px-0 text-left cursor-pointer font-medium hover:underline underline-offset-4"
-              onClick={() => setEditDialogOpen(true)}
-            >
-              {displayTitle}
-            </span>
-          </TooltipTrigger>
-          <TooltipContent side="bottom" align="start">
-            <p className="max-w-md">{item.title}</p>
-          </TooltipContent>
-        </Tooltip>
-      ) : (
-        <span
-          className="text-foreground w-fit px-0 text-left cursor-pointer font-medium hover:underline underline-offset-4"
-          onClick={() => setEditDialogOpen(true)}
-        >
-          {displayTitle}
-        </span>
-      )}
+      <div className="flex items-center gap-1.5">
+        {item.isFavorite && (
+          <IconStarFilled className="size-3.5 text-yellow-500 dark:text-yellow-400 flex-shrink-0" />
+        )}
+        {isTruncated ? (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span
+                className="text-foreground w-fit px-0 text-left cursor-pointer font-medium hover:underline underline-offset-4"
+                onClick={() => setEditDialogOpen(true)}
+              >
+                {displayTitle}
+              </span>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" align="start">
+              <p className="max-w-md">{item.title}</p>
+            </TooltipContent>
+          </Tooltip>
+        ) : (
+          <span
+            className="text-foreground w-fit px-0 text-left cursor-pointer font-medium hover:underline underline-offset-4"
+            onClick={() => setEditDialogOpen(true)}
+          >
+            {displayTitle}
+          </span>
+        )}
+      </div>
       <CreateNoteDialog
         trigger={<span className="hidden" />}
         mode="edit"

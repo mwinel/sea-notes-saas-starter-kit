@@ -42,12 +42,23 @@ describe('editNote', () => {
     expect(await res.json()).toEqual({ ...note, title: 'new' });
   });
 
+  it('updates isFavorite and returns 200', async () => {
+    mockFindById.mockResolvedValue(note);
+    mockUpdate.mockResolvedValue({ ...note, isFavorite: true });
+    const req = makeRequest({ isFavorite: true });
+    const res = await editNote(req, user, makeParams('n1'));
+    expect(mockFindById).toHaveBeenCalledWith('n1');
+    expect(mockUpdate).toHaveBeenCalledWith('n1', { isFavorite: true });
+    expect(res.status).toBe(HTTP_STATUS.OK);
+    expect(await res.json()).toEqual({ ...note, isFavorite: true });
+  });
+
   it('returns 400 if no fields provided', async () => {
     const req = makeRequest({});
     const res = await editNote(req, user, makeParams('n1'));
     expect(res.status).toBe(HTTP_STATUS.BAD_REQUEST);
     expect(await res.json()).toEqual({
-      error: 'At least one field (title or content) is required',
+      error: 'At least one field (title, content, category, status, or isFavorite) is required',
     });
   });
 

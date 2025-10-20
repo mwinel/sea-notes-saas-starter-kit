@@ -34,6 +34,7 @@ export interface Note {
   content: string;
   category: string | null;
   status: string | null;
+  isFavorite: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

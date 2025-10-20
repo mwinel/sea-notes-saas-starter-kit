@@ -5,6 +5,7 @@ export interface Note {
   content: string;
   category: string | null;
   status: string | null;
+  isFavorite: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -21,6 +22,7 @@ export interface UpdateNoteData {
   content?: string;
   category?: string;
   status?: string;
+  isFavorite?: boolean;
 }
 
 export interface PaginatedNotes {
@@ -92,7 +94,7 @@ export class NotesApiClient {
   // Update a note
   async updateNote(id: string, updateData: UpdateNoteData): Promise<Note> {
     const res = await fetch(`${this.baseURL}/${id}`, {
-      method: 'PUT',
+      method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updateData),
     });
@@ -104,5 +106,10 @@ export class NotesApiClient {
   async deleteNote(id: string): Promise<void> {
     const res = await fetch(`${this.baseURL}/${id}`, { method: 'DELETE' });
     if (!res.ok) throw new Error('Failed to delete note');
+  }
+
+  // Toggle favorite status
+  async toggleFavorite(id: string, isFavorite: boolean): Promise<Note> {
+    return this.updateNote(id, { isFavorite });
   }
 }

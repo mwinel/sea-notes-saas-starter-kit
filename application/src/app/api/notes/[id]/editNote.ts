@@ -17,12 +17,14 @@ export const editNote = async (
   try {
     const { id: noteId } = await params;
     const userId = user.id;
-    const { title, content, category, status } = await request.json();
+    const { title, content, category, status, isFavorite } = await request.json();
     const dbClient = await createDatabaseService();
 
-    if (!title && !content && !category && !status) {
+    if (!title && !content && !category && !status && isFavorite === undefined) {
       return NextResponse.json(
-        { error: 'At least one field (title, content, category, or status) is required' },
+        {
+          error: 'At least one field (title, content, category, status, or isFavorite) is required',
+        },
         { status: HTTP_STATUS.BAD_REQUEST }
       );
     }
@@ -37,12 +39,22 @@ export const editNote = async (
       return NextResponse.json({ error: 'Unauthorized' }, { status: HTTP_STATUS.FORBIDDEN });
     }
 
-    const updatedNote = await dbClient.note.update(noteId, {
-      title,
-      content,
-      category,
-      status,
-    });
+    // Build update object with only provided fields
+    const updateData: {
+      title?: string;
+      content?: string;
+      category?: string;
+      status?: string;
+      isFavorite?: boolean;
+    } = {};
+
+    if (title !== undefined) updateData.title = title;
+    if (content !== undefined) updateData.content = content;
+    if (category !== undefined) updateData.category = category;
+    if (status !== undefined) updateData.status = status;
+    if (isFavorite !== undefined) updateData.isFavorite = isFavorite;
+
+    const updatedNote = await dbClient.note.update(noteId, updateData);
 
     return NextResponse.json(updatedNote, { status: HTTP_STATUS.OK });
   } catch (error) {
