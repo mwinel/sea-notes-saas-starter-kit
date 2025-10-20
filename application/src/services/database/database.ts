@@ -59,6 +59,7 @@ export abstract class DatabaseClient implements ConfigurableService {
       search?: string;
       categories?: string[];
       statuses?: string[];
+      isFavorite?: boolean;
       userId: string;
       skip: number;
       take: number;
@@ -74,7 +75,8 @@ export abstract class DatabaseClient implements ConfigurableService {
       userId: string,
       search?: string,
       categories?: string[],
-      statuses?: string[]
+      statuses?: string[],
+      isFavorite?: boolean
     ) => Promise<number>;
   };
   abstract verificationToken: {

@@ -488,6 +488,7 @@ export function DataTable() {
   });
   const [selectedCategories, setSelectedCategories] = React.useState<string[]>([]);
   const [selectedStatuses, setSelectedStatuses] = React.useState<string[]>([]);
+  const [showFavoritesOnly, setShowFavoritesOnly] = React.useState(false);
   const [localData, setLocalData] = React.useState<z.infer<typeof schema>[]>([]);
   const sortableId = React.useId();
   const sensors = useSensors(
@@ -512,6 +513,7 @@ export function DataTable() {
       sorting,
       selectedCategories,
       selectedStatuses,
+      showFavoritesOnly,
     ],
     queryFn: () => {
       const globalFilter = columnFilters.find((filter) => filter.id === 'global');
@@ -523,6 +525,7 @@ export function DataTable() {
           sorting.length > 0 ? `${sorting[0].id}:${sorting[0].desc ? 'desc' : 'asc'}` : undefined,
         categories: selectedCategories.length > 0 ? selectedCategories : undefined,
         statuses: selectedStatuses.length > 0 ? selectedStatuses : undefined,
+        isFavorite: showFavoritesOnly ? true : undefined,
       });
     },
     placeholderData: (previousData) => previousData,
@@ -691,6 +694,28 @@ export function DataTable() {
             emptyMessage="No status found."
             showSearch={false}
           />
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant={showFavoritesOnly ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
+                className="font-normal"
+              >
+                <IconStarFilled
+                  className={`size-3.5 ${
+                    showFavoritesOnly
+                      ? 'text-yellow-300 dark:text-yellow-400'
+                      : 'text-muted-foreground'
+                  }`}
+                />
+                <span className="hidden lg:inline">Favorites</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">
+              <p>{showFavoritesOnly ? 'Show all notes' : 'Show only favorites'}</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
         <CreateNoteDialog
           trigger={

@@ -160,6 +160,7 @@ export class SqlDatabaseService extends DatabaseClient {
       search?: string;
       categories?: string[];
       statuses?: string[];
+      isFavorite?: boolean;
       skip: number;
       take: number;
       orderBy: {
@@ -171,7 +172,7 @@ export class SqlDatabaseService extends DatabaseClient {
         position?: 'desc' | 'asc';
       };
     }) => {
-      const { userId, search, categories, statuses, skip, take, orderBy } = args;
+      const { userId, search, categories, statuses, isFavorite, skip, take, orderBy } = args;
       return prisma.note.findMany({
         where: {
           userId,
@@ -197,13 +198,24 @@ export class SqlDatabaseService extends DatabaseClient {
                 },
               }
             : {}),
+          ...(isFavorite !== undefined
+            ? {
+                isFavorite: isFavorite,
+              }
+            : {}),
         },
         skip,
         take,
         orderBy,
       });
     },
-    count: async (userId: string, search?: string, categories?: string[], statuses?: string[]) => {
+    count: async (
+      userId: string,
+      search?: string,
+      categories?: string[],
+      statuses?: string[],
+      isFavorite?: boolean
+    ) => {
       return prisma.note.count({
         where: {
           userId,
@@ -227,6 +239,11 @@ export class SqlDatabaseService extends DatabaseClient {
                 status: {
                   in: statuses,
                 },
+              }
+            : {}),
+          ...(isFavorite !== undefined
+            ? {
+                isFavorite: isFavorite,
               }
             : {}),
         },

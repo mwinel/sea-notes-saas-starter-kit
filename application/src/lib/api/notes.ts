@@ -45,6 +45,7 @@ export class NotesApiClient {
     sortBy?: string;
     categories?: string[];
     statuses?: string[];
+    isFavorite?: boolean;
   }): Promise<PaginatedNotes> {
     let url = `${this.baseURL}`;
     if (
@@ -54,7 +55,8 @@ export class NotesApiClient {
         params.search !== undefined ||
         params.sortBy !== undefined ||
         params.categories !== undefined ||
-        params.statuses !== undefined)
+        params.statuses !== undefined ||
+        params.isFavorite !== undefined)
     ) {
       const query = new URLSearchParams();
       if (params.page !== undefined) query.append('page', params.page.toString());
@@ -66,6 +68,9 @@ export class NotesApiClient {
       }
       if (params.statuses !== undefined && params.statuses.length > 0) {
         query.append('statuses', params.statuses.join(','));
+      }
+      if (params.isFavorite !== undefined) {
+        query.append('isFavorite', params.isFavorite.toString());
       }
       url += `?${query.toString()}`;
     }

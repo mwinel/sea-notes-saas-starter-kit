@@ -25,6 +25,8 @@ export const getAllNotes = async (
     const categories = categoriesParam ? categoriesParam.split(',').filter(Boolean) : undefined;
     const statusesParam = searchParams.get('statuses');
     const statuses = statusesParam ? statusesParam.split(',').filter(Boolean) : undefined;
+    const isFavoriteParam = searchParams.get('isFavorite');
+    const isFavorite = isFavoriteParam === 'true' ? true : undefined;
 
     // Parse sortBy parameter (format: "column:direction")
     const [sortField, sortDirection] = sortBy.split(':');
@@ -51,6 +53,7 @@ export const getAllNotes = async (
       search?: string;
       categories?: string[];
       statuses?: string[];
+      isFavorite?: boolean;
       orderBy: {
         createdAt?: 'desc' | 'asc';
         updatedAt?: 'desc' | 'asc';
@@ -81,10 +84,15 @@ export const getAllNotes = async (
       findManyParams.statuses = statuses;
     }
 
+    // Only include isFavorite if it's defined
+    if (isFavorite !== undefined) {
+      findManyParams.isFavorite = isFavorite;
+    }
+
     // Get all notes for the user
     const [notes, total] = await Promise.all([
       dbClient.note.findMany(findManyParams),
-      dbClient.note.count(userId, search, categories, statuses),
+      dbClient.note.count(userId, search, categories, statuses, isFavorite),
     ]);
 
     // Return both notes and total count
