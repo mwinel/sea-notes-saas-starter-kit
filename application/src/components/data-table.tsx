@@ -51,7 +51,6 @@ import {
   VisibilityState,
 } from '@tanstack/react-table';
 import { z } from 'zod';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -66,23 +65,12 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from '@/components/ui/drawer';
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -744,82 +732,41 @@ export function DataTable() {
 }
 
 function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
-  const isMobile = useIsMobile();
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
   const isTruncated = item.title.length > 30;
   const displayTitle = isTruncated ? item.title.substring(0, 30) + '...' : item.title;
 
   return (
-    <Drawer direction={isMobile ? 'bottom' : 'right'}>
-      <DrawerTrigger asChild>
-        {isTruncated ? (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span className="text-foreground w-fit px-0 text-left cursor-pointer font-medium hover:underline underline-offset-4">
-                {displayTitle}
-              </span>
-            </TooltipTrigger>
-            <TooltipContent side="bottom" align="start">
-              <p className="max-w-md">{item.title}</p>
-            </TooltipContent>
-          </Tooltip>
-        ) : (
-          <span className="text-foreground w-fit px-0 text-left cursor-pointer font-medium hover:underline underline-offset-4">
-            {displayTitle}
-          </span>
-        )}
-      </DrawerTrigger>
-      <DrawerContent>
-        <DrawerHeader className="gap-1">
-          <DrawerTitle>{item.title}</DrawerTitle>
-          <DrawerDescription>Showing total visitors for the last 6 months</DrawerDescription>
-        </DrawerHeader>
-        <div className="flex flex-col gap-4 overflow-y-auto px-4 text-sm">
-          <form className="flex flex-col gap-4">
-            <div className="flex flex-col gap-3">
-              <Label htmlFor="title">Title</Label>
-              <Input id="title" defaultValue={item.title} />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="flex flex-col gap-3">
-                <Label htmlFor="category">Category</Label>
-                <Select defaultValue={item.category ?? undefined}>
-                  <SelectTrigger id="type" className="w-full">
-                    <SelectValue placeholder="Select a type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Table of Contents">Table of Contents</SelectItem>
-                    <SelectItem value="Executive Summary">Executive Summary</SelectItem>
-                    <SelectItem value="Technical Approach">Technical Approach</SelectItem>
-                    <SelectItem value="Design">Design</SelectItem>
-                    <SelectItem value="Capabilities">Capabilities</SelectItem>
-                    <SelectItem value="Focus Documents">Focus Documents</SelectItem>
-                    <SelectItem value="Narrative">Narrative</SelectItem>
-                    <SelectItem value="Cover Page">Cover Page</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex flex-col gap-3">
-                <Label htmlFor="status">Status</Label>
-                <Select defaultValue={item.status ?? undefined}>
-                  <SelectTrigger id="status" className="w-full">
-                    <SelectValue placeholder="Select a status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Draft">Draft</SelectItem>
-                    <SelectItem value="Done">Done</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </form>
-        </div>
-        <DrawerFooter>
-          <Button>Submit</Button>
-          <DrawerClose asChild>
-            <Button variant="outline">Done</Button>
-          </DrawerClose>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
+    <>
+      {isTruncated ? (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span
+              className="text-foreground w-fit px-0 text-left cursor-pointer font-medium hover:underline underline-offset-4"
+              onClick={() => setEditDialogOpen(true)}
+            >
+              {displayTitle}
+            </span>
+          </TooltipTrigger>
+          <TooltipContent side="bottom" align="start">
+            <p className="max-w-md">{item.title}</p>
+          </TooltipContent>
+        </Tooltip>
+      ) : (
+        <span
+          className="text-foreground w-fit px-0 text-left cursor-pointer font-medium hover:underline underline-offset-4"
+          onClick={() => setEditDialogOpen(true)}
+        >
+          {displayTitle}
+        </span>
+      )}
+      <CreateNoteDialog
+        trigger={<span className="hidden" />}
+        mode="edit"
+        noteId={item.id}
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+      />
+    </>
   );
 }
