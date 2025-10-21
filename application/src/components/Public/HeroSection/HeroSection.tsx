@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Box, Container } from '@mui/material';
-import TerminalMockup from 'components/Public/TerminalMockup/TerminalMockup';
-import CTAButtons from 'components/Public/CTAButtons/CTAButtons';
+import TerminalMockup from '@/components/public/TerminalMockup/TerminalMockup';
+import CTAButtons from '@/components/public/CTAButtons/CTAButtons';
 import { DIMENSIONS } from 'constants/landing';
 
 /**

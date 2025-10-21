@@ -2,7 +2,7 @@ import { Box, Button, Card, CardContent, Typography, List, ListItem } from '@mui
 import CheckIcon from '@mui/icons-material/Check';
 import Link from 'next/link';
 import { createBillingService } from 'services/billing/billingFactory';
-import GetInvoiceButton from 'components/Pricing/GetInvoiceButton';
+import GetInvoiceButton from '@/components/billing/Pricing/GetInvoiceButton';
 
 export const dynamic = 'force-dynamic'; // Ensure this page is always revalidated
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography, Box, Container, Stack } from '@mui/material';
-import CTAButtons from 'components/Public/CTAButtons/CTAButtons';
+import CTAButtons from '@/components/public/CTAButtons/CTAButtons';
 import { DIMENSIONS } from 'constants/landing';
 
 /**

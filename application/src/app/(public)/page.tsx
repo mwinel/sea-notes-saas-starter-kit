@@ -1,9 +1,9 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import HeroSection from 'components/Public/HeroSection/HeroSection';
-import ApplicationPreview from 'components/Public/ApplicationPreview/ApplicationPreview';
-import FeatureCards from 'components/Public/FeatureCards/FeatureCards';
-import CTASection from 'components/Public/CTASection/CTASection';
+import HeroSection from '@/components/public/HeroSection/HeroSection';
+import ApplicationPreview from '@/components/public/ApplicationPreview/ApplicationPreview';
+import FeatureCards from '@/components/public/FeatureCards/FeatureCards';
+import CTASection from '@/components/public/CTASection/CTASection';
 
 /**
  * Home page component

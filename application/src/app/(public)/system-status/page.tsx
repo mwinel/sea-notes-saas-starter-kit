@@ -1,4 +1,4 @@
-import SystemStatusPage from '../../../components/SystemStatus/SystemStatusPage';
+import SystemStatusPage from '../../../components/admin/SystemStatus/SystemStatusPage';
 
 /**
  * System Status page route for checking and displaying the status of all system services.

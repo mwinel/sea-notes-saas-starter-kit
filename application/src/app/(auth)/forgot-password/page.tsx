@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import { LoginForm } from '@/components/auth/login-form';
+import { ForgotPasswordForm } from '@/components/auth/forgot-password-form';
 
-export default function LoginPage() {
+export default function Page() {
   return (
     <>
       <Link href="/" className="flex items-center gap-2 self-center font-medium">
@@ -10,7 +10,7 @@ export default function LoginPage() {
         </div>
         <span className="text-xl font-bold">SeaNotes</span>
       </Link>
-      <LoginForm />
+      <ForgotPasswordForm />
     </>
   );
 }
