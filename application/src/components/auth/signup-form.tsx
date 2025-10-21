@@ -70,7 +70,7 @@ export function SignUpForm({ className, ...props }: React.ComponentProps<'div'>)
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Create Account</CardTitle>
-          <CardDescription>Sign up to get started with your account</CardDescription>
+          <CardDescription>Sign up to get started with your account.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} data-testid="signup-form">
