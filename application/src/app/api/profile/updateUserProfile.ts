@@ -18,6 +18,8 @@ export const updateUserProfile = async (
     const formData = await request.formData();
     const file = formData.get('file') as File | null;
     const newName = formData.get('name') as string | null;
+    const removeAvatar = formData.get('removeAvatar') as string | null;
+
     if (newName === '') {
       return NextResponse.json({ error: 'Name invalid' }, { status: HTTP_STATUS.BAD_REQUEST });
     }
@@ -29,11 +31,19 @@ export const updateUserProfile = async (
       return NextResponse.json({ error: "User doesn't exist" }, { status: HTTP_STATUS.NOT_FOUND });
     }
 
-    if (file) {
-      const allowedTypes = ['image/jpeg', 'image/png'];
+    // Handle avatar removal
+    if (removeAvatar === 'true' || (file && file.size === 0)) {
+      const oldImageName = getFileNameFromUrl(dbUser.image);
+      if (oldImageName) {
+        const storageService = await createStorageService();
+        await storageService.deleteFile(user.id, oldImageName);
+      }
+      dbUser.image = null;
+    } else if (file && file.size > 0) {
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
       if (!allowedTypes.includes(file.type)) {
         return NextResponse.json(
-          { error: 'Only JPG or PNG files are allowed' },
+          { error: 'Only JPG, PNG, or WebP files are allowed' },
           { status: HTTP_STATUS.BAD_REQUEST }
         );
       }
@@ -67,13 +77,20 @@ export const updateUserProfile = async (
     }
 
     if (newName !== null) {
-      dbUser.name = newName;
+      // Parse the name into firstName and lastName
+      const nameParts = newName.trim().split(' ');
+      dbUser.firstName = nameParts[0] || '';
+      dbUser.lastName = nameParts.slice(1).join(' ') || '';
     }
 
     await db.user.update(dbUser.id, dbUser);
 
     return NextResponse.json(
-      { name: dbUser.name, image: dbUser.image },
+      {
+        firstName: dbUser.firstName,
+        lastName: dbUser.lastName,
+        image: dbUser.image,
+      },
       { status: HTTP_STATUS.OK }
     );
   } catch (error) {
