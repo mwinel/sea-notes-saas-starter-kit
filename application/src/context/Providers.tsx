@@ -1,8 +1,8 @@
 'use client';
 import { SessionProvider } from 'next-auth/react';
-import { UserProvider } from './UserContext';
+import { UserProvider } from './user-context';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
-import { NavigatingProvider } from './Navigation';
+import { NavigatingProvider } from './navigation';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ThemeProvider } from 'next-themes';

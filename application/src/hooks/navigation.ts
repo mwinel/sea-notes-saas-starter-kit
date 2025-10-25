@@ -1,6 +1,6 @@
 'use client';
 
-import { NavigatingContext } from 'context/Navigation';
+import { NavigatingContext } from '@/context/navigation';
 import { useRouter } from 'next/navigation';
 import { useContext } from 'react';
 

@@ -11,6 +11,8 @@ const customJestConfig = {
     '^components/(.*)$': '<rootDir>/src/components/$1',
     '^lib/(.*)$': '<rootDir>/src/lib/$1',
     '^settings$': '<rootDir>/src/settings',
+    '^@/test-utils$': '<rootDir>/src/__tests__/utils/test-utils',
+    '^@/test-mocks/(.*)$': '<rootDir>/src/__tests__/mocks/$1',
   },
   transformIgnorePatterns: ['/node_modules/(?!next-auth|@auth/core).+\\.js$'],
   testPathIgnorePatterns: [

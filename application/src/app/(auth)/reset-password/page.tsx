@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ResetPasswordForm } from '@/components/auth/reset-password-form';
+import { ResetPasswordForm } from '@/components/auth/reset-password/reset-password-form';
 
 export default function Page() {
   return (
