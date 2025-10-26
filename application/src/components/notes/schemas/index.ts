@@ -9,3 +9,10 @@ export const noteValidationSchema = yup.object().shape({
   category: yup.string().optional(),
   status: yup.string().optional(),
 });
+
+export {
+  noteTableSchema,
+  type NoteTableData,
+  AVAILABLE_CATEGORIES,
+  AVAILABLE_STATUSES,
+} from './table-schema';
