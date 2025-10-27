@@ -9,10 +9,28 @@ import { NoteTableData } from '@/components/notes/schemas';
 interface DraggableCardProps {
   item: NoteTableData;
   isSelected?: boolean;
+  isCopyPending?: boolean;
+  isFavoritePending?: boolean;
+  onTitleClick: (noteId: string) => void;
+  onEdit: (noteId: string) => void;
+  onCopy: (noteId: string) => void;
+  onToggleFavorite: (noteId: string, isFavorite: boolean) => void;
+  onDelete: (noteId: string) => void;
   onSelectionChange?: (selected: boolean) => void;
 }
 
-export function DraggableCard({ item, isSelected, onSelectionChange }: DraggableCardProps) {
+export function DraggableCard({
+  item,
+  isSelected,
+  isCopyPending,
+  isFavoritePending,
+  onTitleClick,
+  onEdit,
+  onCopy,
+  onToggleFavorite,
+  onDelete,
+  onSelectionChange,
+}: DraggableCardProps) {
   const { attributes, listeners, transform, transition, setNodeRef, isDragging } = useSortable({
     id: item.id,
   });
@@ -38,10 +56,17 @@ export function DraggableCard({ item, isSelected, onSelectionChange }: Draggable
           <IconGripVertical className="size-4 text-muted-foreground" />
         </div>
       </div>
-      
+
       <NoteCard
         item={item}
         isSelected={isSelected}
+        isCopyPending={isCopyPending}
+        isFavoritePending={isFavoritePending}
+        onTitleClick={onTitleClick}
+        onEdit={onEdit}
+        onCopy={onCopy}
+        onToggleFavorite={onToggleFavorite}
+        onDelete={onDelete}
         onSelectionChange={onSelectionChange}
       />
     </div>

@@ -1,4 +1,4 @@
-import { getFileNameFromUrl } from 'helpers/fileName';
+import { getFileNameFromUrl } from '@/helpers/file-name';
 import { createDatabaseService } from 'services/database/databaseFactory';
 import { createStorageService } from 'services/storage/storageFactory';
 import { v4 as uuidv4 } from 'uuid';
