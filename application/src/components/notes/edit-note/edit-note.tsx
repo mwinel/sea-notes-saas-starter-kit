@@ -125,14 +125,7 @@ export function EditNote({ noteId, open, onOpenChange }: EditNoteProps) {
           <DialogTitle>Edit note</DialogTitle>
           <DialogDescription>Update your note with the following details.</DialogDescription>
         </DialogHeader>
-        {isLoadingNote ? (
-          <div className="flex items-center justify-center py-8">
-            <div className="flex items-center gap-2">
-              <Spinner aria-label="Loading note" />
-              <span>Loading note...</span>
-            </div>
-          </div>
-        ) : (
+        <div aria-busy={isLoadingNote} className={isLoadingNote ? 'opacity-50' : ''}>
           <form className="flex flex-col gap-4" data-testid="edit-note-dialog-form">
             <NoteForm
               title={titleValue}
@@ -144,10 +137,11 @@ export function EditNote({ noteId, open, onOpenChange }: EditNoteProps) {
               onCategoryChange={(value) => setValue('category', value)}
               onStatusChange={(value) => setValue('status', value)}
               isSubmitting={isSubmitting}
+              disabled={isLoadingNote || isSubmitting}
               contentClassName="h-48 overflow-y-auto resize-none"
             />
             <DialogFooter className="flex !justify-between items-center">
-              <Button variant="gradient" type="button" disabled={isSubmitting}>
+              <Button variant="gradient" type="button" disabled={isSubmitting || isLoadingNote}>
                 ✨ Generate Note with AI
               </Button>
               <div className="flex gap-2">
@@ -155,7 +149,7 @@ export function EditNote({ noteId, open, onOpenChange }: EditNoteProps) {
                   variant="outline"
                   type="button"
                   onClick={() => onOpenChange(false)}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || isLoadingNote}
                   data-testid="close-dialog-button"
                 >
                   Cancel
@@ -164,14 +158,16 @@ export function EditNote({ noteId, open, onOpenChange }: EditNoteProps) {
                   type="button"
                   data-testid="submit-button"
                   onClick={handleSubmit(onSubmit)}
-                  disabled={isSubmitting || (!titleValue?.trim() && !contentValue?.trim())}
+                  disabled={
+                    isSubmitting || isLoadingNote || (!titleValue?.trim() && !contentValue?.trim())
+                  }
                 >
                   {isSubmitting ? 'Updating...' : 'Update Note'}
                 </Button>
               </div>
             </DialogFooter>
           </form>
-        )}
+        </div>
       </DialogContent>
     </Dialog>
   );
