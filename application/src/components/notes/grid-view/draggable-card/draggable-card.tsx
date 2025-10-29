@@ -3,6 +3,7 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { IconGripVertical } from '@tabler/icons-react';
+import { Button } from '@/components/ui/button';
 import { NoteCard } from '@/components/notes/grid-view/note-card';
 import { NoteTableData } from '@/components/notes/schemas';
 
@@ -50,13 +51,13 @@ export function DraggableCard({
       <div
         {...attributes}
         {...listeners}
-        className="absolute top-2 left-2 z-10 cursor-grab active:cursor-grabbing opacity-0 group-hover/card:opacity-100 transition-opacity"
+        className="absolute bottom-2 right-2 z-10 cursor-grab active:cursor-grabbing opacity-0 group-hover/card:opacity-100 transition-opacity"
       >
-        <div className="bg-background/90 backdrop-blur-sm rounded p-1.5 border shadow-md hover:bg-muted">
-          <IconGripVertical className="size-4 text-muted-foreground" />
-        </div>
+        <Button variant="ghost" size="icon-sm">
+          <IconGripVertical className="text-muted-foreground size-4" />
+          <span className="sr-only">Drag to reorder</span>
+        </Button>
       </div>
-
       <NoteCard
         item={item}
         isSelected={isSelected}
