@@ -38,19 +38,21 @@ interface NoteFormProps {
   onStatusChange: (value: string) => void;
   isSubmitting: boolean;
   disabled?: boolean;
+  contentClassName?: string;
 }
 
-export function NoteForm({ 
-  title, 
-  content, 
-  category, 
-  status, 
-  onTitleChange, 
-  onContentChange, 
-  onCategoryChange, 
-  onStatusChange, 
-  isSubmitting, 
-  disabled = false 
+export function NoteForm({
+  title,
+  content,
+  category,
+  status,
+  onTitleChange,
+  onContentChange,
+  onCategoryChange,
+  onStatusChange,
+  isSubmitting,
+  disabled = false,
+  contentClassName,
 }: NoteFormProps) {
   const [openFramework, setOpenFramework] = useState(false);
   const isDisabled = disabled || isSubmitting;
@@ -77,6 +79,7 @@ export function NoteForm({
           value={content}
           onChange={(e) => onContentChange(e.target.value)}
           disabled={isDisabled}
+          className={contentClassName}
         />
       </Field>
       <Field>

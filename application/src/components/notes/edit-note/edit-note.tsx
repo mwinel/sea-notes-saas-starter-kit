@@ -144,6 +144,7 @@ export function EditNote({ noteId, open, onOpenChange }: EditNoteProps) {
               onCategoryChange={(value) => setValue('category', value)}
               onStatusChange={(value) => setValue('status', value)}
               isSubmitting={isSubmitting}
+              contentClassName="h-48 overflow-y-auto resize-none"
             />
             <DialogFooter className="flex !justify-between items-center">
               <Button variant="gradient" type="button" disabled={isSubmitting}>
