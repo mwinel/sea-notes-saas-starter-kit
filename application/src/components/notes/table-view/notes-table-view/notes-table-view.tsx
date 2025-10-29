@@ -40,13 +40,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  DragHandle,
-  SortableHeader,
-  ActionsCell,
-  DraggableRow,
-  TableCellViewer,
-} from '@/components/notes/shared';
+import { DragHandle } from '@/components/notes/table-view/drag-handle';
+import { SortableHeader } from '@/components/notes/table-view/sortable-header';
+import { ActionsCell } from '@/components/notes/table-view/actions-cell';
+import { DraggableRow } from '@/components/notes/table-view/draggable-row';
+import { TableCellViewer } from '@/components/notes/table-view/table-cell-viewer';
 import { NotesToolbar } from '@/components/notes/shared/notes-toolbar';
 import { NotesPagination } from '@/components/notes/shared/notes-pagination';
 import {

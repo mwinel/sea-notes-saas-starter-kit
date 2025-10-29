@@ -2,7 +2,7 @@
 
 import { useNotesData } from '@/hooks/use-notes-data';
 import { DEFAULT_PAGE_SIZE_GRID } from '@/constants/pagination';
-import { GridView } from './notes-grid-view';
+import { GridView } from '../notes-grid-view';
 
 interface GridViewContainerProps {
   onViewChange: (view: 'table' | 'grid') => void;

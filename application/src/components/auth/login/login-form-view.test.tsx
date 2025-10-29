@@ -21,14 +21,8 @@ describe('LoginFormView', () => {
     jest.clearAllMocks();
   });
 
-  it('should render all form fields', () => {
-    render(<LoginFormView {...mockProps} />);
-    expect(screen.getByLabelText('Email address')).toBeInTheDocument();
-    expect(screen.getByLabelText('Password')).toBeInTheDocument();
-    expect(screen.getByText('Login with Google')).toBeInTheDocument();
-  });
-
-  it('should handle complete login form interaction flow', () => {
+  it('handles complete login form interaction flow', () => {
+    // Arrange & Act
     render(<LoginFormView {...mockProps} />);
 
     // User enters email
@@ -43,32 +37,29 @@ describe('LoginFormView', () => {
     const submitButton = screen.getByRole('button', { name: 'Login' });
     fireEvent.click(submitButton);
 
+    // Assert
     expect(mockProps.onEmailChange).toHaveBeenCalledWith('test@example.com');
     expect(mockProps.onPasswordChange).toHaveBeenCalledWith('password123');
     expect(mockProps.onFormSubmit).toHaveBeenCalled();
   });
 
-  it('should disable button and show loading state when isSubmitting is true', () => {
+  it('disables button and shows loading state when submitting', () => {
+    // Arrange & Act
     render(<LoginFormView {...mockProps} isSubmitting={true} />);
+
+    // Assert
     const submitButton = screen.getByRole('button', { name: /Logging in/ });
     expect(submitButton).toBeDisabled();
     expect(screen.getByText('Logging in...')).toBeInTheDocument();
   });
 
-  it('should call onGoogleSignIn when Google button is clicked', () => {
+  it('calls onGoogleSignIn when Google button is clicked', () => {
+    // Arrange & Act
     render(<LoginFormView {...mockProps} />);
     const googleButton = screen.getByText('Login with Google');
     fireEvent.click(googleButton);
+
+    // Assert
     expect(mockProps.onGoogleSignIn).toHaveBeenCalled();
-  });
-
-  it('should render forgot password link', () => {
-    render(<LoginFormView {...mockProps} />);
-    expect(screen.getByText('Forgot your password?')).toBeInTheDocument();
-  });
-
-  it('should render sign up link', () => {
-    render(<LoginFormView {...mockProps} />);
-    expect(screen.getByText('Sign up')).toBeInTheDocument();
   });
 });

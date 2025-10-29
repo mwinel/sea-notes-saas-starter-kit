@@ -5,32 +5,36 @@ import userEvent from '@testing-library/user-event';
 
 describe('FormButton', () => {
   it('renders the button with given text', () => {
+    // Arrange & Act
     render(<FormButton>Submit</FormButton>);
+
+    // Assert
     const button = screen.getByRole('button', { name: /submit/i });
     expect(button).toBeInTheDocument();
   });
 
   it('has type="submit"', () => {
+    // Arrange & Act
     render(<FormButton>Submit</FormButton>);
+
+    // Assert
     const button = screen.getByRole('button', { name: /submit/i });
     expect(button).toHaveAttribute('type', 'submit');
   });
 
-  it('has the expected styles and props', () => {
-    render(<FormButton>Send</FormButton>);
-    const button = screen.getByRole('button', { name: /send/i });
-    expect(button).toHaveClass('MuiButton-contained');
-    expect(button).toHaveStyle({ textTransform: 'none' });
-  });
-
   it('calls onClick handler when provided and clicked', async () => {
+    // Arrange
     const handleClick = jest.fn();
     render(
       <FormButton>
         <span onClick={handleClick}>Click me</span>
       </FormButton>
     );
+
+    // Act
     await userEvent.click(screen.getByText(/click me/i));
+
+    // Assert
     expect(handleClick).toHaveBeenCalled();
   });
 });

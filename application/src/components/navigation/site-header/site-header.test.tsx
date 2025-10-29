@@ -11,20 +11,20 @@ jest.mock('@/components/ui/sidebar', () => ({
 }));
 
 describe('SiteHeader', () => {
-  it('renders without crashing', () => {
-    render(<SiteHeader title="Test Title" />);
-    expect(screen.getByText('Test Title')).toBeInTheDocument();
-  });
-
   it('renders the provided title', () => {
+    // Arrange & Act
     const testTitle = 'Dashboard';
     render(<SiteHeader title={testTitle} />);
+
+    // Assert
     expect(screen.getByText(testTitle)).toBeInTheDocument();
   });
 
   it('renders sidebar trigger', () => {
+    // Arrange & Act
     render(<SiteHeader title="Test Title" />);
-    // The SidebarTrigger should be present (it's a button)
+
+    // Assert: The SidebarTrigger should be present (it's a button)
     expect(screen.getByRole('button')).toBeInTheDocument();
   });
 });

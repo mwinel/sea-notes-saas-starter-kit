@@ -3,7 +3,7 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { IconGripVertical } from '@tabler/icons-react';
-import { NoteCard } from './note-card';
+import { NoteCard } from '@/components/notes/grid-view/note-card';
 import { NoteTableData } from '@/components/notes/schemas';
 
 interface DraggableCardProps {

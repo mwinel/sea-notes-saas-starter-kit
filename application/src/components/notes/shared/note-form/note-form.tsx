@@ -28,19 +28,14 @@ import { cn } from '@/lib/utils';
 import { NOTE_CATEGORIES } from '@/constants/notes';
 
 interface NoteFormProps {
-  // Values
   title: string;
   content: string;
   category: string;
   status: string;
-  
-  // Callbacks
   onTitleChange: (value: string) => void;
   onContentChange: (value: string) => void;
   onCategoryChange: (value: string) => void;
   onStatusChange: (value: string) => void;
-  
-  // State
   isSubmitting: boolean;
   disabled?: boolean;
 }

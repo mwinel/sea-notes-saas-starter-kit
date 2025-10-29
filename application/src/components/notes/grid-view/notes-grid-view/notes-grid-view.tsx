@@ -13,16 +13,16 @@ import {
   type UniqueIdentifier,
 } from '@dnd-kit/core';
 import { SortableContext, rectSortingStrategy } from '@dnd-kit/sortable';
-import { DraggableCard } from '@/components/notes/shared';
-import { NotesToolbar } from '@/components/notes/shared/notes-toolbar';
-import { NotesPagination } from '@/components/notes/shared/notes-pagination';
 import {
+  NotesToolbar,
+  NotesPagination,
   NotesLoadingState,
   NotesErrorState,
   NotesEmptyState,
-} from '@/components/notes/shared/notes-states';
+  DeleteNoteDialog,
+} from '@/components/notes/shared';
+import { DraggableCard } from '@/components/notes/grid-view/draggable-card';
 import { EditNote } from '@/components/notes/edit-note';
-import { DeleteNoteDialog } from '@/components/notes/shared/delete-note-dialog';
 import { NoteTableData } from '@/components/notes/schemas';
 import { useNoteDialogs } from '@/hooks/use-note-dialogs';
 import { useNoteActions } from '@/hooks/use-note-actions';
@@ -141,7 +141,10 @@ export function GridView({
               id={sortableId}
             >
               <SortableContext items={dataIds} strategy={rectSortingStrategy}>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div
+                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                  data-testid="grid-container"
+                >
                   {data.map((item) => (
                     <DraggableCard
                       key={item.id}

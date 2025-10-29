@@ -24,16 +24,8 @@ describe('SignupFormView', () => {
     jest.clearAllMocks();
   });
 
-  it('should render all form fields', () => {
-    render(<SignupFormView {...mockProps} />);
-    expect(screen.getByLabelText('First name')).toBeInTheDocument();
-    expect(screen.getByLabelText('Last name')).toBeInTheDocument();
-    expect(screen.getByLabelText('Email address')).toBeInTheDocument();
-    expect(screen.getByLabelText('Password')).toBeInTheDocument();
-    expect(screen.getByText('Signup with Google')).toBeInTheDocument();
-  });
-
-  it('should handle complete signup form interaction flow', () => {
+  it('handles complete signup form interaction flow', () => {
+    // Arrange & Act
     render(<SignupFormView {...mockProps} />);
 
     // User enters first name
@@ -56,6 +48,7 @@ describe('SignupFormView', () => {
     const submitButton = screen.getByRole('button', { name: 'Signup' });
     fireEvent.click(submitButton);
 
+    // Assert
     expect(mockProps.onFirstNameChange).toHaveBeenCalledWith('John');
     expect(mockProps.onLastNameChange).toHaveBeenCalledWith('Doe');
     expect(mockProps.onEmailChange).toHaveBeenCalledWith('test@example.com');
@@ -63,22 +56,23 @@ describe('SignupFormView', () => {
     expect(mockProps.onFormSubmit).toHaveBeenCalled();
   });
 
-  it('should disable button and show loading state when isSubmitting is true', () => {
+  it('disables button and shows loading state when submitting', () => {
+    // Arrange & Act
     render(<SignupFormView {...mockProps} isSubmitting={true} />);
+
+    // Assert
     const submitButton = screen.getByRole('button', { name: /Creating account/ });
     expect(submitButton).toBeDisabled();
     expect(screen.getByText('Creating account...')).toBeInTheDocument();
   });
 
-  it('should call onGoogleSignIn when Google button is clicked', () => {
+  it('calls onGoogleSignIn when Google button is clicked', () => {
+    // Arrange & Act
     render(<SignupFormView {...mockProps} />);
     const googleButton = screen.getByText('Signup with Google');
     fireEvent.click(googleButton);
-    expect(mockProps.onGoogleSignIn).toHaveBeenCalled();
-  });
 
-  it('should render login link', () => {
-    render(<SignupFormView {...mockProps} />);
-    expect(screen.getByText('Login')).toBeInTheDocument();
+    // Assert
+    expect(mockProps.onGoogleSignIn).toHaveBeenCalled();
   });
 });

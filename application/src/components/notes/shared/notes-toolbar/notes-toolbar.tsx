@@ -4,7 +4,7 @@ import { CreateNote } from '@/components/notes/create-note';
 import { DebouncedSearchInput } from '@/components/shared/debounced-search-input';
 import { MultiSelectFilter } from '@/components/ui/multi-select-filter';
 import { ViewToggle } from '@/components/notes/shared';
-import { FavoritesToggle } from './favorites-toggle';
+import { FavoritesToggle } from '../favorites-toggle';
 import { AVAILABLE_CATEGORIES, AVAILABLE_STATUSES } from '@/components/notes/schemas';
 
 interface NotesToolbarProps {

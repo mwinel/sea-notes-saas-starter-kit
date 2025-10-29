@@ -75,11 +75,6 @@ jest.mock('@/components/ui/sidebar', () => ({
 }));
 
 describe('AppSidebar', () => {
-  it('renders without crashing', () => {
-    render(<AppSidebar />);
-    expect(screen.getByText('SeaNotes')).toBeInTheDocument();
-  });
-
   it('renders with user data when provided', () => {
     const mockUser = {
       id: '1',
@@ -88,8 +83,8 @@ describe('AppSidebar', () => {
       email: 'john@example.com',
       image: '/avatar.jpg',
     };
-
     render(<AppSidebar user={mockUser} />);
+
     expect(screen.getByText('SeaNotes')).toBeInTheDocument();
   });
 });
